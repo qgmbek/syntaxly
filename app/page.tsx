@@ -1,5 +1,9 @@
+import Column from "./components/Column";
+
 export default function Home() {
   return (
-    <div>Home</div>
-  )
+    <div>
+      <Column />
+    </div>
+  );
 }

@@ -15,9 +15,11 @@ interface ColumnData {
 
 interface ColumnProps {
   data: ColumnData;
+  onBlockClick?: (block: Block, blockIndex: number) => void;
+  activeBlockIndex?: number | null;
 }
 
-export default function Column({ data }: ColumnProps) {
+export default function Column({ data, onBlockClick, activeBlockIndex }: ColumnProps) {
   return (
     <div className={styles.column}>
       <div className={styles.meta}>
@@ -26,8 +28,15 @@ export default function Column({ data }: ColumnProps) {
       </div>
 
       <div className={styles.main}>
-        {data.blocks.map((block) => (
-          <div key={block.title} className={styles.block}>
+        {data.blocks.map((block, i) => (
+          <div
+            key={block.title}
+            className={`${styles.block} ${activeBlockIndex === i ? styles.blockActive : ""}`}
+            onClick={() => onBlockClick?.(block, i)}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => e.key === "Enter" && onBlockClick?.(block, i)}
+          >
             <div className={styles.blockTitle}>{block.title}</div>
             <CodeBlock code={block.code} language={block.language ?? "tsx"} />
           </div>

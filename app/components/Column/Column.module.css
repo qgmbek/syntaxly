@@ -9,7 +9,7 @@
   height: 12%;
   width: 100%;
   padding: 10px 10px 10px 20px;
-  background-color: rgb(0, 222, 148);
+  background-color: rgb(30, 255, 180);
 }
 
 .number {
@@ -59,7 +59,7 @@
 }
 
 .block.blockActive {
-  outline: 2px solid aquamarine;
+  outline: 3px solid aquamarine;
   box-shadow: 0 0 0 4px rgba(0, 255, 200, 0.18);
 }
 
@@ -74,4 +74,15 @@
   border-bottom-right-radius: 12px;
   text-align: center;
   background-color: aquamarine;
+}
+
+.main::-webkit-scrollbar {
+  width: 4px;
+}
+.main::-webkit-scrollbar-track {
+  background: transparent;
+}
+.main::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.326);
+  border-radius: 2px;
 }

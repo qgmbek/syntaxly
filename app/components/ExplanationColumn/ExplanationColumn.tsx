@@ -16,12 +16,16 @@ interface ExplanationColumnProps {
   onClose: () => void;
 }
 
-export default function ExplanationColumn({ data, onClose }: ExplanationColumnProps) {
+export default function ExplanationColumn({
+  data,
+  onClose,
+}: ExplanationColumnProps) {
   const [visible, setVisible] = useState(false);
   const [rendered, setRendered] = useState<ExplanationData | null>(null);
 
   useEffect(() => {
     if (data) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setVisible(true);
       const t = setTimeout(() => setRendered(data), 80);
       return () => clearTimeout(t);
@@ -39,12 +43,18 @@ export default function ExplanationColumn({ data, onClose }: ExplanationColumnPr
         <div className={styles.meta}>
           <div className={styles.label}>explanation</div>
           <div className={styles.title}>{rendered?.blockTitle ?? ""}</div>
-          <button className={styles.close} onClick={onClose} aria-label="Close explanation">
+          <button
+            className={styles.close}
+            onClick={onClose}
+            aria-label="Close explanation"
+          >
             ✕
           </button>
         </div>
 
-        <div className={`${styles.main} ${rendered ? styles.contentVisible : ""}`}>
+        <div
+          className={`${styles.main} ${rendered ? styles.contentVisible : ""}`}
+        >
           {rendered && (
             <>
               <section className={styles.section}>

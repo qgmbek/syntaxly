@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, Fragment } from "react";
+import { Columns } from "@phosphor-icons/react";
+
 import Column from "./components/Column/Column";
 import ExplanationColumn, {
   ExplanationData,
@@ -482,12 +484,22 @@ interface Selected {
 
 export default function Home() {
   const [selected, setSelected] = useState<Selected | null>(null);
+  const [compact, setCompact] = useState(false);
 
   function handleBlockClick(
     columnIndex: number,
     block: Block,
     blockIndex: number,
   ) {
+    if (compact) {
+      setCompact(false);
+      setSelected({
+        columnIndex,
+        blockIndex: 0,
+        explanation: block.explanation,
+      });
+      return;
+    }
     if (
       selected?.columnIndex === columnIndex &&
       selected?.blockIndex === blockIndex
@@ -499,34 +511,65 @@ export default function Home() {
   }
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "row",
-        overflowX: "auto",
-        overflowY: "hidden",
-        height: "100vh",
-      }}
-    >
-      {COLUMNS.map((col, colIndex) => (
-        <Fragment key={col.number}>
-          <Column
-            data={col}
-            activeBlockIndex={
-              selected?.columnIndex === colIndex ? selected.blockIndex : null
-            }
-            onBlockClick={(block, blockIndex) =>
-              handleBlockClick(colIndex, block as Block, blockIndex)
-            }
-          />
-          <ExplanationColumn
-            data={
-              selected?.columnIndex === colIndex ? selected.explanation : null
-            }
-            onClose={() => setSelected(null)}
-          />
-        </Fragment>
-      ))}
+    <div style={{ position: "relative" }}>
+      <button
+        onClick={() => setCompact((c) => !c)}
+        title={compact ? "Expand columns" : "Overview"}
+        style={{
+          position: "fixed",
+          top: 16,
+          left: 16,
+          zIndex: 100,
+          width: 36,
+          height: 36,
+          borderRadius: "50%",
+          border: "none",
+          background: compact ? "aquamarine" : "rgba(255,255,255,0.12)",
+          cursor: "pointer",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          transition: "background 200ms ease",
+        }}
+      >
+        <Columns size={18} weight={compact ? "fill" : "regular"} />
+      </button>
+
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          overflowX: "auto",
+          overflowY: "hidden",
+          height: "100vh",
+        }}
+      >
+        {COLUMNS.map((col, colIndex) => (
+          <Fragment key={col.number}>
+            <Column
+              data={col}
+              activeBlockIndex={
+                selected?.columnIndex === colIndex ? selected.blockIndex : null
+              }
+              onBlockClick={(block, blockIndex) =>
+                handleBlockClick(colIndex, block as Block, blockIndex)
+              }
+              compact={compact}
+              columnIndex={colIndex}
+            />
+            {!compact && (
+              <ExplanationColumn
+                data={
+                  selected?.columnIndex === colIndex
+                    ? selected.explanation
+                    : null
+                }
+                onClose={() => setSelected(null)}
+              />
+            )}
+          </Fragment>
+        ))}
+      </div>
     </div>
   );
 }

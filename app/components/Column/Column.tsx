@@ -17,13 +17,27 @@ interface ColumnProps {
   data: ColumnData;
   onBlockClick?: (block: Block, blockIndex: number) => void;
   activeBlockIndex?: number | null;
+  compact?: boolean;
+  columnIndex?: number;
 }
 
-export default function Column({ data, onBlockClick, activeBlockIndex }: ColumnProps) {
+export default function Column({
+  data,
+  onBlockClick,
+  activeBlockIndex,
+  compact = false,
+  columnIndex = 0,
+}: ColumnProps) {
+  const delay = compact ? `${columnIndex * 30}ms` : `${columnIndex * 20}ms`;
+
   return (
-    <div className={styles.column}>
+    <div
+      className={`${styles.column} ${compact ? styles.compact : ""}`}
+      style={{ transitionDelay: delay }}
+    >
       <div className={styles.meta}>
         <div className={styles.number}>{data.number}</div>
+        <div className={styles.countBadge}>{data.blocks.length}</div>
         <div className={styles.title}>{data.title}</div>
       </div>
 

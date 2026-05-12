@@ -8,6 +8,8 @@ import ExplanationColumn, {
   ExplanationData,
 } from "../components/ExplanationColumn/ExplanationColumn";
 
+import styles from "./syntax.module.css";
+
 interface Block {
   title: string;
   code: string;
@@ -511,39 +513,21 @@ export default function Syntax() {
   }
 
   return (
-    <div style={{ position: "relative" }}>
-      <button
-        onClick={() => setCompact((c) => !c)}
-        title={compact ? "Expand columns" : "Overview"}
-        style={{
-          position: "fixed",
-          top: 16,
-          left: 16,
-          zIndex: 100,
-          width: 36,
-          height: 36,
-          borderRadius: "50%",
-          border: "none",
-          background: compact ? "aquamarine" : "rgba(255,255,255,0.12)",
-          cursor: "pointer",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          transition: "background 200ms ease",
-        }}
-      >
-        <Columns size={18} weight={compact ? "fill" : "regular"} />
-      </button>
+    <div className={styles.container}>
+      <div className={styles.sidebar}>
+        <button
+          onClick={() => setCompact((c) => !c)}
+          title={compact ? "Expand columns" : "Overview"}
+          className={`${styles.expandButton} ${
+            compact ? styles.expandButtonCompact : ""
+          }`}
+        >
+          <Columns size={18} weight={compact ? "fill" : "regular"} />
+        </button>
+        <div className={styles.name}>REACT</div>
+      </div>
 
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          overflowX: "auto",
-          overflowY: "hidden",
-          height: "100vh",
-        }}
-      >
+      <div className={styles.mainbar}>
         {COLUMNS.map((col, colIndex) => (
           <Fragment key={col.number}>
             <Column

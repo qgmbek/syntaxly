@@ -1,0 +1,48 @@
+.container {
+  position: relative;
+  display: flex;
+}
+
+.sidebar {
+  max-width: 80px;
+  height: 100vh;
+  background-color: rgb(30, 255, 180);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
+}
+
+.expandButton {
+  z-index: 100;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.12);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 200ms ease;
+}
+
+.expandButtonCompact {
+  background: aquamarine;
+}
+
+.name {
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+  color: rgb(187, 0, 255);
+  font-size: 28px;
+}
+
+.mainbar {
+  display: flex;
+  flex-direction: row;
+  overflow-x: auto;
+  overflow-y: hidden;
+  height: 100vh;
+}

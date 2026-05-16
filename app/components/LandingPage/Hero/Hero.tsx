@@ -198,7 +198,7 @@ export default function Hero() {
               left: cell.left,
               width: cell.width,
               height: cell.height,
-              backgroundColor: `rgba(0, 0, 0, ${highlightOpacities[idx] || 0})`,
+              backgroundColor: `rgba(255, 215, 0, ${highlightOpacities[idx] || 0})`,
             }}
           />
         ))}

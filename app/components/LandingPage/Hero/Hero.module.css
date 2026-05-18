@@ -11,6 +11,8 @@
     linear-gradient(to bottom, #ddd 1px, transparent 1px);
   background-size: 80px 80px;
   overflow: hidden;
+  z-index: 1;
+  background-color: #fff;
 }
 
 .overlayContainer {

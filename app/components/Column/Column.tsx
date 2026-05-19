@@ -19,6 +19,7 @@ interface ColumnProps {
   activeBlockIndex?: number | null;
   compact?: boolean;
   columnIndex?: number;
+  fontSize?: number;
 }
 
 export default function Column({
@@ -27,6 +28,7 @@ export default function Column({
   activeBlockIndex,
   compact = false,
   columnIndex = 0,
+  fontSize = 16,
 }: ColumnProps) {
   const delay = compact ? `${columnIndex * 30}ms` : `${columnIndex * 20}ms`;
 
@@ -51,8 +53,17 @@ export default function Column({
             tabIndex={0}
             onKeyDown={(e) => e.key === "Enter" && onBlockClick?.(block, i)}
           >
-            <div className={styles.blockTitle}>{block.title}</div>
-            <CodeBlock code={block.code} language={block.language ?? "tsx"} />
+            <div
+              className={styles.blockTitle}
+              style={{ fontSize }}
+            >
+              {block.title}
+            </div>
+            <CodeBlock
+              code={block.code}
+              language={block.language ?? "tsx"}
+              fontSize={fontSize}
+            />
           </div>
         ))}
       </div>

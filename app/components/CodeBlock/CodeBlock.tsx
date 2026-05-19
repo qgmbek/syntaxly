@@ -6,9 +6,14 @@ import styles from "./CodeBlock.module.css";
 interface CodeBlockProps {
   code: string;
   language?: string;
+  fontSize?: number;
 }
 
-export default function CodeBlock({ code, language = "tsx" }: CodeBlockProps) {
+export default function CodeBlock({
+  code,
+  language = "tsx",
+  fontSize = 16,
+}: CodeBlockProps) {
   const [html, setHtml] = useState("");
 
   useEffect(() => {
@@ -24,6 +29,7 @@ export default function CodeBlock({ code, language = "tsx" }: CodeBlockProps) {
   return (
     <div
       className={styles.code}
+      style={{ fontSize }}
       dangerouslySetInnerHTML={{ __html: html || `<pre>${code}</pre>` }}
     />
   );

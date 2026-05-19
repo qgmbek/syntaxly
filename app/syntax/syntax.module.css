@@ -32,6 +32,49 @@
   background: aquamarine;
 }
 
+.fontControls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  margin-top: 14px;
+}
+
+.fontBtn {
+  width: 28px;
+  height: 28px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 6px;
+  background: transparent;
+  color: inherit;
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 120ms ease;
+}
+
+.fontBtn:hover {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+.fontBtn:active {
+  background: rgba(0, 0, 0, 0.15);
+}
+
+.fontValue {
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  opacity: 0.65;
+  padding: 4px 0;
+  min-width: 20px;
+  text-align: center;
+  user-select: none;
+}
+
 .name {
   writing-mode: vertical-rl;
   text-orientation: upright;

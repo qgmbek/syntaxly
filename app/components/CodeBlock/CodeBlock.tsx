@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useDragScroll } from "@/app/utils/useDragScroll";
 import styles from "./CodeBlock.module.css";
 
 interface CodeBlockProps {
@@ -15,6 +16,8 @@ export default function CodeBlock({
   fontSize = 16,
 }: CodeBlockProps) {
   const [html, setHtml] = useState("");
+  const { ref, onMouseDown, onMouseMove, onMouseUp, onMouseLeave } =
+    useDragScroll();
 
   useEffect(() => {
     fetch("/api/highlight", {
@@ -28,8 +31,13 @@ export default function CodeBlock({
 
   return (
     <div
+      ref={ref}
       className={styles.code}
-      style={{ fontSize }}
+      style={{ fontSize, cursor: "grab" }}
+      onMouseDown={onMouseDown}
+      onMouseMove={onMouseMove}
+      onMouseUp={onMouseUp}
+      onMouseLeave={onMouseLeave}
       dangerouslySetInnerHTML={{ __html: html || `<pre>${code}</pre>` }}
     />
   );

@@ -27,7 +27,7 @@ export default function Navbar() {
       <header className={styles.navbar}>
         <div className={styles.logo}>
           <div className={styles.logoIcon}>✦</div>
-          <span className={styles.logoText}>obsidian</span>
+          <span className={styles.logoText}>syntaxly</span>
         </div>
 
         <nav className={styles.centerNav}>
@@ -134,17 +134,14 @@ export default function Navbar() {
       >
         <div className={styles.menuContainer}>
           {activeMenu === "offers" && (
-            <div className={styles.gridTwoColumn}>
+            <>
               <div className={styles.card}>
-                <div className={styles.visualBox}>
-                  <Image
-                    src=""
-                    alt="AI Practice"
-                    fill
-                    sizes="110px"
-                    className={styles.cardImage}
-                  />
-                </div>
+                <img
+                  src="/img1.jpg"
+                  alt="AI Practice"
+                  sizes="110px"
+                  className={styles.cardImage}
+                />
 
                 <div>
                   <h3 className={styles.cardTitle}>AI Practice Management</h3>
@@ -157,15 +154,12 @@ export default function Navbar() {
               </div>
 
               <div className={styles.card}>
-                <div className={styles.visualBox}>
-                  <Image
-                    src=""
-                    alt="Execution"
-                    fill
-                    sizes="110px"
-                    className={styles.cardImage}
-                  />
-                </div>
+                <img
+                  src="/img2.jpg"
+                  alt="AI Practice"
+                  sizes="110px"
+                  className={styles.cardImage}
+                />
 
                 <div>
                   <h3 className={styles.cardTitle}>Execution & Custody</h3>
@@ -176,53 +170,47 @@ export default function Navbar() {
                   </p>
                 </div>
               </div>
-            </div>
+            </>
           )}
 
           {activeMenu === "audience" && (
-            <div className={styles.gridTwoColumn}>
+            <>
               <div className={styles.card}>
-                <div className={styles.visualBox}>
-                  <Image
-                    src=""
-                    alt="Wealth Managers"
-                    fill
-                    sizes="110px"
-                    className={styles.cardImage}
-                  />
-                </div>
+                <img
+                  src="/img1.jpg"
+                  alt="AI Practice"
+                  sizes="110px"
+                  className={styles.cardImage}
+                />
 
                 <div>
-                  <h3 className={styles.cardTitle}>RIAs & Wealth Managers</h3>
+                  <h3 className={styles.cardTitle}>AI Practice Management</h3>
 
                   <p className={styles.cardDescription}>
-                    Empower your practice with automated back-offices and
-                    high-end execution tools.
+                    Your clients, meetings, and tasks - captured by AI,
+                    searchable in seconds.
                   </p>
                 </div>
               </div>
 
               <div className={styles.card}>
-                <div className={styles.visualBox}>
-                  <Image
-                    src=""
-                    alt="z Offices"
-                    fill
-                    sizes="110px"
-                    className={styles.cardImage}
-                  />
-                </div>
+                <img
+                  src="/img2.jpg"
+                  alt="AI Practice"
+                  sizes="110px"
+                  className={styles.cardImage}
+                />
 
                 <div>
-                  <h3 className={styles.cardTitle}>Family Offices</h3>
+                  <h3 className={styles.cardTitle}>Execution & Custody</h3>
 
                   <p className={styles.cardDescription}>
-                    Consolidate multi-custodial complex portfolios under a
-                    secure unified architecture.
+                    Trade, rebalance, and custody - all in one seamless,
+                    high-performance interface.
                   </p>
                 </div>
               </div>
-            </div>
+            </>
           )}
         </div>
       </div>

@@ -451,15 +451,7 @@ export default function Syntax() {
   return (
     <div className={styles.container}>
       <div className={styles.sidebar}>
-        <button
-          onClick={() => setCompact((c) => !c)}
-          title={compact ? "Expand columns" : "Overview"}
-          className={`${styles.expandButton} ${
-            compact ? styles.expandButtonCompact : ""
-          }`}
-        >
-          <Columns size={18} weight={compact ? "fill" : "regular"} />
-        </button>
+        <div className={styles.name}>REACT</div>
 
         <div className={styles.fontControls}>
           <button
@@ -479,7 +471,15 @@ export default function Syntax() {
           </button>
         </div>
 
-        <div className={styles.name}>REACT</div>
+        <button
+          onClick={() => setCompact((c) => !c)}
+          title={compact ? "Expand columns" : "Overview"}
+          className={`${styles.expandButton} ${
+            compact ? styles.expandButtonCompact : ""
+          }`}
+        >
+          <Columns size={18} weight={compact ? "fill" : "regular"} />
+        </button>
       </div>
 
       <div className={styles.mainbar}>

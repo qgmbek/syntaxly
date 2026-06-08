@@ -7,6 +7,7 @@ import Column from "../components/Column/Column";
 import ExplanationColumn, {
   ExplanationData,
 } from "../components/ExplanationColumn/ExplanationColumn";
+import SearchOverlay from "../components/SearchOverlay/SearchOverlay";
 
 import styles from "./syntax.module.css";
 
@@ -216,201 +217,6 @@ const COLUMNS: ColumnData[] = [
       },
     ],
   },
-  {
-    number: 34,
-    title: "React",
-    blocks: [
-      {
-        title: "Component",
-        code: `export default function Button() {\n  return <button>Click</button>;\n}`,
-        language: "tsx",
-        explanation: {
-          blockTitle: "Component",
-          what: "A React component is a function that returns JSX — a description of what should appear on screen. Components are the building blocks of React UIs.",
-          how: "The function name must start with a capital letter. It can receive data via props and return any JSX. React calls this function whenever it needs to render or re-render.",
-          example: `interface ButtonProps {\n  label: string;\n  onClick: () => void;\n}\n\nexport default function Button({ label, onClick }: ButtonProps) {\n  return (\n    <button\n      onClick={onClick}\n      style={{ padding: "8px 16px", cursor: "pointer" }}\n    >\n      {label}\n    </button>\n  );\n}\n\n// Usage:\n// <Button label="Save" onClick={() => console.log("saved")} />`,
-          tip: "Keep components small and focused. If JSX gets long, split it into smaller child components.",
-        },
-      },
-      {
-        title: "useState",
-        code: `const [count, setCount] = useState(0);`,
-        language: "tsx",
-        explanation: {
-          blockTitle: "useState",
-          what: "`useState` is a React hook that adds local state to a component. When state changes, React re-renders the component with the new value.",
-          how: "Call `useState(initialValue)` — it returns a tuple: the current value and a setter function. Always use the setter to update state, never mutate directly.",
-          example: `import { useState } from "react";\n\nexport default function Counter() {\n  const [count, setCount] = useState(0);\n\n  return (\n    <div>\n      <p>Count: {count}</p>\n      <button onClick={() => setCount(count + 1)}>+</button>\n      <button onClick={() => setCount(count - 1)}>-</button>\n      <button onClick={() => setCount(0)}>Reset</button>\n    </div>\n  );\n}`,
-          tip: "For complex state with multiple related fields, consider `useReducer` instead of multiple `useState` calls.",
-        },
-      },
-      {
-        title: "useEffect",
-        code: `useEffect(() => {\n  fetchData();\n}, [id]);`,
-        language: "tsx",
-        explanation: {
-          blockTitle: "useEffect",
-          what: "`useEffect` runs side effects in a component - things like fetching data, setting up subscriptions, or updating the document title.",
-          how: "The second argument is the dependency array. The effect re-runs whenever a dependency changes. An empty array `[]` means run once on mount. Returning a function from the effect cleans up on unmount.",
-          example: `import { useState, useEffect } from "react";\n\nexport default function Profile({ userId }: { userId: number }) {\n  const [user, setUser] = useState(null);\n\n  useEffect(() => {\n    fetch(\`/api/users/\${userId}\`)\n      .then(res => res.json())\n      .then(data => setUser(data));\n  }, [userId]); // re-runs when userId changes\n\n  if (!user) return <p>Loading...</p>;\n  return <p>Hello, {user.name}</p>;\n}`,
-          tip: "Every value used inside the effect that comes from the component scope should be in the dependency array. The `eslint-plugin-react-hooks` rule enforces this automatically.",
-        },
-      },
-      {
-        title: "Props",
-        code: `function Card({ title }: { title: string }) {\n  return <div>{title}</div>;\n}`,
-        language: "tsx",
-        explanation: {
-          blockTitle: "Props",
-          what: "Props (short for properties) are how parent components pass data down to child components. They are read-only inside the child.",
-          how: "Destructure props directly in the function signature for cleaner code. Define the shape with an interface for type safety. Default values can be set with `=` in destructuring.",
-          example: `interface CardProps {\n  title: string;\n  subtitle?: string;\n  highlighted?: boolean;\n}\n\nfunction Card({ title, subtitle = "No subtitle", highlighted = false }: CardProps) {\n  return (\n    <div style={{ border: highlighted ? "2px solid gold" : "1px solid gray" }}>\n      <h2>{title}</h2>\n      <p>{subtitle}</p>\n    </div>\n  );\n}\n\n// Usage:\n// <Card title="Hello" highlighted />\n// <Card title="World" subtitle="A subtitle" />`,
-          tip: "Never modify props inside a child component. If you need to transform data, derive a new value from props instead.",
-        },
-      },
-      {
-        title: "Event Handlers",
-        code: `<button onClick={(e) => console.log(e)}>Click</button>`,
-        explanation: {
-          blockTitle: "Event Handlers",
-          what: "Event handlers are functions that run in response to user actions like clicks, input changes, form submissions, and keyboard events.",
-          how: "In JSX, event names are camelCase (`onClick`, `onChange`, `onSubmit`). You pass a function reference - not a call. TypeScript infers the event type from the JSX attribute.",
-          example: `import { useState } from "react";\n\nexport default function Form() {\n  const [text, setText] = useState("");\n\n  function handleSubmit(e: React.FormEvent) {\n    e.preventDefault();\n    console.log("Submitted:", text);\n  }\n\n  return (\n    <form onSubmit={handleSubmit}>\n      <input\n        value={text}\n        onChange={(e) => setText(e.target.value)}\n        placeholder="Type something"\n      />\n      <button type="submit">Submit</button>\n    </form>\n  );\n}`,
-          tip: "Always call `e.preventDefault()` in form `onSubmit` handlers to stop the page from reloading.",
-        },
-      },
-    ],
-  },
-  {
-    number: 35,
-    title: "React",
-    blocks: [
-      {
-        title: "Component",
-        code: `export default function Button() {\n  return <button>Click</button>;\n}`,
-        language: "tsx",
-        explanation: {
-          blockTitle: "Component",
-          what: "A React component is a function that returns JSX — a description of what should appear on screen. Components are the building blocks of React UIs.",
-          how: "The function name must start with a capital letter. It can receive data via props and return any JSX. React calls this function whenever it needs to render or re-render.",
-          example: `interface ButtonProps {\n  label: string;\n  onClick: () => void;\n}\n\nexport default function Button({ label, onClick }: ButtonProps) {\n  return (\n    <button\n      onClick={onClick}\n      style={{ padding: "8px 16px", cursor: "pointer" }}\n    >\n      {label}\n    </button>\n  );\n}\n\n// Usage:\n// <Button label="Save" onClick={() => console.log("saved")} />`,
-          tip: "Keep components small and focused. If JSX gets long, split it into smaller child components.",
-        },
-      },
-      {
-        title: "useState",
-        code: `const [count, setCount] = useState(0);`,
-        language: "tsx",
-        explanation: {
-          blockTitle: "useState",
-          what: "`useState` is a React hook that adds local state to a component. When state changes, React re-renders the component with the new value.",
-          how: "Call `useState(initialValue)` — it returns a tuple: the current value and a setter function. Always use the setter to update state, never mutate directly.",
-          example: `import { useState } from "react";\n\nexport default function Counter() {\n  const [count, setCount] = useState(0);\n\n  return (\n    <div>\n      <p>Count: {count}</p>\n      <button onClick={() => setCount(count + 1)}>+</button>\n      <button onClick={() => setCount(count - 1)}>-</button>\n      <button onClick={() => setCount(0)}>Reset</button>\n    </div>\n  );\n}`,
-          tip: "For complex state with multiple related fields, consider `useReducer` instead of multiple `useState` calls.",
-        },
-      },
-      {
-        title: "useEffect",
-        code: `useEffect(() => {\n  fetchData();\n}, [id]);`,
-        language: "tsx",
-        explanation: {
-          blockTitle: "useEffect",
-          what: "`useEffect` runs side effects in a component - things like fetching data, setting up subscriptions, or updating the document title.",
-          how: "The second argument is the dependency array. The effect re-runs whenever a dependency changes. An empty array `[]` means run once on mount. Returning a function from the effect cleans up on unmount.",
-          example: `import { useState, useEffect } from "react";\n\nexport default function Profile({ userId }: { userId: number }) {\n  const [user, setUser] = useState(null);\n\n  useEffect(() => {\n    fetch(\`/api/users/\${userId}\`)\n      .then(res => res.json())\n      .then(data => setUser(data));\n  }, [userId]); // re-runs when userId changes\n\n  if (!user) return <p>Loading...</p>;\n  return <p>Hello, {user.name}</p>;\n}`,
-          tip: "Every value used inside the effect that comes from the component scope should be in the dependency array. The `eslint-plugin-react-hooks` rule enforces this automatically.",
-        },
-      },
-      {
-        title: "Props",
-        code: `function Card({ title }: { title: string }) {\n  return <div>{title}</div>;\n}`,
-        language: "tsx",
-        explanation: {
-          blockTitle: "Props",
-          what: "Props (short for properties) are how parent components pass data down to child components. They are read-only inside the child.",
-          how: "Destructure props directly in the function signature for cleaner code. Define the shape with an interface for type safety. Default values can be set with `=` in destructuring.",
-          example: `interface CardProps {\n  title: string;\n  subtitle?: string;\n  highlighted?: boolean;\n}\n\nfunction Card({ title, subtitle = "No subtitle", highlighted = false }: CardProps) {\n  return (\n    <div style={{ border: highlighted ? "2px solid gold" : "1px solid gray" }}>\n      <h2>{title}</h2>\n      <p>{subtitle}</p>\n    </div>\n  );\n}\n\n// Usage:\n// <Card title="Hello" highlighted />\n// <Card title="World" subtitle="A subtitle" />`,
-          tip: "Never modify props inside a child component. If you need to transform data, derive a new value from props instead.",
-        },
-      },
-      {
-        title: "Event Handlers",
-        code: `<button onClick={(e) => console.log(e)}>Click</button>`,
-        explanation: {
-          blockTitle: "Event Handlers",
-          what: "Event handlers are functions that run in response to user actions like clicks, input changes, form submissions, and keyboard events.",
-          how: "In JSX, event names are camelCase (`onClick`, `onChange`, `onSubmit`). You pass a function reference - not a call. TypeScript infers the event type from the JSX attribute.",
-          example: `import { useState } from "react";\n\nexport default function Form() {\n  const [text, setText] = useState("");\n\n  function handleSubmit(e: React.FormEvent) {\n    e.preventDefault();\n    console.log("Submitted:", text);\n  }\n\n  return (\n    <form onSubmit={handleSubmit}>\n      <input\n        value={text}\n        onChange={(e) => setText(e.target.value)}\n        placeholder="Type something"\n      />\n      <button type="submit">Submit</button>\n    </form>\n  );\n}`,
-          tip: "Always call `e.preventDefault()` in form `onSubmit` handlers to stop the page from reloading.",
-        },
-      },
-    ],
-  },
-  {
-    number: 36,
-    title: "React",
-    blocks: [
-      {
-        title: "Component",
-        code: `export default function Button() {\n  return <button>Click</button>;\n}`,
-        language: "tsx",
-        explanation: {
-          blockTitle: "Component",
-          what: "A React component is a function that returns JSX — a description of what should appear on screen. Components are the building blocks of React UIs.",
-          how: "The function name must start with a capital letter. It can receive data via props and return any JSX. React calls this function whenever it needs to render or re-render.",
-          example: `interface ButtonProps {\n  label: string;\n  onClick: () => void;\n}\n\nexport default function Button({ label, onClick }: ButtonProps) {\n  return (\n    <button\n      onClick={onClick}\n      style={{ padding: "8px 16px", cursor: "pointer" }}\n    >\n      {label}\n    </button>\n  );\n}\n\n// Usage:\n// <Button label="Save" onClick={() => console.log("saved")} />`,
-          tip: "Keep components small and focused. If JSX gets long, split it into smaller child components.",
-        },
-      },
-      {
-        title: "useState",
-        code: `const [count, setCount] = useState(0);`,
-        language: "tsx",
-        explanation: {
-          blockTitle: "useState",
-          what: "`useState` is a React hook that adds local state to a component. When state changes, React re-renders the component with the new value.",
-          how: "Call `useState(initialValue)` — it returns a tuple: the current value and a setter function. Always use the setter to update state, never mutate directly.",
-          example: `import { useState } from "react";\n\nexport default function Counter() {\n  const [count, setCount] = useState(0);\n\n  return (\n    <div>\n      <p>Count: {count}</p>\n      <button onClick={() => setCount(count + 1)}>+</button>\n      <button onClick={() => setCount(count - 1)}>-</button>\n      <button onClick={() => setCount(0)}>Reset</button>\n    </div>\n  );\n}`,
-          tip: "For complex state with multiple related fields, consider `useReducer` instead of multiple `useState` calls.",
-        },
-      },
-      {
-        title: "useEffect",
-        code: `useEffect(() => {\n  fetchData();\n}, [id]);`,
-        language: "tsx",
-        explanation: {
-          blockTitle: "useEffect",
-          what: "`useEffect` runs side effects in a component - things like fetching data, setting up subscriptions, or updating the document title.",
-          how: "The second argument is the dependency array. The effect re-runs whenever a dependency changes. An empty array `[]` means run once on mount. Returning a function from the effect cleans up on unmount.",
-          example: `import { useState, useEffect } from "react";\n\nexport default function Profile({ userId }: { userId: number }) {\n  const [user, setUser] = useState(null);\n\n  useEffect(() => {\n    fetch(\`/api/users/\${userId}\`)\n      .then(res => res.json())\n      .then(data => setUser(data));\n  }, [userId]); // re-runs when userId changes\n\n  if (!user) return <p>Loading...</p>;\n  return <p>Hello, {user.name}</p>;\n}`,
-          tip: "Every value used inside the effect that comes from the component scope should be in the dependency array. The `eslint-plugin-react-hooks` rule enforces this automatically.",
-        },
-      },
-      {
-        title: "Props",
-        code: `function Card({ title }: { title: string }) {\n  return <div>{title}</div>;\n}`,
-        language: "tsx",
-        explanation: {
-          blockTitle: "Props",
-          what: "Props (short for properties) are how parent components pass data down to child components. They are read-only inside the child.",
-          how: "Destructure props directly in the function signature for cleaner code. Define the shape with an interface for type safety. Default values can be set with `=` in destructuring.",
-          example: `interface CardProps {\n  title: string;\n  subtitle?: string;\n  highlighted?: boolean;\n}\n\nfunction Card({ title, subtitle = "No subtitle", highlighted = false }: CardProps) {\n  return (\n    <div style={{ border: highlighted ? "2px solid gold" : "1px solid gray" }}>\n      <h2>{title}</h2>\n      <p>{subtitle}</p>\n    </div>\n  );\n}\n\n// Usage:\n// <Card title="Hello" highlighted />\n// <Card title="World" subtitle="A subtitle" />`,
-          tip: "Never modify props inside a child component. If you need to transform data, derive a new value from props instead.",
-        },
-      },
-      {
-        title: "Event Handlers",
-        code: `<button onClick={(e) => console.log(e)}>Click</button>`,
-        explanation: {
-          blockTitle: "Event Handlers",
-          what: "Event handlers are functions that run in response to user actions like clicks, input changes, form submissions, and keyboard events.",
-          how: "In JSX, event names are camelCase (`onClick`, `onChange`, `onSubmit`). You pass a function reference - not a call. TypeScript infers the event type from the JSX attribute.",
-          example: `import { useState } from "react";\n\nexport default function Form() {\n  const [text, setText] = useState("");\n\n  function handleSubmit(e: React.FormEvent) {\n    e.preventDefault();\n    console.log("Submitted:", text);\n  }\n\n  return (\n    <form onSubmit={handleSubmit}>\n      <input\n        value={text}\n        onChange={(e) => setText(e.target.value)}\n        placeholder="Type something"\n      />\n      <button type="submit">Submit</button>\n    </form>\n  );\n}`,
-          tip: "Always call `e.preventDefault()` in form `onSubmit` handlers to stop the page from reloading.",
-        },
-      },
-    ],
-  },
 ];
 
 interface Selected {
@@ -424,10 +230,32 @@ export default function Syntax() {
   const [compact, setCompact] = useState(false);
   const [fontSize, setFontSize] = useState(16);
 
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  function openSearch() {
+    setSearchQuery("");
+    setSearchOpen(true);
+  }
+
+  function closeSearch() {
+    setSearchOpen(false);
+  }
+
+  function handleSearchSelect(colIndex: number, blockIndex: number) {
+    closeSearch();
+    if (compact) setCompact(false);
+    setSelected({
+      columnIndex: colIndex,
+      blockIndex,
+      explanation: COLUMNS[colIndex].blocks[blockIndex].explanation,
+    });
+  }
+
   function handleBlockClick(
     columnIndex: number,
     block: Block,
-    blockIndex: number,
+    blockIndex: number
   ) {
     if (compact) {
       setCompact(false);
@@ -472,6 +300,28 @@ export default function Syntax() {
         </div>
 
         <button
+          onClick={openSearch}
+          title="Search blocks"
+          className={`${styles.expandButton} ${searchOpen ? styles.expandButtonCompact : ""}`}
+          aria-label="Search blocks"
+        >
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
+        </button>
+
+        <button
           onClick={() => setCompact((c) => !c)}
           title={compact ? "Expand columns" : "Overview"}
           className={`${styles.expandButton} ${
@@ -510,6 +360,16 @@ export default function Syntax() {
           </Fragment>
         ))}
       </div>
+
+      {searchOpen && (
+        <SearchOverlay
+          query={searchQuery}
+          onQueryChange={setSearchQuery}
+          columns={COLUMNS}
+          onClose={closeSearch}
+          onSelect={handleSearchSelect}
+        />
+      )}
     </div>
   );
 }

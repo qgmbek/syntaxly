@@ -60,8 +60,8 @@ export default function SearchOverlay({
           .filter(
             ({ block }) =>
               block.title.toLowerCase().includes(query.toLowerCase()) ||
-              block.code.toLowerCase().includes(query.toLowerCase())
-          )
+              block.code.toLowerCase().includes(query.toLowerCase()),
+          ),
       )
     : [];
 
@@ -93,7 +93,7 @@ export default function SearchOverlay({
         onSelect(m.colIndex, m.blockIndex);
       }
     },
-    [matches, activeIndex, onClose, onSelect]
+    [matches, activeIndex, onClose, onSelect],
   );
 
   useEffect(() => {
@@ -148,31 +148,41 @@ export default function SearchOverlay({
             </button>
           )}
           <kbd className={styles.esc}>ESC</kbd>
-          {query && (
-            <div className={styles.scanLine} key={`scan-${scanKey}`} />
-          )}
+          {query && <div className={styles.scanLine} key={`scan-${scanKey}`} />}
         </div>
 
         <div className={styles.results} role="listbox">
           {!query.trim() && (
             <div className={styles.idle}>
               <div className={styles.idleIcon}>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
                   <circle cx="11" cy="11" r="8" />
                   <line x1="21" y1="21" x2="16.65" y2="16.65" />
                 </svg>
               </div>
               <p className={styles.idleText}>Type to scan across all columns</p>
               <p className={styles.idleHint}>
-                {columns.length} COLUMNS · {columns.reduce((a, c) => a + c.blocks.length, 0)} BLOCKS INDEXED
+                {columns.length} COLUMNS ·{" "}
+                {columns.reduce((a, c) => a + c.blocks.length, 0)} BLOCKS
+                INDEXED
               </p>
             </div>
           )}
 
           {query.trim() && matches.length === 0 && (
             <div className={styles.empty}>
-              <span className={styles.emptyCode}>// NO BLOCKS MATCH</span>
-              <span className={styles.emptyQuery}>"{query}"</span>
+              <span className={styles.emptyCode}>NO BLOCKS MATCH</span>
+              <span className={styles.emptyQuery}>{query}</span>
             </div>
           )}
 
@@ -198,7 +208,7 @@ export default function SearchOverlay({
                   dangerouslySetInnerHTML={{
                     __html: highlight(
                       m.block.code.replace(/\n/g, " · ").slice(0, 60),
-                      query
+                      query,
                     ),
                   }}
                 />

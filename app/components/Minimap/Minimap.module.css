@@ -1,0 +1,108 @@
+.minimap {
+  position: fixed;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 36px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  background: var(--color-background-secondary, rgba(0, 0, 0, 0.03));
+  border-left: 0.5px solid var(--color-border-tertiary, rgba(0, 0, 0, 0.08));
+  z-index: 100;
+  box-sizing: border-box;
+}
+
+.scroll {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 0;
+  box-sizing: border-box;
+  scrollbar-width: none;
+}
+
+.scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollSpacer {
+  flex: 1;
+  min-height: 0;
+}
+
+.lane {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+}
+
+.laneLabel {
+  font-family: "Share Tech Mono", "Courier New", monospace;
+  font-size: 8px;
+  letter-spacing: 0.06em;
+  color: var(--color-text-tertiary, #bbb);
+  line-height: 1;
+  user-select: none;
+}
+
+.pills {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  width: 100%;
+  padding: 0 8px;
+  box-sizing: border-box;
+}
+
+.pill {
+  display: block;
+  width: 100%;
+  height: 5px;
+  border-radius: 2px;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  background: var(--color-border-secondary, rgba(0, 0, 0, 0.12));
+  transition:
+    background 0.15s,
+    transform 0.15s,
+    box-shadow 0.15s;
+}
+
+.pill:hover {
+  background: var(--color-text-tertiary, #999);
+  transform: scaleX(1.1);
+}
+
+.pillActive {
+  background: #4af0b4 !important;
+  box-shadow: 0 0 6px rgba(74, 240, 180, 0.5);
+}
+
+.lane + .lane {
+  padding-top: 6px;
+  border-top: 0.5px solid var(--color-border-tertiary, rgba(0, 0, 0, 0.07));
+}
+
+.verticalLabel {
+  flex-shrink: 0;
+  padding: 8px 0;
+  font-family: "Share Tech Mono", "Courier New", monospace;
+  font-size: 7px;
+  letter-spacing: 0.12em;
+  color: var(--color-text-tertiary, #ccc);
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  transform: rotate(180deg);
+  user-select: none;
+  opacity: 0.6;
+  align-self: center;
+}

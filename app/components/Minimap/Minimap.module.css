@@ -3,12 +3,12 @@
   right: 0;
   top: 0;
   bottom: 0;
-  width: 36px;
+  width: 30px;
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  background: var(--color-background-secondary, rgba(0, 0, 0, 0.03));
-  border-left: 0.5px solid var(--color-border-tertiary, rgba(0, 0, 0, 0.08));
+  background: rgba(0, 0, 0, 0.03);
+  border-left: 1px solid rgba(0, 0, 0, 0.08);
   z-index: 100;
   box-sizing: border-box;
 }
@@ -44,10 +44,9 @@
 }
 
 .laneLabel {
-  font-family: "Share Tech Mono", "Courier New", monospace;
   font-size: 8px;
   letter-spacing: 0.06em;
-  color: var(--color-text-tertiary, #bbb);
+  color: #bbb;
   line-height: 1;
   user-select: none;
 }
@@ -70,7 +69,7 @@
   border: none;
   cursor: pointer;
   padding: 0;
-  background: var(--color-border-secondary, rgba(0, 0, 0, 0.12));
+  background: rgba(0, 0, 0, 0.12);
   transition:
     background 0.15s,
     transform 0.15s,
@@ -78,7 +77,7 @@
 }
 
 .pill:hover {
-  background: var(--color-text-tertiary, #999);
+  background: #999;
   transform: scaleX(1.1);
 }
 
@@ -89,16 +88,15 @@
 
 .lane + .lane {
   padding-top: 6px;
-  border-top: 0.5px solid var(--color-border-tertiary, rgba(0, 0, 0, 0.07));
+  border-top: 0.5px solid rgba(0, 0, 0, 0.07);
 }
 
 .verticalLabel {
   flex-shrink: 0;
   padding: 8px 0;
-  font-family: "Share Tech Mono", "Courier New", monospace;
-  font-size: 7px;
+  font-size: 8px;
   letter-spacing: 0.12em;
-  color: var(--color-text-tertiary, #ccc);
+  color: #000000;
   writing-mode: vertical-rl;
   text-orientation: mixed;
   transform: rotate(180deg);

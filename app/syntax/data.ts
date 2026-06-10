@@ -1,13 +1,14 @@
 import { ExplanationData } from "../components/ExplanationColumn/ExplanationColumn";
 
-interface Block {
+export interface Block {
   title: string;
   code: string;
   language?: string;
+  unique?: boolean;
   explanation: ExplanationData;
 }
 
-interface ColumnData {
+export interface ColumnData {
   number: number;
   title: string;
   blocks: Block[];
@@ -21,6 +22,7 @@ export const Data: ColumnData[] = [
       {
         title: "Variables",
         code: `const x: number = 42;`,
+        unique: false,
         explanation: {
           blockTitle: "Variables",
           what: "A variable is a named container that holds a value. In TypeScript you declare its type so the compiler can catch mistakes before your code runs.",
@@ -32,6 +34,7 @@ export const Data: ColumnData[] = [
       {
         title: "While Loops",
         code: `while (x > 0) { x--; }`,
+        unique: false,
         explanation: {
           blockTitle: "While Loops",
           what: "A while loop repeats a block of code as long as its condition remains true. Useful when you don't know the iteration count in advance.",
@@ -43,6 +46,7 @@ export const Data: ColumnData[] = [
       {
         title: "Functions",
         code: `function greet(name: string) {\n  return \`Hello \${name}\`;\n}`,
+        unique: false,
         explanation: {
           blockTitle: "Functions",
           what: "A function is a reusable block of logic with a name. You give it inputs (parameters) and it produces an output (return value).",
@@ -54,6 +58,7 @@ export const Data: ColumnData[] = [
       {
         title: "If / Else",
         code: `if (x > 0) {\n  // positive\n} else {\n  // other\n}`,
+        unique: false,
         explanation: {
           blockTitle: "If / Else",
           what: "Conditional statements let your program take different paths depending on whether a condition is true or false.",
@@ -65,6 +70,7 @@ export const Data: ColumnData[] = [
       {
         title: "Arrays",
         code: `const nums: number[] = [1, 2, 3];`,
+        unique: false,
         explanation: {
           blockTitle: "Arrays",
           what: "An array is an ordered list of values. In TypeScript you annotate the element type with `Type[]` or `Array<Type>`.",
@@ -83,6 +89,7 @@ export const Data: ColumnData[] = [
         title: "Primitives",
         code: `let n: number = 1;\nlet s: string = "hi";\nlet b: boolean = true;`,
         language: "ts",
+        unique: true,
         explanation: {
           blockTitle: "Primitives",
           what: "TypeScript's three basic primitive types are `number`, `string`, and `boolean`. They map directly to JavaScript's runtime primitives.",
@@ -95,6 +102,7 @@ export const Data: ColumnData[] = [
         title: "Interfaces",
         code: `interface User {\n  name: string;\n  age: number;\n}`,
         language: "ts",
+        unique: true,
         explanation: {
           blockTitle: "Interfaces",
           what: "An interface defines the shape of an object — which properties it has and what types they are.",
@@ -107,6 +115,7 @@ export const Data: ColumnData[] = [
         title: "Union Types",
         code: `let id: string | number;`,
         language: "ts",
+        unique: true,
         explanation: {
           blockTitle: "Union Types",
           what: "A union type means a value can be one of several types. Use the `|` operator to combine them.",
@@ -119,6 +128,7 @@ export const Data: ColumnData[] = [
         title: "Generics",
         code: `function identity<T>(arg: T): T {\n  return arg;\n}`,
         language: "ts",
+        unique: true,
         explanation: {
           blockTitle: "Generics",
           what: "Generics let you write reusable code that works with any type while still being type-safe. Think of `T` as a placeholder for a real type.",
@@ -131,6 +141,7 @@ export const Data: ColumnData[] = [
         title: "Type Aliases",
         code: `type Point = { x: number; y: number };`,
         language: "ts",
+        unique: true,
         explanation: {
           blockTitle: "Type Aliases",
           what: "A `type` alias gives a name to any type expression - objects, unions, primitives, tuples, and more.",
@@ -149,6 +160,7 @@ export const Data: ColumnData[] = [
         title: "Component",
         code: `export default function Button() {\n  return <button>Click</button>;\n}`,
         language: "tsx",
+        unique: false,
         explanation: {
           blockTitle: "Component",
           what: "A React component is a function that returns JSX — a description of what should appear on screen. Components are the building blocks of React UIs.",
@@ -161,6 +173,7 @@ export const Data: ColumnData[] = [
         title: "useState",
         code: `const [count, setCount] = useState(0);`,
         language: "tsx",
+        unique: false,
         explanation: {
           blockTitle: "useState",
           what: "`useState` is a React hook that adds local state to a component. When state changes, React re-renders the component with the new value.",
@@ -173,6 +186,7 @@ export const Data: ColumnData[] = [
         title: "useEffect",
         code: `useEffect(() => {\n  fetchData();\n}, [id]);`,
         language: "tsx",
+        unique: false,
         explanation: {
           blockTitle: "useEffect",
           what: "`useEffect` runs side effects in a component - things like fetching data, setting up subscriptions, or updating the document title.",
@@ -185,6 +199,7 @@ export const Data: ColumnData[] = [
         title: "Props",
         code: `function Card({ title }: { title: string }) {\n  return <div>{title}</div>;\n}`,
         language: "tsx",
+        unique: true,
         explanation: {
           blockTitle: "Props",
           what: "Props (short for properties) are how parent components pass data down to child components. They are read-only inside the child.",
@@ -196,804 +211,13 @@ export const Data: ColumnData[] = [
       {
         title: "Event Handlers",
         code: `<button onClick={(e) => console.log(e)}>Click</button>`,
+        unique: false,
         explanation: {
           blockTitle: "Event Handlers",
           what: "Event handlers are functions that run in response to user actions like clicks, input changes, form submissions, and keyboard events.",
           how: "In JSX, event names are camelCase (`onClick`, `onChange`, `onSubmit`). You pass a function reference - not a call. TypeScript infers the event type from the JSX attribute.",
           example: `import { useState } from "react";\n\nexport default function Form() {\n  const [text, setText] = useState("");\n\n  function handleSubmit(e: React.FormEvent) {\n    e.preventDefault();\n    console.log("Submitted:", text);\n  }\n\n  return (\n    <form onSubmit={handleSubmit}>\n      <input\n        value={text}\n        onChange={(e) => setText(e.target.value)}\n        placeholder="Type something"\n      />\n      <button type="submit">Submit</button>\n    </form>\n  );\n}`,
           tip: "Always call `e.preventDefault()` in form `onSubmit` handlers to stop the page from reloading.",
-        },
-      },
-    ],
-  },
-  {
-    number: 4,
-    title: "React Hooks",
-    blocks: [
-      {
-        title: "useRef",
-        code: `const ref = useRef<HTMLInputElement>(null);`,
-        language: "tsx",
-        explanation: {
-          blockTitle: "useRef",
-          what: "`useRef` gives you a mutable container that persists across renders without triggering a re-render when changed. Most commonly used to hold a reference to a DOM element.",
-          how: "Pass the ref to a JSX element's `ref` prop. After mount, `ref.current` points to the DOM node. You can also store any mutable value — like a timer ID — that shouldn't trigger re-renders.",
-          example: `import { useRef } from "react";\n\nexport default function FocusInput() {\n  const inputRef = useRef<HTMLInputElement>(null);\n\n  function handleClick() {\n    inputRef.current?.focus();\n  }\n\n  return (\n    <div>\n      <input ref={inputRef} placeholder="Click button to focus" />\n      <button onClick={handleClick}>Focus</button>\n    </div>\n  );\n}`,
-          tip: "Don't read or write `ref.current` during rendering — only in event handlers or effects. Refs are an escape hatch from React's data flow.",
-        },
-      },
-      {
-        title: "useCallback",
-        code: `const fn = useCallback(() => doWork(id), [id]);`,
-        language: "tsx",
-        explanation: {
-          blockTitle: "useCallback",
-          what: "`useCallback` memoizes a function so the same function reference is returned across renders, as long as its dependencies haven't changed.",
-          how: "Wrap a function with `useCallback(fn, deps)`. React only creates a new function when one of the deps changes. This is mostly useful when passing callbacks to memoized child components.",
-          example: `import { useState, useCallback } from "react";\n\nexport default function Parent() {\n  const [count, setCount] = useState(0);\n\n  const handleClick = useCallback(() => {\n    setCount(c => c + 1);\n  }, []); // stable reference — no deps\n\n  return (\n    <div>\n      <p>{count}</p>\n      <ExpensiveChild onClick={handleClick} />\n    </div>\n  );\n}`,
-          tip: "Don't reach for `useCallback` everywhere. It adds overhead. Use it when passing callbacks to `React.memo` children or as `useEffect` dependencies.",
-        },
-      },
-      {
-        title: "useMemo",
-        code: `const result = useMemo(() => compute(a, b), [a, b]);`,
-        language: "tsx",
-        explanation: {
-          blockTitle: "useMemo",
-          what: "`useMemo` memoizes the result of an expensive calculation so it's only recomputed when its dependencies change.",
-          how: "Wrap the calculation in `useMemo(() => expensiveFn(), deps)`. The cached value is returned on every render until a dependency changes.",
-          example: `import { useMemo } from "react";\n\nfunction ProductList({ products, filterText }: Props) {\n  const filtered = useMemo(\n    () => products.filter(p =>\n      p.name.toLowerCase().includes(filterText.toLowerCase())\n    ),\n    [products, filterText]\n  );\n\n  return (\n    <ul>\n      {filtered.map(p => <li key={p.id}>{p.name}</li>)}\n    </ul>\n  );\n}`,
-          tip: "Only memoize calculations that are genuinely slow. Filtering small arrays doesn't need `useMemo` — measure first.",
-        },
-      },
-      {
-        title: "useReducer",
-        code: `const [state, dispatch] = useReducer(reducer, init);`,
-        language: "tsx",
-        explanation: {
-          blockTitle: "useReducer",
-          what: "`useReducer` is an alternative to `useState` for managing complex state logic. It's modeled after the Redux pattern: you dispatch actions and a reducer function returns the next state.",
-          how: "Define a reducer `(state, action) => newState` function. Pass it and an initial state to `useReducer`. Call `dispatch({ type: '...' })` to trigger state updates.",
-          example: `import { useReducer } from "react";\n\ntype Action = { type: "inc" } | { type: "dec" } | { type: "reset" };\n\nfunction reducer(state: number, action: Action): number {\n  switch (action.type) {\n    case "inc":   return state + 1;\n    case "dec":   return state - 1;\n    case "reset": return 0;\n  }\n}\n\nexport default function Counter() {\n  const [count, dispatch] = useReducer(reducer, 0);\n  return (\n    <div>\n      <p>{count}</p>\n      <button onClick={() => dispatch({ type: "inc" })}>+</button>\n      <button onClick={() => dispatch({ type: "dec" })}>-</button>\n      <button onClick={() => dispatch({ type: "reset" })}>Reset</button>\n    </div>\n  );\n}`,
-          tip: "`useReducer` shines when the next state depends on the previous one, or when multiple sub-values update together. It also makes state transitions easy to test in isolation.",
-        },
-      },
-      {
-        title: "useContext",
-        code: `const theme = useContext(ThemeContext);`,
-        language: "tsx",
-        explanation: {
-          blockTitle: "useContext",
-          what: "`useContext` reads a value from a React context, letting you share data across the component tree without prop-drilling.",
-          how: "Create a context with `createContext`. Wrap part of the tree in `<Context.Provider value={...}>`. Any descendant can call `useContext(Context)` to read the current value.",
-          example: `import { createContext, useContext, useState } from "react";\n\nconst ThemeContext = createContext<"light" | "dark">("light");\n\nfunction ThemedButton() {\n  const theme = useContext(ThemeContext);\n  return (\n    <button style={{ background: theme === "dark" ? "#333" : "#fff" }}>\n      I am {theme}\n    </button>\n  );\n}\n\nexport default function App() {\n  const [theme, setTheme] = useState<"light" | "dark">("light");\n  return (\n    <ThemeContext.Provider value={theme}>\n      <ThemedButton />\n      <button onClick={() => setTheme(t => t === "light" ? "dark" : "light")}>\n        Toggle\n      </button>\n    </ThemeContext.Provider>\n  );\n}`,
-          tip: "Context re-renders every consumer when the value changes. Split contexts by update frequency to avoid unnecessary re-renders.",
-        },
-      },
-    ],
-  },
-  {
-    number: 5,
-    title: "Next.js",
-    blocks: [
-      {
-        title: "App Router",
-        code: `// app/page.tsx\nexport default function Page() {\n  return <h1>Hello</h1>;\n}`,
-        language: "tsx",
-        explanation: {
-          blockTitle: "App Router",
-          what: "Next.js App Router uses a file-system based routing where folders define routes. A `page.tsx` file inside a folder makes that route publicly accessible.",
-          how: "Files inside `app/` have special meaning: `page.tsx` renders the route UI, `layout.tsx` wraps it, `loading.tsx` shows while streaming, and `error.tsx` handles errors.",
-          example: `// app/blog/[slug]/page.tsx\ninterface Props {\n  params: { slug: string };\n}\n\nexport default function BlogPost({ params }: Props) {\n  return <h1>Post: {params.slug}</h1>;\n}\n\n// Visiting /blog/hello-world renders:\n// <h1>Post: hello-world</h1>`,
-          tip: "Components inside `app/` are Server Components by default — they run on the server and send HTML to the client. Add `'use client'` at the top only when you need interactivity.",
-        },
-      },
-      {
-        title: "Server Components",
-        code: `// No 'use client' = Server Component\nasync function Page() {\n  const data = await fetchData();\n  return <div>{data.title}</div>;\n}`,
-        language: "tsx",
-        explanation: {
-          blockTitle: "Server Components",
-          what: "Server Components run exclusively on the server. They can directly `await` database queries, file reads, or API calls — no `useEffect` needed.",
-          how: "Any component in the `app/` directory without `'use client'` is a Server Component. They can't use hooks or browser APIs, but they keep secrets off the client and reduce JS bundle size.",
-          example: `// app/users/page.tsx\nasync function getUsers() {\n  const res = await fetch("https://api.example.com/users", {\n    cache: "no-store", // always fresh\n  });\n  return res.json();\n}\n\nexport default async function UsersPage() {\n  const users = await getUsers();\n  return (\n    <ul>\n      {users.map((u: { id: number; name: string }) => (\n        <li key={u.id}>{u.name}</li>\n      ))}\n    </ul>\n  );\n}`,
-          tip: "Keep as much as possible as Server Components. Only push down to `'use client'` the interactive leaf nodes that need state or event handlers.",
-        },
-      },
-      {
-        title: "Client Components",
-        code: `'use client';\nimport { useState } from 'react';`,
-        language: "tsx",
-        explanation: {
-          blockTitle: "Client Components",
-          what: "Client Components are the interactive parts of your app. They run in the browser and can use React hooks, browser APIs, and event listeners.",
-          how: "Add `'use client'` as the very first line of the file. This marks the component and all its imports as client-side. You can nest Server Components inside Client Components by passing them as `children`.",
-          example: `'use client';\nimport { useState } from "react";\n\nexport default function LikeButton({ initialCount }: { initialCount: number }) {\n  const [likes, setLikes] = useState(initialCount);\n\n  return (\n    <button onClick={() => setLikes(l => l + 1)}>\n      ❤️ {likes}\n    </button>\n  );\n}`,
-          tip: "Place the `'use client'` boundary as deep in the tree as possible. A large Client Component subtree opts out of server rendering optimizations.",
-        },
-      },
-      {
-        title: "Route Handlers",
-        code: `// app/api/hello/route.ts\nexport async function GET() {\n  return Response.json({ hello: "world" });\n}`,
-        language: "tsx",
-        explanation: {
-          blockTitle: "Route Handlers",
-          what: "Route Handlers let you create API endpoints inside the `app/` directory. They replace the old `pages/api/` pattern and support all HTTP methods.",
-          how: "Export named functions matching HTTP verbs (`GET`, `POST`, `PUT`, `DELETE`, etc.) from a `route.ts` file. Use the Web `Request` and `Response` APIs.",
-          example: `// app/api/users/route.ts\nimport { NextRequest } from "next/server";\n\nexport async function GET() {\n  const users = await db.user.findMany();\n  return Response.json(users);\n}\n\nexport async function POST(req: NextRequest) {\n  const body = await req.json();\n  const user = await db.user.create({ data: body });\n  return Response.json(user, { status: 201 });\n}`,
-          tip: "Route Handlers in the `app/` directory are cached by default for `GET` requests. Add `export const dynamic = 'force-dynamic'` to opt out.",
-        },
-      },
-      {
-        title: "Metadata",
-        code: `export const metadata = {\n  title: "My App",\n};`,
-        language: "tsx",
-        explanation: {
-          blockTitle: "Metadata",
-          what: "Next.js has a built-in Metadata API for setting `<head>` tags like `<title>`, `<meta>`, and Open Graph tags — fully type-safe and SEO-friendly.",
-          how: "Export a `metadata` object or a `generateMetadata` async function from any `page.tsx` or `layout.tsx`. Next.js merges metadata from parent layouts down to the current page.",
-          example: `// app/blog/[slug]/page.tsx\nimport { Metadata } from "next";\n\nexport async function generateMetadata(\n  { params }: { params: { slug: string } }\n): Promise<Metadata> {\n  const post = await getPost(params.slug);\n  return {\n    title: post.title,\n    description: post.excerpt,\n    openGraph: {\n      images: [post.coverImage],\n    },\n  };\n}`,
-          tip: "Dynamic metadata from `generateMetadata` is fetched on the server — you can safely access your database or API without exposing secrets to the client.",
-        },
-      },
-    ],
-  },
-  {
-    number: 6,
-    title: "Next.js",
-    blocks: [
-      {
-        title: "Link",
-        code: `import Link from 'next/link';\n<Link href="/about">About</Link>`,
-        language: "tsx",
-        explanation: {
-          blockTitle: "Link",
-          what: "Next.js `<Link>` is the client-side navigation component. It prefetches the destination page in the background and navigates without a full page reload.",
-          how: "Import `Link` from `'next/link'` and use `href` just like an anchor tag. It renders an `<a>` tag in the HTML, so it's accessible and works without JavaScript.",
-          example: `import Link from "next/link";\n\nexport default function Nav() {\n  return (\n    <nav>\n      <Link href="/">Home</Link>\n      <Link href="/about">About</Link>\n      <Link href="/blog/hello" prefetch={false}>\n        Hello Post\n      </Link>\n    </nav>\n  );\n}`,
-          tip: "In the App Router, `<Link>` prefetches by default when visible in the viewport. Set `prefetch={false}` for links that are unlikely to be followed, to save bandwidth.",
-        },
-      },
-      {
-        title: "useRouter",
-        code: `const router = useRouter();\nrouter.push('/dashboard');`,
-        language: "tsx",
-        explanation: {
-          blockTitle: "useRouter",
-          what: "`useRouter` (from `next/navigation` in App Router) gives you programmatic navigation — useful for redirecting after form submissions or button clicks.",
-          how: "Call `router.push(href)` to navigate, `router.replace(href)` to navigate without adding a history entry, and `router.back()` to go back.",
-          example: `'use client';\nimport { useRouter } from "next/navigation";\n\nexport default function LoginForm() {\n  const router = useRouter();\n\n  async function handleSubmit(e: React.FormEvent) {\n    e.preventDefault();\n    await login(/* ... */);\n    router.push("/dashboard"); // redirect on success\n  }\n\n  return (\n    <form onSubmit={handleSubmit}>\n      {/* form fields */}\n      <button type="submit">Login</button>\n    </form>\n  );\n}`,
-          tip: "Prefer `<Link>` for visible navigation links and reserve `useRouter` for programmatic redirects after async operations.",
-        },
-      },
-      {
-        title: "Image",
-        code: `import Image from 'next/image';\n<Image src="/hero.png" width={800} height={400} alt="Hero" />`,
-        language: "tsx",
-        explanation: {
-          blockTitle: "Image",
-          what: "Next.js `<Image>` automatically optimizes images: resizing, converting to WebP/AVIF, lazy loading, and preventing layout shift via reserved space.",
-          how: "Always provide `width` and `height` (or use `fill` with a positioned parent) and a descriptive `alt`. External image domains must be whitelisted in `next.config.js`.",
-          example: `import Image from "next/image";\n\nexport default function Avatar({ user }: { user: User }) {\n  return (\n    <div style={{ position: "relative", width: 64, height: 64 }}>\n      <Image\n        src={user.avatarUrl}\n        alt={user.name}\n        fill\n        style={{ objectFit: "cover", borderRadius: "50%" }}\n        sizes="64px"\n      />\n    </div>\n  );\n}`,
-          tip: "Use the `sizes` prop to tell the browser which image size to download at different breakpoints. This dramatically reduces image payload on mobile.",
-        },
-      },
-      {
-        title: "Loading UI",
-        code: `// app/dashboard/loading.tsx\nexport default function Loading() {\n  return <Spinner />;\n}`,
-        language: "tsx",
-        explanation: {
-          blockTitle: "Loading UI",
-          what: "A `loading.tsx` file in any route segment automatically wraps the page in a `<Suspense>` boundary, showing its content while the page's async Server Component data is fetching.",
-          how: "Create `loading.tsx` alongside `page.tsx`. Next.js wraps the page in Suspense automatically. The loading UI is shown instantly while the server streams in the real content.",
-          example: `// app/dashboard/loading.tsx\nexport default function DashboardSkeleton() {\n  return (\n    <div className="animate-pulse">\n      <div className="h-8 bg-gray-200 rounded w-1/3 mb-4" />\n      <div className="h-4 bg-gray-200 rounded w-full mb-2" />\n      <div className="h-4 bg-gray-200 rounded w-5/6" />\n    </div>\n  );\n}`,
-          tip: "Design loading states that match the shape of the real content (skeleton screens). They feel much faster than spinners because users see the layout immediately.",
-        },
-      },
-      {
-        title: "Error Boundary",
-        code: `// app/dashboard/error.tsx\n'use client';\nexport default function Error({ reset }) {\n  return <button onClick={reset}>Retry</button>;\n}`,
-        language: "tsx",
-        explanation: {
-          blockTitle: "Error Boundary",
-          what: "An `error.tsx` file catches runtime errors in a route segment and displays a fallback UI instead of crashing the whole page.",
-          how: "Must be a Client Component (`'use client'`). Receives `error` (the thrown error) and `reset` (a function to re-render the segment). Place it alongside `page.tsx`.",
-          example: `'use client';\nimport { useEffect } from "react";\n\nexport default function Error({\n  error,\n  reset,\n}: {\n  error: Error & { digest?: string };\n  reset: () => void;\n}) {\n  useEffect(() => {\n    console.error(error);\n  }, [error]);\n\n  return (\n    <div>\n      <h2>Something went wrong!</h2>\n      <button onClick={reset}>Try again</button>\n    </div>\n  );\n}`,
-          tip: "`error.tsx` doesn't catch errors in the same segment's `layout.tsx`. For layout errors, add `global-error.tsx` at the root of `app/`.",
-        },
-      },
-    ],
-  },
-  {
-    number: 7,
-    title: "CSS Modules",
-    blocks: [
-      {
-        title: "Basic Usage",
-        code: `import styles from './Card.module.css';\n<div className={styles.card}>`,
-        language: "tsx",
-        explanation: {
-          blockTitle: "Basic Usage",
-          what: "CSS Modules scope class names locally to the component file, preventing style collisions across the app. Next.js and Create React App support them out of the box.",
-          how: "Name the file `Component.module.css`. Import it as an object and access class names as properties: `styles.className`. The build tool generates a unique class name at compile time.",
-          example: `// Card.module.css\n.card {\n  border: 1px solid #e5e7eb;\n  border-radius: 8px;\n  padding: 16px;\n}\n\n.title {\n  font-size: 1.25rem;\n  font-weight: 600;\n}\n\n// Card.tsx\nimport styles from "./Card.module.css";\n\nexport default function Card({ title }: { title: string }) {\n  return (\n    <div className={styles.card}>\n      <h2 className={styles.title}>{title}</h2>\n    </div>\n  );\n}`,
-          tip: "CSS Modules only scope class names, not element selectors or CSS variables. Keep element-level styles in a global stylesheet.",
-        },
-      },
-      {
-        title: "Composing Classes",
-        code: `className={\`\${styles.btn} \${styles.primary}\`}`,
-        language: "tsx",
-        explanation: {
-          blockTitle: "Composing Classes",
-          what: "You often need to apply multiple CSS Module classes at once, or conditionally apply a class based on state.",
-          how: "Use template literals or the `clsx` / `classnames` library to combine class names cleanly. Avoid messy string concatenation for conditional logic.",
-          example: `import styles from "./Button.module.css";\nimport clsx from "clsx";\n\ninterface Props {\n  variant: "primary" | "secondary";\n  disabled?: boolean;\n}\n\nexport default function Button({ variant, disabled }: Props) {\n  return (\n    <button\n      className={clsx(\n        styles.btn,\n        styles[variant],\n        { [styles.disabled]: disabled }\n      )}\n      disabled={disabled}\n    >\n      Click me\n    </button>\n  );\n}`,
-          tip: "Install `clsx` (`npm i clsx`) — it's tiny and makes conditional class logic much more readable than template literal tricks.",
-        },
-      },
-      {
-        title: "composes",
-        code: `.btn {\n  composes: base from './base.module.css';\n}`,
-        language: "css",
-        explanation: {
-          blockTitle: "composes",
-          what: "`composes` is a CSS Modules feature that lets one class inherit styles from another, promoting reuse without duplication.",
-          how: "Use `composes: className` to inherit from a class in the same file, or `composes: className from './other.module.css'` to inherit from another module.",
-          example: `/* base.module.css */\n.focusRing {\n  outline: 2px solid #3b82f6;\n  outline-offset: 2px;\n}\n\n/* Button.module.css */\n.btn {\n  composes: focusRing from './base.module.css';\n  padding: 8px 16px;\n  border-radius: 4px;\n  cursor: pointer;\n}\n\n/* The element gets both class names applied */`,
-          tip: "`composes` is resolved at build time — there's no runtime cost. But it only works with class names, not arbitrary CSS properties.",
-        },
-      },
-      {
-        title: "Global Styles",
-        code: `:global(.active) {\n  color: blue;\n}`,
-        language: "css",
-        explanation: {
-          blockTitle: "Global Styles",
-          what: "Sometimes you need to style elements you don't control — like third-party library classes or dynamically added class names. `:global()` escapes CSS Modules scoping.",
-          how: "Wrap a selector in `:global()` to prevent CSS Modules from transforming it. Everything inside is treated as a regular global CSS rule.",
-          example: `/* Tooltip.module.css */\n.wrapper {\n  position: relative;\n}\n\n/* Style a class added by a third-party library */\n.wrapper :global(.tippy-box) {\n  background-color: #1f2937;\n  border-radius: 4px;\n}\n\n.wrapper :global(.tippy-arrow) {\n  color: #1f2937;\n}`,
-          tip: "Use `:global()` sparingly — it defeats the purpose of CSS Modules. Prefer it only for third-party or dynamically injected class names you can't control.",
-        },
-      },
-      {
-        title: "CSS Variables",
-        code: `.card {\n  color: var(--color-text);\n  padding: var(--spacing-md);\n}`,
-        language: "css",
-        explanation: {
-          blockTitle: "CSS Variables",
-          what: "CSS custom properties (variables) let you define reusable values in one place and reference them throughout your stylesheets — works perfectly alongside CSS Modules.",
-          how: "Define variables on `:root` (or any ancestor) with `--name: value`. Reference them with `var(--name)`. You can also override them per-component.",
-          example: `/* globals.css */\n:root {\n  --color-primary: #3b82f6;\n  --color-text: #111827;\n  --spacing-md: 16px;\n  --radius-sm: 4px;\n}\n\n/* Button.module.css */\n.btn {\n  background: var(--color-primary);\n  color: white;\n  padding: var(--spacing-md);\n  border-radius: var(--radius-sm);\n}\n\n/* Dark mode override */\n@media (prefers-color-scheme: dark) {\n  :root {\n    --color-text: #f9fafb;\n  }\n}`,
-          tip: "Use CSS variables for your design tokens (colors, spacing, radii, fonts). They're more maintainable than Sass variables because they can be changed at runtime via JavaScript.",
-        },
-      },
-    ],
-  },
-  {
-    number: 8,
-    title: "TypeScript",
-    blocks: [
-      {
-        title: "Narrowing",
-        code: `if (typeof x === 'string') {\n  x.toUpperCase();\n}`,
-        language: "ts",
-        explanation: {
-          blockTitle: "Narrowing",
-          what: "Type narrowing is TypeScript's ability to refine a broad type to a more specific one inside a conditional block, based on runtime checks.",
-          how: "TypeScript understands `typeof`, `instanceof`, `in`, equality checks, and custom type guards. Inside the check, it knows the exact type.",
-          example: `type Shape = { kind: "circle"; radius: number } | { kind: "rect"; width: number; height: number };\n\nfunction area(shape: Shape): number {\n  if (shape.kind === "circle") {\n    // TypeScript knows shape is { kind: "circle"; radius: number }\n    return Math.PI * shape.radius ** 2;\n  } else {\n    return shape.width * shape.height;\n  }\n}`,
-          tip: "Discriminated unions (a shared `kind`/`type` property) are the most reliable narrowing pattern. TypeScript can exhaustively check all cases.",
-        },
-      },
-      {
-        title: "Type Guards",
-        code: `function isString(x: unknown): x is string {\n  return typeof x === 'string';\n}`,
-        language: "ts",
-        explanation: {
-          blockTitle: "Type Guards",
-          what: "A type guard is a function with a return type of `x is Type`. When it returns `true`, TypeScript narrows `x` to `Type` in the calling scope.",
-          how: "Write a function that checks the value at runtime and annotate the return type as `paramName is Type`. TypeScript uses this predicate during type analysis.",
-          example: `interface Cat { meow(): void; }\ninterface Dog { bark(): void; }\n\nfunction isCat(animal: Cat | Dog): animal is Cat {\n  return (animal as Cat).meow !== undefined;\n}\n\nfunction makeNoise(animal: Cat | Dog) {\n  if (isCat(animal)) {\n    animal.meow(); // TypeScript knows it's Cat\n  } else {\n    animal.bark(); // TypeScript knows it's Dog\n  }\n}`,
-          tip: "Type guards are especially useful when working with `unknown` values from API responses or `JSON.parse`. They let you safely assert a shape.",
-        },
-      },
-      {
-        title: "Utility Types",
-        code: `type PartialUser = Partial<User>;\ntype ReadonlyUser = Readonly<User>;`,
-        language: "ts",
-        explanation: {
-          blockTitle: "Utility Types",
-          what: "TypeScript ships with built-in utility types that transform existing types without writing them from scratch. They cover the most common type manipulation patterns.",
-          how: "Pass your type as a generic argument. Common ones: `Partial<T>` (all optional), `Required<T>` (all required), `Readonly<T>`, `Pick<T, K>`, `Omit<T, K>`, `Record<K, V>`, `ReturnType<F>`.",
-          example: `interface User {\n  id: number;\n  name: string;\n  email: string;\n  role: "admin" | "user";\n}\n\ntype UpdateUserDto = Partial<Pick<User, "name" | "email">>;\n// { name?: string; email?: string }\n\ntype PublicUser = Omit<User, "email">;\n// { id: number; name: string; role: ... }\n\ntype UserRecord = Record<string, User>;\n// { [key: string]: User }`,
-          tip: "Combine utility types together: `Partial<Pick<T, K>>` is a very common pattern for update DTOs where only some fields are editable.",
-        },
-      },
-      {
-        title: "Mapped Types",
-        code: `type Optional<T> = { [K in keyof T]?: T[K] };`,
-        language: "ts",
-        explanation: {
-          blockTitle: "Mapped Types",
-          what: "Mapped types let you create a new type by iterating over the keys of an existing type and transforming each property.",
-          how: "Use `[K in keyof T]` to iterate keys. Add `?` to make optional, `readonly` to make readonly, or `-?` / `-readonly` to remove those modifiers.",
-          example: `type Getters<T> = {\n  [K in keyof T as \`get\${Capitalize<string & K>}\`]: () => T[K];\n};\n\ninterface User {\n  name: string;\n  age: number;\n}\n\ntype UserGetters = Getters<User>;\n// {\n//   getName: () => string;\n//   getAge: () => number;\n// }`,
-          tip: "The `as` clause in `[K in keyof T as NewKey]` lets you rename or filter keys — a powerful pattern for generating accessor types or stripping certain keys.",
-        },
-      },
-      {
-        title: "Template Literal Types",
-        code: `type EventName = \`on\${Capitalize<string>}\`;`,
-        language: "ts",
-        explanation: {
-          blockTitle: "Template Literal Types",
-          what: "Template literal types let you build new string types by combining string literals, similar to template literals in JavaScript but at the type level.",
-          how: "Use backtick syntax with type placeholders: `` `prefix_${T}` ``. TypeScript expands unions distributively.",
-          example: `type Direction = "top" | "right" | "bottom" | "left";\ntype Padding = \`padding-\${Direction}\`;\n// "padding-top" | "padding-right" | "padding-bottom" | "padding-left"\n\ntype EventMap = {\n  click: MouseEvent;\n  keydown: KeyboardEvent;\n};\n\ntype HandlerName = \`on\${Capitalize<keyof EventMap>}\`;\n// "onClick" | "onKeydown"`,
-          tip: "Template literal types are perfect for generating exhaustive sets of string constants — CSS property names, event handler keys, API endpoint paths, and more.",
-        },
-      },
-    ],
-  },
-  {
-    number: 9,
-    title: "Async",
-    blocks: [
-      {
-        title: "Promises",
-        code: `fetch('/api/data')\n  .then(res => res.json())\n  .then(data => console.log(data));`,
-        language: "ts",
-        explanation: {
-          blockTitle: "Promises",
-          what: "A Promise represents a value that may not be available yet. It's in one of three states: pending, fulfilled (resolved), or rejected.",
-          how: "Chain `.then()` for success and `.catch()` for errors. You can chain multiple `.then()` calls — each receives the return value of the previous one.",
-          example: `function delay(ms: number): Promise<void> {\n  return new Promise(resolve => setTimeout(resolve, ms));\n}\n\ndelay(1000)\n  .then(() => {\n    console.log("1 second passed");\n    return delay(500);\n  })\n  .then(() => {\n    console.log("500ms more passed");\n  })\n  .catch(err => {\n    console.error("Something failed:", err);\n  });`,
-          tip: "Always attach a `.catch()` handler, or unhandled rejections will silently swallow errors in production.",
-        },
-      },
-      {
-        title: "async / await",
-        code: `async function load() {\n  const data = await fetch('/api');\n  return data.json();\n}`,
-        language: "ts",
-        explanation: {
-          blockTitle: "async / await",
-          what: "`async/await` is syntactic sugar over Promises that makes asynchronous code read like synchronous code.",
-          how: "Mark a function `async` and use `await` before any Promise. The function pauses at `await` and resumes when the Promise settles. Use `try/catch` for error handling.",
-          example: `async function getUser(id: number) {\n  try {\n    const res = await fetch(\`/api/users/\${id}\`);\n\n    if (!res.ok) {\n      throw new Error(\`HTTP error: \${res.status}\`);\n    }\n\n    const user = await res.json();\n    return user;\n  } catch (err) {\n    console.error("Failed to fetch user:", err);\n    throw err; // re-throw so callers know it failed\n  }\n}`,
-          tip: "An `async` function always returns a Promise, even if you return a plain value. `async function f() { return 1 }` resolves to `Promise<number>`.",
-        },
-      },
-      {
-        title: "Promise.all",
-        code: `const [a, b] = await Promise.all([fetchA(), fetchB()]);`,
-        language: "ts",
-        explanation: {
-          blockTitle: "Promise.all",
-          what: "`Promise.all` runs multiple Promises concurrently and resolves when all of them settle. It rejects immediately if any one of them rejects.",
-          how: "Pass an array of Promises. The result is an array of resolved values in the same order as the input. TypeScript infers the tuple type automatically.",
-          example: `async function loadDashboard(userId: number) {\n  const [user, posts, notifications] = await Promise.all([\n    fetchUser(userId),\n    fetchPosts(userId),\n    fetchNotifications(userId),\n  ]);\n\n  return { user, posts, notifications };\n}\n\n// All three requests fire simultaneously — much faster than awaiting sequentially`,
-          tip: "Use `Promise.all` when requests are independent. Awaiting them sequentially (`await a; await b;`) is slower because they run one after the other.",
-        },
-      },
-      {
-        title: "Error Handling",
-        code: `try {\n  const data = await fetchData();\n} catch (err) {\n  handleError(err);\n}`,
-        language: "ts",
-        explanation: {
-          blockTitle: "Error Handling",
-          what: "Proper async error handling ensures your app degrades gracefully when network requests fail, APIs return errors, or unexpected exceptions occur.",
-          how: "Wrap `await` calls in `try/catch`. Check `res.ok` before parsing the response body. Consider a wrapper utility to normalize errors across the app.",
-          example: `class ApiError extends Error {\n  constructor(public status: number, message: string) {\n    super(message);\n    this.name = "ApiError";\n  }\n}\n\nasync function apiFetch<T>(url: string): Promise<T> {\n  const res = await fetch(url);\n\n  if (!res.ok) {\n    throw new ApiError(res.status, \`API error: \${res.status}\`);\n  }\n\n  return res.json() as Promise<T>;\n}\n\n// Usage:\ntry {\n  const user = await apiFetch<User>("/api/users/1");\n} catch (err) {\n  if (err instanceof ApiError && err.status === 404) {\n    console.log("User not found");\n  }\n}`,
-          tip: "Catching `(err)` gives you `unknown` in strict TypeScript. Always check `err instanceof Error` or your custom error class before accessing properties.",
-        },
-      },
-      {
-        title: "Abort Controller",
-        code: `const controller = new AbortController();\nfetch(url, { signal: controller.signal });`,
-        language: "ts",
-        explanation: {
-          blockTitle: "Abort Controller",
-          what: "`AbortController` lets you cancel in-flight fetch requests. This is critical in React to prevent state updates on unmounted components.",
-          how: "Create a controller, pass its `signal` to `fetch`. Call `controller.abort()` to cancel. The fetch will reject with an `AbortError`.",
-          example: `import { useEffect, useState } from "react";\n\nexport default function Search({ query }: { query: string }) {\n  const [results, setResults] = useState([]);\n\n  useEffect(() => {\n    const controller = new AbortController();\n\n    async function search() {\n      try {\n        const res = await fetch(\`/api/search?q=\${query}\`, {\n          signal: controller.signal,\n        });\n        const data = await res.json();\n        setResults(data);\n      } catch (err) {\n        if ((err as Error).name !== "AbortError") throw err;\n      }\n    }\n\n    search();\n    return () => controller.abort(); // cancel on cleanup\n  }, [query]);\n\n  return <ul>{results.map(r => <li>{r}</li>)}</ul>;\n}`,
-          tip: "The cleanup function in `useEffect` runs when the component unmounts OR before the effect re-runs. Always abort in-flight requests in the cleanup to avoid race conditions.",
-        },
-      },
-    ],
-  },
-  {
-    number: 10,
-    title: "Forms",
-    blocks: [
-      {
-        title: "Controlled Input",
-        code: `const [val, setVal] = useState('');\n<input value={val} onChange={e => setVal(e.target.value)} />`,
-        language: "tsx",
-        explanation: {
-          blockTitle: "Controlled Input",
-          what: "A controlled input is one whose value is driven by React state. Every keystroke updates state, and React re-renders the input with the new value.",
-          how: "Set `value` to a state variable and `onChange` to a state setter. The input's value always reflects the state — React is the single source of truth.",
-          example: `import { useState } from "react";\n\nexport default function NameField() {\n  const [name, setName] = useState("");\n\n  return (\n    <div>\n      <input\n        type="text"\n        value={name}\n        onChange={(e) => setName(e.target.value)}\n        placeholder="Enter your name"\n      />\n      <p>Hello, {name || "stranger"}!</p>\n    </div>\n  );\n}`,
-          tip: "Controlled inputs give you instant access to the value for validation, formatting (e.g. phone numbers), or enabling/disabling other elements.",
-        },
-      },
-      {
-        title: "Form Submission",
-        code: `function handleSubmit(e: React.FormEvent) {\n  e.preventDefault();\n  // process form\n}`,
-        language: "tsx",
-        explanation: {
-          blockTitle: "Form Submission",
-          what: "Handling form submission in React means intercepting the browser's default submit behavior and processing the data in JavaScript.",
-          how: "Attach `onSubmit` to the `<form>` element. Call `e.preventDefault()` to stop the page reload. Then read state values or use `FormData`.",
-          example: `import { useState } from "react";\n\nexport default function LoginForm() {\n  const [email, setEmail] = useState("");\n  const [password, setPassword] = useState("");\n\n  async function handleSubmit(e: React.FormEvent) {\n    e.preventDefault();\n    await login({ email, password });\n  }\n\n  return (\n    <form onSubmit={handleSubmit}>\n      <input value={email} onChange={e => setEmail(e.target.value)} type="email" />\n      <input value={password} onChange={e => setPassword(e.target.value)} type="password" />\n      <button type="submit">Login</button>\n    </form>\n  );\n}`,
-          tip: "Always put `onSubmit` on the `<form>`, not `onClick` on the button. It handles both button clicks and Enter key presses automatically.",
-        },
-      },
-      {
-        title: "Validation",
-        code: `const [error, setError] = useState('');\nif (!email.includes('@')) setError('Invalid email');`,
-        language: "tsx",
-        explanation: {
-          blockTitle: "Validation",
-          what: "Form validation ensures user input meets your requirements before submission. You can validate on change (live), on blur (when leaving a field), or on submit.",
-          how: "Store error messages in state. Validate in the change handler for live feedback, or in `handleSubmit` for submit-time validation. Display errors near the relevant field.",
-          example: `import { useState } from "react";\n\nexport default function EmailForm() {\n  const [email, setEmail] = useState("");\n  const [error, setError] = useState("");\n\n  function validate(value: string) {\n    if (!value) return "Email is required";\n    if (!value.includes("@")) return "Enter a valid email";\n    return "";\n  }\n\n  function handleBlur() {\n    setError(validate(email));\n  }\n\n  function handleSubmit(e: React.FormEvent) {\n    e.preventDefault();\n    const err = validate(email);\n    if (err) { setError(err); return; }\n    console.log("Submitted:", email);\n  }\n\n  return (\n    <form onSubmit={handleSubmit}>\n      <input\n        value={email}\n        onChange={e => { setEmail(e.target.value); setError(""); }}\n        onBlur={handleBlur}\n      />\n      {error && <p style={{ color: "red" }}>{error}</p>}\n      <button type="submit">Submit</button>\n    </form>\n  );\n}`,
-          tip: "For complex forms with many fields, consider libraries like React Hook Form or Zod + react-hook-form. They handle validation, errors, and performance elegantly.",
-        },
-      },
-      {
-        title: "Select & Checkbox",
-        code: `<select value={val} onChange={e => setVal(e.target.value)}>\n  <option value="a">A</option>\n</select>`,
-        language: "tsx",
-        explanation: {
-          blockTitle: "Select & Checkbox",
-          what: "`<select>` and `<input type='checkbox'>` have slightly different controlled patterns than text inputs.",
-          how: "For `<select>`, use `value` and `onChange` same as text. For checkboxes, use `checked` (boolean) instead of `value`, and read `e.target.checked` in `onChange`.",
-          example: `import { useState } from "react";\n\nexport default function Preferences() {\n  const [color, setColor] = useState("blue");\n  const [newsletter, setNewsletter] = useState(false);\n\n  return (\n    <form>\n      <select value={color} onChange={e => setColor(e.target.value)}>\n        <option value="red">Red</option>\n        <option value="blue">Blue</option>\n        <option value="green">Green</option>\n      </select>\n\n      <label>\n        <input\n          type="checkbox"\n          checked={newsletter}\n          onChange={e => setNewsletter(e.target.checked)}\n        />\n        Subscribe to newsletter\n      </label>\n    </form>\n  );\n}`,
-          tip: "For multi-select (allowing multiple chosen options), store an array of values and use `Array.from(e.target.selectedOptions).map(o => o.value)` in `onChange`.",
-        },
-      },
-      {
-        title: "React Hook Form",
-        code: `const { register, handleSubmit } = useForm();\n<input {...register('email')} />`,
-        language: "tsx",
-        explanation: {
-          blockTitle: "React Hook Form",
-          what: "React Hook Form is a library that manages form state using uncontrolled inputs for better performance, with a clean API for validation and error messages.",
-          how: "Call `useForm()` to get helpers. Use `register('fieldName')` to connect an input. Pass `handleSubmit(fn)` to your form's `onSubmit`. Access errors from `formState.errors`.",
-          example: `import { useForm } from "react-hook-form";\n\ninterface FormData {\n  email: string;\n  password: string;\n}\n\nexport default function LoginForm() {\n  const {\n    register,\n    handleSubmit,\n    formState: { errors },\n  } = useForm<FormData>();\n\n  return (\n    <form onSubmit={handleSubmit(data => console.log(data))}>\n      <input\n        {...register("email", {\n          required: "Email is required",\n          pattern: { value: /\\S+@\\S+/, message: "Invalid email" },\n        })}\n      />\n      {errors.email && <p>{errors.email.message}</p>}\n      <button type="submit">Login</button>\n    </form>\n  );\n}`,
-          tip: "React Hook Form uses uncontrolled inputs internally, meaning far fewer re-renders than a fully controlled approach. This matters in large forms with many fields.",
-        },
-      },
-    ],
-  },
-  {
-    number: 11,
-    title: "Data Fetching",
-    blocks: [
-      {
-        title: "fetch API",
-        code: `const res = await fetch('/api/users');\nconst data = await res.json();`,
-        language: "ts",
-        explanation: {
-          blockTitle: "fetch API",
-          what: "The `fetch` API is the modern browser and Node.js standard for making HTTP requests. It returns a Promise that resolves to a `Response` object.",
-          how: "Call `fetch(url)` for GET, or pass options for other methods. Always check `res.ok` before parsing the body — a 404 still resolves the Promise.",
-          example: `async function createPost(post: { title: string; body: string }) {\n  const res = await fetch("/api/posts", {\n    method: "POST",\n    headers: { "Content-Type": "application/json" },\n    body: JSON.stringify(post),\n  });\n\n  if (!res.ok) {\n    throw new Error(\`Failed: \${res.status}\`);\n  }\n\n  return res.json();\n}`,
-          tip: "`fetch` only rejects on network failure — not HTTP error status codes like 404 or 500. Always check `res.ok` or `res.status` manually.",
-        },
-      },
-      {
-        title: "SWR",
-        code: `const { data, error } = useSWR('/api/user', fetcher);`,
-        language: "tsx",
-        explanation: {
-          blockTitle: "SWR",
-          what: "SWR (stale-while-revalidate) is a data-fetching library from Vercel. It caches data, revalidates in the background, and keeps the UI fast and fresh.",
-          how: "Pass a key (usually a URL) and a fetcher function to `useSWR`. It handles loading, error, and revalidation states. The same key is deduplicated across components.",
-          example: `import useSWR from "swr";\n\nconst fetcher = (url: string) => fetch(url).then(r => r.json());\n\nexport default function Profile() {\n  const { data: user, error, isLoading } = useSWR("/api/user", fetcher);\n\n  if (isLoading) return <p>Loading...</p>;\n  if (error) return <p>Error loading user</p>;\n\n  return <h1>Hello, {user.name}</h1>;\n}`,
-          tip: "SWR automatically revalidates when the window regains focus. This keeps data fresh without manual polling — great for dashboards and frequently changing data.",
-        },
-      },
-      {
-        title: "TanStack Query",
-        code: `const { data } = useQuery({\n  queryKey: ['user', id],\n  queryFn: () => fetchUser(id),\n});`,
-        language: "tsx",
-        explanation: {
-          blockTitle: "TanStack Query",
-          what: "TanStack Query (formerly React Query) is a powerful async state manager for fetching, caching, synchronizing, and updating server data in React.",
-          how: "Wrap the app in `QueryClientProvider`. Use `useQuery` for reading data and `useMutation` for write operations. Query keys uniquely identify each query.",
-          example: `import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";\n\nfunction UserProfile({ id }: { id: number }) {\n  const queryClient = useQueryClient();\n\n  const { data: user } = useQuery({\n    queryKey: ["user", id],\n    queryFn: () => fetchUser(id),\n  });\n\n  const mutation = useMutation({\n    mutationFn: updateUser,\n    onSuccess: () => {\n      queryClient.invalidateQueries({ queryKey: ["user", id] });\n    },\n  });\n\n  return <div>{user?.name}</div>;\n}`,
-          tip: "Use `queryKey` arrays to namespace related queries. `['user', id]` lets you invalidate just one user's data without clearing the entire cache.",
-        },
-      },
-      {
-        title: "Loading States",
-        code: `if (isLoading) return <Skeleton />;\nif (error) return <Error />;`,
-        language: "tsx",
-        explanation: {
-          blockTitle: "Loading States",
-          what: "Every data fetch has three states: loading, error, and success. Handling all three explicitly makes your UI robust and user-friendly.",
-          how: "Track state with a simple state machine. Show a skeleton or spinner while loading, a friendly error message on failure, and the real content on success.",
-          example: `type State<T> =\n  | { status: "loading" }\n  | { status: "error"; error: Error }\n  | { status: "success"; data: T };\n\nexport default function DataView({ id }: { id: number }) {\n  const [state, setState] = useState<State<User>>({ status: "loading" });\n\n  useEffect(() => {\n    fetchUser(id)\n      .then(data => setState({ status: "success", data }))\n      .catch(error => setState({ status: "error", error }));\n  }, [id]);\n\n  if (state.status === "loading") return <Skeleton />;\n  if (state.status === "error")   return <p>Error: {state.error.message}</p>;\n  return <p>{state.data.name}</p>;\n}`,
-          tip: "Model loading state as a discriminated union (`{ status: 'loading' | 'error' | 'success' }`) rather than separate booleans. It's impossible to be both loading and errored at once.",
-        },
-      },
-      {
-        title: "Optimistic Updates",
-        code: `// Update UI immediately, then sync with server`,
-        language: "tsx",
-        explanation: {
-          blockTitle: "Optimistic Updates",
-          what: "Optimistic updates apply a state change to the UI immediately — before the server confirms — making the app feel instant. On failure, you roll back.",
-          how: "Update local state first, fire the API call, then revalidate on success or revert on error. TanStack Query and SWR both have built-in optimistic update APIs.",
-          example: `import { useMutation, useQueryClient } from "@tanstack/react-query";\n\nfunction LikeButton({ postId }: { postId: number }) {\n  const queryClient = useQueryClient();\n\n  const mutation = useMutation({\n    mutationFn: (id: number) => fetch(\`/api/posts/\${id}/like\`, { method: "POST" }),\n    onMutate: async (id) => {\n      await queryClient.cancelQueries({ queryKey: ["post", id] });\n      const prev = queryClient.getQueryData(["post", id]);\n      queryClient.setQueryData(["post", id], (old: Post) => ({\n        ...old, likes: old.likes + 1,\n      }));\n      return { prev };\n    },\n    onError: (err, id, ctx) => {\n      queryClient.setQueryData(["post", id], ctx?.prev);\n    },\n    onSettled: (data, err, id) => {\n      queryClient.invalidateQueries({ queryKey: ["post", id] });\n    },\n  });\n\n  return <button onClick={() => mutation.mutate(postId)}>❤️ Like</button>;\n}`,
-          tip: "Always implement `onError` rollback when doing optimistic updates. Without it, a failed request leaves the UI in a permanently incorrect state.",
-        },
-      },
-    ],
-  },
-  {
-    number: 12,
-    title: "Routing",
-    blocks: [
-      {
-        title: "Dynamic Routes",
-        code: `// app/blog/[slug]/page.tsx\nexport default function Post({ params }) {\n  return <h1>{params.slug}</h1>;\n}`,
-        language: "tsx",
-        explanation: {
-          blockTitle: "Dynamic Routes",
-          what: "Dynamic route segments are folder names wrapped in brackets like `[slug]`. They match any URL at that position and pass the value as a param.",
-          how: "Access params via the `params` prop in `page.tsx`. Use `generateStaticParams` to pre-render a set of dynamic pages at build time.",
-          example: `// app/blog/[slug]/page.tsx\ninterface Props {\n  params: { slug: string };\n}\n\nexport async function generateStaticParams() {\n  const posts = await getAllPosts();\n  return posts.map(post => ({ slug: post.slug }));\n}\n\nexport default async function BlogPost({ params }: Props) {\n  const post = await getPost(params.slug);\n  if (!post) notFound();\n  return (\n    <article>\n      <h1>{post.title}</h1>\n      <p>{post.content}</p>\n    </article>\n  );\n}`,
-          tip: "`generateStaticParams` runs at build time and pre-generates pages. Without it, dynamic routes are server-rendered on demand. Use it for content that doesn't change frequently.",
-        },
-      },
-      {
-        title: "Catch-all Routes",
-        code: `// app/docs/[...slug]/page.tsx`,
-        language: "tsx",
-        explanation: {
-          blockTitle: "Catch-all Routes",
-          what: "A catch-all route (`[...slug]`) matches any number of path segments. An optional catch-all (`[[...slug]]`) also matches the root path.",
-          how: "The `params.slug` value is an array of path segments. `/docs/a/b/c` gives `params.slug = ['a', 'b', 'c']`.",
-          example: `// app/docs/[...slug]/page.tsx\ninterface Props {\n  params: { slug: string[] };\n}\n\nexport default async function DocsPage({ params }: Props) {\n  const path = params.slug.join("/");\n  const doc = await getDoc(path);\n\n  return (\n    <div>\n      <nav>{/* breadcrumb from params.slug */}</nav>\n      <article dangerouslySetInnerHTML={{ __html: doc.html }} />\n    </div>\n  );\n}\n\n// Matches:\n// /docs/getting-started          → slug: ['getting-started']\n// /docs/api/reference/endpoints  → slug: ['api', 'reference', 'endpoints']`,
-          tip: "Use catch-all routes for documentation sites, CMSes, or any content with an arbitrary nesting depth.",
-        },
-      },
-      {
-        title: "Layouts",
-        code: `// app/dashboard/layout.tsx\nexport default function Layout({ children }) {\n  return <aside />{children};\n}`,
-        language: "tsx",
-        explanation: {
-          blockTitle: "Layouts",
-          what: "Layouts are UI that wraps multiple pages. They persist across navigations — their state is preserved and they don't re-render when child routes change.",
-          how: "Export a default component from `layout.tsx`. It receives `children` which is the active page. Layouts nest automatically from the root `app/layout.tsx` down.",
-          example: `// app/dashboard/layout.tsx\nimport Sidebar from "@/components/Sidebar";\n\nexport default function DashboardLayout({\n  children,\n}: {\n  children: React.ReactNode;\n}) {\n  return (\n    <div style={{ display: "flex" }}>\n      <Sidebar />\n      <main style={{ flex: 1, padding: 24 }}>\n        {children}\n      </main>\n    </div>\n  );\n}`,
-          tip: "The root `app/layout.tsx` must include `<html>` and `<body>` tags. Nested layouts only need to return the partial UI that wraps the route segment.",
-        },
-      },
-      {
-        title: "Parallel Routes",
-        code: `// app/@modal/page.tsx\n// app/layout.tsx receives { children, modal }`,
-        language: "tsx",
-        explanation: {
-          blockTitle: "Parallel Routes",
-          what: "Parallel routes allow rendering multiple pages simultaneously in the same layout. Common use case: showing a modal or side panel alongside the main content.",
-          how: "Name a folder with `@` prefix (e.g. `@modal`). The parent layout receives it as a named prop alongside `children`. Each slot is independently navigable.",
-          example: `// app/layout.tsx\nexport default function RootLayout({\n  children,\n  modal,\n}: {\n  children: React.ReactNode;\n  modal: React.ReactNode;\n}) {\n  return (\n    <html>\n      <body>\n        {children}\n        {modal} {/* Renders app/@modal/page.tsx */}\n      </body>\n    </html>\n  );\n}\n\n// app/@modal/page.tsx — renders as an overlay\nexport default function Modal() {\n  return <dialog open>I'm a modal!</dialog>;\n}`,
-          tip: "Parallel routes are perfect for intercepting routes (modals that show on top of the current page) combined with the `(.)` interception syntax.",
-        },
-      },
-      {
-        title: "Middleware",
-        code: `// middleware.ts\nexport function middleware(req: NextRequest) {\n  if (!isAuth(req)) return redirect('/login');\n}`,
-        language: "tsx",
-        explanation: {
-          blockTitle: "Middleware",
-          what: "Next.js Middleware runs before a request is processed, letting you redirect, rewrite, or modify the response at the edge — before the page renders.",
-          how: "Create `middleware.ts` at the project root. Export a `middleware` function that receives a `NextRequest`. Use `NextResponse` to redirect, rewrite, or continue.",
-          example: `import { NextResponse } from "next/server";\nimport type { NextRequest } from "next/server";\n\nexport function middleware(request: NextRequest) {\n  const token = request.cookies.get("auth-token");\n\n  const isProtected = request.nextUrl.pathname.startsWith("/dashboard");\n\n  if (isProtected && !token) {\n    return NextResponse.redirect(new URL("/login", request.url));\n  }\n\n  return NextResponse.next();\n}\n\nexport const config = {\n  matcher: ["/dashboard/:path*"],\n};`,
-          tip: "Use the `matcher` config to limit which routes the middleware runs on. Running it on every route (including static assets) adds latency unnecessarily.",
-        },
-      },
-    ],
-  },
-  {
-    number: 13,
-    title: "Patterns",
-    blocks: [
-      {
-        title: "Custom Hooks",
-        code: `function useWindowSize() {\n  const [size, setSize] = useState({ w: 0, h: 0 });\n  // ...\n  return size;\n}`,
-        language: "tsx",
-        explanation: {
-          blockTitle: "Custom Hooks",
-          what: "Custom hooks let you extract and reuse stateful logic across multiple components. They're just functions that call other hooks.",
-          how: "Name the function with `use` prefix. It can call `useState`, `useEffect`, and other hooks. Return whatever values the consuming component needs.",
-          example: `import { useState, useEffect } from "react";\n\nfunction useLocalStorage<T>(key: string, initial: T) {\n  const [value, setValue] = useState<T>(() => {\n    try {\n      const item = window.localStorage.getItem(key);\n      return item ? JSON.parse(item) : initial;\n    } catch {\n      return initial;\n    }\n  });\n\n  const setStored = (val: T) => {\n    setValue(val);\n    window.localStorage.setItem(key, JSON.stringify(val));\n  };\n\n  return [value, setStored] as const;\n}\n\n// Usage:\nconst [theme, setTheme] = useLocalStorage("theme", "light");`,
-          tip: "The `use` prefix isn't just convention — it's what allows the React linter to enforce rules of hooks on your custom hook. Always use it.",
-        },
-      },
-      {
-        title: "Compound Components",
-        code: `<Tabs>\n  <Tabs.List>\n    <Tabs.Tab>One</Tabs.Tab>\n  </Tabs.List>\n  <Tabs.Panel>Content</Tabs.Panel>\n</Tabs>`,
-        language: "tsx",
-        explanation: {
-          blockTitle: "Compound Components",
-          what: "Compound components are a pattern where a parent component shares state with its children via Context, letting you build flexible, expressive APIs.",
-          how: "Create a Context inside the parent component. Attach child components as static properties of the parent. Children read shared state from context.",
-          example: `const TabsContext = createContext<{ active: string; setActive: (id: string) => void } | null>(null);\n\nfunction Tabs({ children }: { children: React.ReactNode }) {\n  const [active, setActive] = useState("");\n  return (\n    <TabsContext.Provider value={{ active, setActive }}>\n      <div>{children}</div>\n    </TabsContext.Provider>\n  );\n}\n\nTabs.Tab = function Tab({ id, children }: { id: string; children: React.ReactNode }) {\n  const ctx = useContext(TabsContext)!;\n  return (\n    <button\n      style={{ fontWeight: ctx.active === id ? "bold" : "normal" }}\n      onClick={() => ctx.setActive(id)}\n    >\n      {children}\n    </button>\n  );\n};\n\nexport default Tabs;`,
-          tip: "Compound components shine in design systems where consumers need layout flexibility but you want to encapsulate the shared logic.",
-        },
-      },
-      {
-        title: "Render Props",
-        code: `<DataFetcher url="/api/user">\n  {({ data }) => <p>{data.name}</p>}\n</DataFetcher>`,
-        language: "tsx",
-        explanation: {
-          blockTitle: "Render Props",
-          what: "Render props is a pattern where a component delegates its rendering to a function passed as a prop (or `children`). The component provides data; the consumer controls the UI.",
-          how: "Accept a `render` prop (or use `children` as a function). Call it with the shared state/data, returning the JSX. TypeScript infers the function signature.",
-          example: `interface MousePosition { x: number; y: number; }\n\nfunction MouseTracker({ children }: { children: (pos: MousePosition) => React.ReactNode }) {\n  const [pos, setPos] = useState({ x: 0, y: 0 });\n\n  return (\n    <div\n      onMouseMove={e => setPos({ x: e.clientX, y: e.clientY })}\n      style={{ height: "200px", border: "1px solid gray" }}\n    >\n      {children(pos)}\n    </div>\n  );\n}\n\n// Usage:\n<MouseTracker>\n  {({ x, y }) => <p>Mouse at {x}, {y}</p>}\n</MouseTracker>`,
-          tip: "Render props predate hooks but are still useful for libraries that need to share DOM event logic. For most new code, a custom hook achieves the same result more cleanly.",
-        },
-      },
-      {
-        title: "Higher-Order Components",
-        code: `function withAuth<P>(Component: React.FC<P>) {\n  return function Protected(props: P) {\n    if (!isAuth()) return <Redirect />;\n    return <Component {...props} />;\n  };\n}`,
-        language: "tsx",
-        explanation: {
-          blockTitle: "Higher-Order Components",
-          what: "A Higher-Order Component (HOC) is a function that takes a component and returns a new component with added behavior — like authentication guards, analytics, or error boundaries.",
-          how: "Accept a component as an argument, optionally accept config, return a new component that wraps the original. Use generics to preserve the prop types.",
-          example: `import { useRouter } from "next/navigation";\n\nfunction withLogger<P extends object>(WrappedComponent: React.ComponentType<P>) {\n  return function LoggedComponent(props: P) {\n    useEffect(() => {\n      console.log("Mounted:", WrappedComponent.displayName);\n      return () => console.log("Unmounted:", WrappedComponent.displayName);\n    }, []);\n\n    return <WrappedComponent {...props} />;\n  };\n}\n\n// Usage:\nconst LoggedButton = withLogger(Button);\n<LoggedButton label="Save" onClick={save} />`,
-          tip: "HOCs can make stack traces harder to read. Always set `displayName` on the returned component: `LoggedComponent.displayName = \`withLogger(\${WrappedComponent.displayName})\``.",
-        },
-      },
-      {
-        title: "Error Boundaries",
-        code: `class ErrorBoundary extends React.Component {\n  componentDidCatch(error) { log(error); }\n  render() { return this.props.children; }\n}`,
-        language: "tsx",
-        explanation: {
-          blockTitle: "Error Boundaries",
-          what: "Error boundaries catch JavaScript errors in the component tree and display a fallback UI instead of crashing the entire app. They must be class components.",
-          how: "Extend `React.Component` and implement `getDerivedStateFromError` (to show fallback) and `componentDidCatch` (to log). Wrap risky subtrees in the boundary.",
-          example: `import React from "react";\n\ninterface State { hasError: boolean; }\n\nclass ErrorBoundary extends React.Component<React.PropsWithChildren, State> {\n  state: State = { hasError: false };\n\n  static getDerivedStateFromError() {\n    return { hasError: true };\n  }\n\n  componentDidCatch(error: Error, info: React.ErrorInfo) {\n    console.error("Caught error:", error, info.componentStack);\n  }\n\n  render() {\n    if (this.state.hasError) {\n      return <h2>Something went wrong.</h2>;\n    }\n    return this.props.children;\n  }\n}\n\n// Usage:\n<ErrorBoundary>\n  <RiskyComponent />\n</ErrorBoundary>`,
-          tip: "Error boundaries don't catch errors in event handlers, async code, or SSR. Use `try/catch` for those. The `react-error-boundary` library provides a convenient hook-based alternative.",
-        },
-      },
-    ],
-  },
-  {
-    number: 14,
-    title: "Performance",
-    blocks: [
-      {
-        title: "React.memo",
-        code: `const Memoized = React.memo(ExpensiveComponent);`,
-        language: "tsx",
-        explanation: {
-          blockTitle: "React.memo",
-          what: "`React.memo` is a higher-order component that skips re-rendering a component if its props haven't changed (shallow comparison).",
-          how: "Wrap the component with `React.memo()`. React compares previous and next props shallowly. Pass a custom comparison function as the second argument for deep or custom equality.",
-          example: `import { memo } from "react";\n\ninterface Props {\n  name: string;\n  score: number;\n}\n\nconst PlayerCard = memo(function PlayerCard({ name, score }: Props) {\n  console.log("Rendering PlayerCard:", name);\n  return (\n    <div>\n      <p>{name}</p>\n      <p>Score: {score}</p>\n    </div>\n  );\n});\n\n// Only re-renders when name or score actually changes`,
-          tip: "Don't memo everything. It adds overhead and can cause bugs if props contain objects created inline. Profile first with React DevTools to identify actual bottlenecks.",
-        },
-      },
-      {
-        title: "Code Splitting",
-        code: `const Modal = lazy(() => import('./Modal'));\n<Suspense fallback={<Spinner />}>\n  <Modal />\n</Suspense>`,
-        language: "tsx",
-        explanation: {
-          blockTitle: "Code Splitting",
-          what: "Code splitting lets you break your JavaScript bundle into smaller chunks that load on demand, reducing the initial page load time.",
-          how: "Use `React.lazy` with dynamic `import()` to load a component only when it's rendered. Wrap it in `<Suspense>` to show a fallback while the chunk loads.",
-          example: `import { lazy, Suspense, useState } from "react";\n\nconst HeavyChart = lazy(() => import("./HeavyChart"));\n\nexport default function Dashboard() {\n  const [showChart, setShowChart] = useState(false);\n\n  return (\n    <div>\n      <button onClick={() => setShowChart(true)}>Load Chart</button>\n      {showChart && (\n        <Suspense fallback={<p>Loading chart...</p>}>\n          <HeavyChart />\n        </Suspense>\n      )}\n    </div>\n  );\n}`,
-          tip: "In Next.js, use `next/dynamic` instead of `React.lazy` — it supports server-side rendering and has more options like `{ ssr: false }` for client-only components.",
-        },
-      },
-      {
-        title: "Virtualization",
-        code: `import { FixedSizeList } from 'react-window';\n<FixedSizeList itemCount={10000} itemSize={35}>`,
-        language: "tsx",
-        explanation: {
-          blockTitle: "Virtualization",
-          what: "Virtualization (or windowing) renders only the items visible in the viewport rather than all items in a large list, dramatically reducing DOM nodes.",
-          how: "Use `react-window` or `@tanstack/virtual` to render large lists, tables, or grids. The library calculates which items are visible and only renders those.",
-          example: `import { FixedSizeList } from "react-window";\n\nconst rows = Array.from({ length: 10_000 }, (_, i) => \`Item \${i + 1}\`);\n\nfunction Row({ index, style }: { index: number; style: React.CSSProperties }) {\n  return (\n    <div style={style}>\n      {rows[index]}\n    </div>\n  );\n}\n\nexport default function VirtualList() {\n  return (\n    <FixedSizeList\n      height={400}\n      itemCount={rows.length}\n      itemSize={35}\n      width="100%"\n    >\n      {Row}\n    </FixedSizeList>\n  );\n}`,
-          tip: "Virtualization is the single biggest performance win for long lists. Rendering 10,000 items is wasteful; rendering only the 12 visible ones is instant.",
-        },
-      },
-      {
-        title: "Bundle Analysis",
-        code: `// next.config.js\nconst withBundleAnalyzer = require('@next/bundle-analyzer');`,
-        language: "ts",
-        explanation: {
-          blockTitle: "Bundle Analysis",
-          what: "Bundle analysis shows you a visual breakdown of what's in your JavaScript bundle — which packages are largest and where opportunities to reduce size exist.",
-          how: "Install `@next/bundle-analyzer`. Wrap your Next.js config with it. Run `ANALYZE=true next build` to generate an interactive treemap in the browser.",
-          example: `// next.config.js\nconst withBundleAnalyzer = require("@next/bundle-analyzer")({\n  enabled: process.env.ANALYZE === "true",\n});\n\nmodule.exports = withBundleAnalyzer({\n  // your existing Next.js config\n});\n\n// Run:\n// ANALYZE=true npm run build\n// Opens a browser tab with the bundle treemap`,
-          tip: "Look for: duplicate dependencies (two versions of the same package), large libraries with small usage (import only what you need), and anything over 50KB that could be lazy-loaded.",
-        },
-      },
-      {
-        title: "Web Vitals",
-        code: `export function reportWebVitals(metric) {\n  console.log(metric);\n}`,
-        language: "ts",
-        explanation: {
-          blockTitle: "Web Vitals",
-          what: "Core Web Vitals are Google's metrics for measuring real-world user experience: LCP (load speed), INP (interactivity), and CLS (visual stability).",
-          how: "Next.js has built-in Web Vitals reporting. Export `reportWebVitals` from `_app.tsx` (Pages Router) or use the `useReportWebVitals` hook in the App Router.",
-          example: `// app/layout.tsx\n'use client';\nimport { useReportWebVitals } from "next/web-vitals";\n\nexport function WebVitalsReporter() {\n  useReportWebVitals((metric) => {\n    // Send to your analytics\n    fetch("/api/vitals", {\n      method: "POST",\n      body: JSON.stringify(metric),\n    });\n  });\n  return null;\n}\n\n// Metric names:\n// TTFB, FCP, LCP, FID, CLS, INP`,
-          tip: "LCP > 2.5s, INP > 200ms, and CLS > 0.1 are 'needs improvement'. Use Lighthouse in Chrome DevTools to audit locally before deploying.",
-        },
-      },
-    ],
-  },
-  {
-    number: 15,
-    title: "Testing",
-    blocks: [
-      {
-        title: "Jest Basics",
-        code: `test('adds numbers', () => {\n  expect(add(1, 2)).toBe(3);\n});`,
-        language: "ts",
-        explanation: {
-          blockTitle: "Jest Basics",
-          what: "Jest is the most popular JavaScript testing framework. It provides test runners, assertion matchers, mocking, and coverage reporting out of the box.",
-          how: "Write tests in `.test.ts` or `.spec.ts` files. Use `test` (or `it`) to define a test case and `expect` with matchers like `toBe`, `toEqual`, `toThrow`.",
-          example: `// math.ts\nexport function add(a: number, b: number) { return a + b; }\nexport function divide(a: number, b: number) {\n  if (b === 0) throw new Error("Cannot divide by zero");\n  return a / b;\n}\n\n// math.test.ts\nimport { add, divide } from "./math";\n\ndescribe("Math utilities", () => {\n  test("adds two numbers", () => {\n    expect(add(1, 2)).toBe(3);\n  });\n\n  test("throws on division by zero", () => {\n    expect(() => divide(5, 0)).toThrow("Cannot divide by zero");\n  });\n\n  test("divides correctly", () => {\n    expect(divide(10, 2)).toBe(5);\n  });\n});`,
-          tip: "Group related tests with `describe`. It makes output easier to read and lets you share setup code via `beforeEach` scoped to that group.",
-        },
-      },
-      {
-        title: "Testing Library",
-        code: `render(<Button label="Click" />);\nscreen.getByText('Click');`,
-        language: "tsx",
-        explanation: {
-          blockTitle: "Testing Library",
-          what: "React Testing Library tests components from a user's perspective — querying by visible text, roles, and labels rather than implementation details.",
-          how: "Use `render` to mount a component. Query the DOM with `screen.getBy*` / `screen.queryBy*`. Fire events with `userEvent` (preferred over `fireEvent`).",
-          example: `import { render, screen } from "@testing-library/react";\nimport userEvent from "@testing-library/user-event";\nimport Counter from "./Counter";\n\ntest("increments the counter on click", async () => {\n  const user = userEvent.setup();\n  render(<Counter />);\n\n  expect(screen.getByText("Count: 0")).toBeInTheDocument();\n\n  await user.click(screen.getByRole("button", { name: "+" }));\n\n  expect(screen.getByText("Count: 1")).toBeInTheDocument();\n});`,
-          tip: "Prefer `getByRole` over `getByTestId`. It tests accessibility at the same time — if a screen reader can't find it by role, your test catches that too.",
-        },
-      },
-      {
-        title: "Mocking",
-        code: `jest.mock('./api');\n(fetchUser as jest.Mock).mockResolvedValue({ name: 'Alice' });`,
-        language: "ts",
-        explanation: {
-          blockTitle: "Mocking",
-          what: "Mocking replaces real implementations (API calls, timers, modules) with controlled fakes so tests run fast and deterministically.",
-          how: "Use `jest.mock('module')` to auto-mock a module. Use `jest.fn()` to create a mock function and `.mockReturnValue` / `.mockResolvedValue` to control its output.",
-          example: `import { render, screen, waitFor } from "@testing-library/react";\nimport * as api from "./api";\nimport UserProfile from "./UserProfile";\n\njest.mock("./api");\n\ntest("displays the user name", async () => {\n  (api.fetchUser as jest.Mock).mockResolvedValue({\n    id: 1,\n    name: "Alice",\n    email: "alice@example.com",\n  });\n\n  render(<UserProfile userId={1} />);\n\n  await waitFor(() => {\n    expect(screen.getByText("Alice")).toBeInTheDocument();\n  });\n});`,
-          tip: "Clear mocks between tests with `jest.clearAllMocks()` in `beforeEach` or via `clearMocks: true` in `jest.config.js`. Stale mock state causes flaky tests.",
-        },
-      },
-      {
-        title: "Async Testing",
-        code: `await waitFor(() => {\n  expect(screen.getByText('Loaded')).toBeInTheDocument();\n});`,
-        language: "tsx",
-        explanation: {
-          blockTitle: "Async Testing",
-          what: "Async testing handles components that fetch data, animate, or update state asynchronously. You need to wait for the UI to reflect the async result.",
-          how: "Use `waitFor` to poll until an assertion passes. Use `findBy*` queries (which return Promises) as a shorthand for `waitFor` + `getBy*`.",
-          example: `import { render, screen } from "@testing-library/react";\nimport { rest } from "msw";\nimport { setupServer } from "msw/node";\nimport UserList from "./UserList";\n\nconst server = setupServer(\n  rest.get("/api/users", (req, res, ctx) =>\n    res(ctx.json([{ id: 1, name: "Alice" }]))\n  )\n);\n\nbeforeAll(() => server.listen());\nafterEach(() => server.resetHandlers());\nafterAll(() => server.close());\n\ntest("loads and displays users", async () => {\n  render(<UserList />);\n\n  expect(screen.getByText("Loading...")).toBeInTheDocument();\n\n  const item = await screen.findByText("Alice");\n  expect(item).toBeInTheDocument();\n});`,
-          tip: "Use Mock Service Worker (MSW) to intercept actual `fetch` calls in tests. It's more realistic than mocking `fetch` directly and works in both tests and the browser.",
-        },
-      },
-      {
-        title: "Snapshot Tests",
-        code: `expect(render(<Card title="Hi" />)).toMatchSnapshot();`,
-        language: "tsx",
-        explanation: {
-          blockTitle: "Snapshot Tests",
-          what: "Snapshot tests capture the rendered output of a component and save it to a file. On subsequent runs, Jest compares the output to the saved snapshot and fails on differences.",
-          how: "Call `.toMatchSnapshot()` on a rendered component. The first run creates the snapshot file. Update snapshots intentionally with `jest --updateSnapshot`.",
-          example: `import { render } from "@testing-library/react";\nimport Badge from "./Badge";\n\ntest("renders correctly", () => {\n  const { container } = render(\n    <Badge label="New" variant="success" />\n  );\n  expect(container).toMatchSnapshot();\n});\n\n// First run creates:\n// __snapshots__/Badge.test.tsx.snap\n// containing the serialized HTML\n\n// Update after intentional changes:\n// jest --updateSnapshot`,
-          tip: "Keep snapshots small and meaningful. Snapshotting an entire page produces a large, brittle file. Snapshot only small, stable presentational components.",
         },
       },
     ],

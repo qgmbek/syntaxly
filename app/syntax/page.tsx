@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, Fragment } from "react";
-import { Columns } from "@phosphor-icons/react";
+import { useState, Fragment, useMemo } from "react";
+import { Columns, DiamondsFour } from "@phosphor-icons/react";
 
 import Column from "../components/Column/Column";
 import ExplanationColumn, {
@@ -11,22 +11,15 @@ import SearchOverlay from "../components/SearchOverlay/SearchOverlay";
 import Minimap from "../components/Minimap/Minimap";
 
 import styles from "./syntax.module.css";
-import { Data } from "./data";
+import { Data, ColumnData } from "./data";
 
 interface Block {
   title: string;
   code: string;
   language?: string;
+  unique?: boolean;
   explanation: ExplanationData;
 }
-
-interface ColumnData {
-  number: number;
-  title: string;
-  blocks: Block[];
-}
-
-const COLUMNS: ColumnData[] = Data;
 
 interface Selected {
   columnIndex: number;
@@ -38,9 +31,18 @@ export default function Syntax() {
   const [selected, setSelected] = useState<Selected | null>(null);
   const [compact, setCompact] = useState(false);
   const [fontSize, setFontSize] = useState(16);
-
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [tsOnly, setTsOnly] = useState(false);
+
+  const COLUMNS: ColumnData[] = useMemo(() => {
+    if (!tsOnly) return Data;
+    return Data.reduce<ColumnData[]>((acc, col) => {
+      const filtered = col.blocks.filter((b) => b.unique === true);
+      if (filtered.length > 0) acc.push({ ...col, blocks: filtered });
+      return acc;
+    }, []);
+  }, [tsOnly]);
 
   function openSearch() {
     setSearchQuery("");
@@ -102,6 +104,11 @@ export default function Syntax() {
     });
   }
 
+  function toggleTsOnly() {
+    setTsOnly((v) => !v);
+    setSelected(null);
+  }
+
   return (
     <div className={styles.container}>
       <div className={styles.sidebar}>
@@ -148,6 +155,15 @@ export default function Syntax() {
         </button>
 
         <button
+          onClick={toggleTsOnly}
+          title={tsOnly ? "Show all blocks" : "Show TypeScript-only syntax"}
+          aria-pressed={tsOnly}
+          className={`${styles.expandButton} ${tsOnly ? styles.expandButtonCompact : ""}`}
+        >
+          <DiamondsFour size={18} weight={tsOnly ? "fill" : "regular"} />
+        </button>
+
+        <button
           onClick={() => setCompact((c) => !c)}
           title={compact ? "Expand columns" : "Overview"}
           className={`${styles.expandButton} ${
@@ -185,6 +201,13 @@ export default function Syntax() {
             )}
           </Fragment>
         ))}
+
+        {tsOnly && COLUMNS.length === 0 && (
+          <div className={styles.emptyFilter}>
+            <DiamondsFour size={32} weight="thin" />
+            <p>No TypeScript-unique blocks found.</p>
+          </div>
+        )}
       </div>
 
       <Minimap

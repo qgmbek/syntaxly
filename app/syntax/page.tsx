@@ -1,7 +1,12 @@
 "use client";
 
-import { useState, Fragment, useMemo } from "react";
-import { Columns, DiamondsFour, MagnifyingGlass } from "@phosphor-icons/react";
+import { useState, Fragment, useMemo, useEffect, useCallback } from "react";
+import {
+  Columns,
+  DiamondsFour,
+  MagnifyingGlass,
+  Keyboard,
+} from "@phosphor-icons/react";
 
 import Column from "../components/Column/Column";
 import ExplanationColumn, {
@@ -9,6 +14,7 @@ import ExplanationColumn, {
 } from "../components/ExplanationColumn/ExplanationColumn";
 import SearchOverlay from "../components/SearchOverlay/SearchOverlay";
 import Minimap from "../components/Minimap/Minimap";
+import KeyboardShortcutsModal from "../components/KeyboardShortcutsModal/KeyboardShortcutsModal";
 
 import styles from "./syntax.module.css";
 import { Data, ColumnData } from "./data";
@@ -33,8 +39,8 @@ export default function Syntax() {
   const [fontSize, setFontSize] = useState(16);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-
   const [tsOnly, setTsOnly] = useState(false);
+  const [shortcutsOpen, setShortcutsOpen] = useState(false);
 
   const COLUMNS: ColumnData[] = useMemo(() => {
     if (!tsOnly) return Data;
@@ -45,14 +51,122 @@ export default function Syntax() {
     }, []);
   }, [tsOnly]);
 
-  function openSearch() {
+  const openSearch = useCallback(() => {
     setSearchQuery("");
     setSearchOpen(true);
-  }
+  }, []);
 
-  function closeSearch() {
+  const closeSearch = useCallback(() => {
     setSearchOpen(false);
-  }
+  }, []);
+
+  const toggleTsOnly = useCallback(() => {
+    setTsOnly((v) => !v);
+    setSelected(null);
+  }, []);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const isTyping =
+        e.target instanceof HTMLInputElement ||
+        e.target instanceof HTMLTextAreaElement;
+
+      if (isTyping) {
+        if (e.key === "Escape" && searchOpen) {
+          e.preventDefault();
+          closeSearch();
+        }
+        return;
+      }
+
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        openSearch();
+        return;
+      }
+
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "u") {
+        e.preventDefault();
+        toggleTsOnly();
+        return;
+      }
+
+      if (e.key === "+" || e.key === "=") {
+        e.preventDefault();
+        setFontSize((s) => Math.min(s + 1, 24));
+        return;
+      }
+      if (e.key === "-") {
+        e.preventDefault();
+        setFontSize((s) => Math.max(s - 1, 10));
+        return;
+      }
+
+      if (e.key === "Escape") {
+        if (shortcutsOpen) {
+          setShortcutsOpen(false);
+        } else if (searchOpen) {
+          closeSearch();
+        } else {
+          setSelected(null);
+        }
+        return;
+      }
+
+      if (searchOpen || shortcutsOpen) return;
+
+      if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key)) {
+        if (COLUMNS.length === 0) return;
+        e.preventDefault();
+
+        setSelected((prev) => {
+          let colIdx = prev ? prev.columnIndex : 0;
+          let blockIdx = prev ? prev.blockIndex : 0;
+
+          if (!prev) {
+            return {
+              columnIndex: 0,
+              blockIndex: 0,
+              explanation: COLUMNS[0].blocks[0]?.explanation,
+            };
+          }
+
+          if (e.key === "ArrowUp") {
+            blockIdx = Math.max(0, blockIdx - 1);
+          } else if (e.key === "ArrowDown") {
+            blockIdx = Math.min(
+              COLUMNS[colIdx].blocks.length - 1,
+              blockIdx + 1,
+            );
+          } else if (e.key === "ArrowLeft") {
+            colIdx = Math.max(0, colIdx - 1);
+            const maxBlocks = COLUMNS[colIdx].blocks.length;
+            blockIdx = maxBlocks > 0 ? Math.min(maxBlocks - 1, blockIdx) : 0;
+          } else if (e.key === "ArrowRight") {
+            colIdx = Math.min(COLUMNS.length - 1, colIdx + 1);
+            const maxBlocks = COLUMNS[colIdx].blocks.length;
+            blockIdx = maxBlocks > 0 ? Math.min(maxBlocks - 1, blockIdx) : 0;
+          }
+
+          return {
+            columnIndex: colIdx,
+            blockIndex: blockIdx,
+            explanation: COLUMNS[colIdx].blocks[blockIdx]?.explanation,
+          };
+        });
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [
+    searchOpen,
+    shortcutsOpen,
+    COLUMNS,
+    openSearch,
+    closeSearch,
+    toggleTsOnly,
+  ]);
 
   function handleSearchSelect(colIndex: number, blockIndex: number) {
     closeSearch();
@@ -105,11 +219,6 @@ export default function Syntax() {
     });
   }
 
-  function toggleTsOnly() {
-    setTsOnly((v) => !v);
-    setSelected(null);
-  }
-
   return (
     <div className={styles.container}>
       <div className={styles.sidebar}>
@@ -119,7 +228,7 @@ export default function Syntax() {
           <button
             className={styles.fontBtn}
             onClick={() => setFontSize((s) => Math.min(s + 1, 24))}
-            title="Increase font size"
+            title="Increase font size (+)"
           >
             +
           </button>
@@ -127,7 +236,7 @@ export default function Syntax() {
           <button
             className={styles.fontBtn}
             onClick={() => setFontSize((s) => Math.max(s - 1, 10))}
-            title="Decrease font size"
+            title="Decrease font size (-)"
           >
             −
           </button>
@@ -135,10 +244,8 @@ export default function Syntax() {
 
         <button
           onClick={openSearch}
-          title="Search blocks"
-          className={`${styles.expandButton} ${
-            searchOpen ? styles.expandButtonCompact : ""
-          }`}
+          title="Search blocks (Ctrl+K)"
+          className={`${styles.expandButton} ${searchOpen ? styles.expandButtonCompact : ""}`}
           aria-label="Search blocks"
         >
           <MagnifyingGlass size={18} weight="regular" aria-hidden="true" />
@@ -146,7 +253,9 @@ export default function Syntax() {
 
         <button
           onClick={toggleTsOnly}
-          title={tsOnly ? "Show all blocks" : "Show TypeScript-only syntax"}
+          title={
+            tsOnly ? "Show all blocks" : "Show TypeScript-only syntax (Ctrl+U)"
+          }
           aria-pressed={tsOnly}
           className={`${styles.expandButton} ${tsOnly ? styles.expandButtonCompact : ""}`}
         >
@@ -156,11 +265,18 @@ export default function Syntax() {
         <button
           onClick={() => setCompact((c) => !c)}
           title={compact ? "Expand columns" : "Overview"}
-          className={`${styles.expandButton} ${
-            compact ? styles.expandButtonCompact : ""
-          }`}
+          className={`${styles.expandButton} ${compact ? styles.expandButtonCompact : ""}`}
         >
           <Columns size={18} weight={compact ? "fill" : "regular"} />
+        </button>
+
+        <button
+          onClick={() => setShortcutsOpen(true)}
+          title="Keyboard Shortcuts"
+          className={styles.expandButton}
+          aria-label="View Keyboard Shortcuts"
+        >
+          <Keyboard size={18} weight="regular" />
         </button>
       </div>
 
@@ -216,6 +332,11 @@ export default function Syntax() {
           onSelect={handleSearchSelect}
         />
       )}
+
+      <KeyboardShortcutsModal
+        isOpen={shortcutsOpen}
+        onClose={() => setShortcutsOpen(false)}
+      />
     </div>
   );
 }

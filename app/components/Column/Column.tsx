@@ -1,5 +1,6 @@
 import styles from "./Column.module.css";
 import CodeBlock from "../CodeBlock/CodeBlock";
+import CopyButton from "../CopyButton/CopyButton";
 
 interface Block {
   title: string;
@@ -59,6 +60,7 @@ export default function Column({
             >
               {block.title}
             </div>
+            <CopyButton text={block.code} />
             <CodeBlock
               code={block.code}
               language={block.language ?? "tsx"}

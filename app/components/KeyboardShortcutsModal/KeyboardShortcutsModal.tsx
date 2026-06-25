@@ -16,6 +16,7 @@ export default function KeyboardShortcutsModal({
   const shortcuts = [
     { keys: ["Ctrl", "K"], desc: "Open Search / Command Palette" },
     { keys: ["Ctrl", "U"], desc: "Toggle TypeScript / Unique Syntax view" },
+    { keys: ["Ctrl", "Shift", "F"], desc: "Toggle Focus / Reading Mode" },
     { keys: ["+"], desc: "Increase application font size" },
     { keys: ["-"], desc: "Decrease application font size" },
     { keys: ["↑", "↓"], desc: "Navigate blocks up and down" },

@@ -42,6 +42,7 @@ export default function Column({
         <div className={styles.number}>{data.number}</div>
         <div className={styles.countBadge}>{data.blocks.length}</div>
         <div className={styles.title}>{data.title}</div>
+        <div className={styles.blockCount}>Blocks: {data.blocks.length}</div>
       </div>
 
       <div className={styles.main}>

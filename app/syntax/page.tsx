@@ -41,6 +41,7 @@ export default function Syntax() {
   const [searchQuery, setSearchQuery] = useState("");
   const [tsOnly, setTsOnly] = useState(false);
   const [shortcutsOpen, setShortcutsOpen] = useState(false);
+  const [focusMode, setFocusMode] = useState(false);
 
   const COLUMNS: ColumnData[] = useMemo(() => {
     if (!tsOnly) return Data;
@@ -62,6 +63,11 @@ export default function Syntax() {
 
   const toggleTsOnly = useCallback(() => {
     setTsOnly((v) => !v);
+    setSelected(null);
+  }, []);
+
+  const toggleFocusMode = useCallback(() => {
+    setFocusMode((prev) => !prev);
     setSelected(null);
   }, []);
 
@@ -88,6 +94,12 @@ export default function Syntax() {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "u") {
         e.preventDefault();
         toggleTsOnly();
+        return;
+      }
+
+      if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key.toLowerCase() === "f") {
+        e.preventDefault();
+        toggleFocusMode();
         return;
       }
 
@@ -166,6 +178,7 @@ export default function Syntax() {
     openSearch,
     closeSearch,
     toggleTsOnly,
+    toggleFocusMode,
   ]);
 
   function handleSearchSelect(colIndex: number, blockIndex: number) {
@@ -221,64 +234,68 @@ export default function Syntax() {
 
   return (
     <div className={styles.container}>
-      <div className={styles.sidebar}>
-        <div className={styles.name}>REACT</div>
+      {!focusMode && (
+        <div className={styles.sidebar}>
+          <div className={styles.name}>REACT</div>
 
-        <div className={styles.fontControls}>
+          <div className={styles.fontControls}>
+            <button
+              className={styles.fontBtn}
+              onClick={() => setFontSize((s) => Math.min(s + 1, 24))}
+              title="Increase font size (+)"
+            >
+              +
+            </button>
+            <span className={styles.fontValue}>{fontSize}</span>
+            <button
+              className={styles.fontBtn}
+              onClick={() => setFontSize((s) => Math.max(s - 1, 10))}
+              title="Decrease font size (-)"
+            >
+              −
+            </button>
+          </div>
+
           <button
-            className={styles.fontBtn}
-            onClick={() => setFontSize((s) => Math.min(s + 1, 24))}
-            title="Increase font size (+)"
+            onClick={openSearch}
+            title="Search blocks (Ctrl+K)"
+            className={`${styles.expandButton} ${searchOpen ? styles.expandButtonCompact : ""}`}
+            aria-label="Search blocks"
           >
-            +
+            <MagnifyingGlass size={18} weight="regular" aria-hidden="true" />
           </button>
-          <span className={styles.fontValue}>{fontSize}</span>
+
           <button
-            className={styles.fontBtn}
-            onClick={() => setFontSize((s) => Math.max(s - 1, 10))}
-            title="Decrease font size (-)"
+            onClick={toggleTsOnly}
+            title={
+              tsOnly
+                ? "Show all blocks"
+                : "Show TypeScript-only syntax (Ctrl+U)"
+            }
+            aria-pressed={tsOnly}
+            className={`${styles.expandButton} ${tsOnly ? styles.expandButtonCompact : ""}`}
           >
-            −
+            <DiamondsFour size={18} weight={tsOnly ? "fill" : "regular"} />
+          </button>
+
+          <button
+            onClick={() => setCompact((c) => !c)}
+            title={compact ? "Expand columns" : "Overview"}
+            className={`${styles.expandButton} ${compact ? styles.expandButtonCompact : ""}`}
+          >
+            <Columns size={18} weight={compact ? "fill" : "regular"} />
+          </button>
+
+          <button
+            onClick={() => setShortcutsOpen(true)}
+            title="Keyboard Shortcuts"
+            className={styles.expandButton}
+            aria-label="View Keyboard Shortcuts"
+          >
+            <Keyboard size={18} weight="regular" />
           </button>
         </div>
-
-        <button
-          onClick={openSearch}
-          title="Search blocks (Ctrl+K)"
-          className={`${styles.expandButton} ${searchOpen ? styles.expandButtonCompact : ""}`}
-          aria-label="Search blocks"
-        >
-          <MagnifyingGlass size={18} weight="regular" aria-hidden="true" />
-        </button>
-
-        <button
-          onClick={toggleTsOnly}
-          title={
-            tsOnly ? "Show all blocks" : "Show TypeScript-only syntax (Ctrl+U)"
-          }
-          aria-pressed={tsOnly}
-          className={`${styles.expandButton} ${tsOnly ? styles.expandButtonCompact : ""}`}
-        >
-          <DiamondsFour size={18} weight={tsOnly ? "fill" : "regular"} />
-        </button>
-
-        <button
-          onClick={() => setCompact((c) => !c)}
-          title={compact ? "Expand columns" : "Overview"}
-          className={`${styles.expandButton} ${compact ? styles.expandButtonCompact : ""}`}
-        >
-          <Columns size={18} weight={compact ? "fill" : "regular"} />
-        </button>
-
-        <button
-          onClick={() => setShortcutsOpen(true)}
-          title="Keyboard Shortcuts"
-          className={styles.expandButton}
-          aria-label="View Keyboard Shortcuts"
-        >
-          <Keyboard size={18} weight="regular" />
-        </button>
-      </div>
+      )}
 
       <div className={styles.mainbar}>
         {COLUMNS.map((col, colIndex) => (
@@ -316,12 +333,14 @@ export default function Syntax() {
         )}
       </div>
 
-      <Minimap
-        columns={COLUMNS}
-        selectedColumnIndex={selected?.columnIndex ?? null}
-        selectedBlockIndex={selected?.blockIndex ?? null}
-        onSelect={handleMinimapSelect}
-      />
+      {!focusMode && (
+        <Minimap
+          columns={COLUMNS}
+          selectedColumnIndex={selected?.columnIndex ?? null}
+          selectedBlockIndex={selected?.blockIndex ?? null}
+          onSelect={handleMinimapSelect}
+        />
+      )}
 
       {searchOpen && (
         <SearchOverlay

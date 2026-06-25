@@ -189,19 +189,30 @@ export default function Hero() {
   return (
     <div ref={containerRef} className={styles.container}>
       <div className={styles.overlayContainer}>
-        {cells.map((cell, idx) => (
-          <div
-            key={idx}
-            className={styles.overlayCell}
-            style={{
-              top: cell.top,
-              left: cell.left,
-              width: cell.width,
-              height: cell.height,
-              backgroundColor: `rgba(255, 215, 0, ${highlightOpacities[idx] || 0})`,
-            }}
-          />
-        ))}
+        {cells.map((cell, idx) => {
+          const opacity = highlightOpacities[idx] || 0;
+          const cellStyle: React.CSSProperties = {
+            top: cell.top,
+            left: cell.left,
+            width: cell.width,
+            height: cell.height,
+            backgroundColor: `rgba(255, 215, 0, ${opacity})`,
+          };
+
+          if (opacity > 0) {
+            const blur = 20 * opacity;
+            const spread = 6 * opacity;
+            cellStyle.boxShadow = `0 0 ${blur}px ${spread}px rgba(255, 215, 0, ${opacity * 0.7})`;
+          }
+
+          return (
+            <div
+              key={idx}
+              className={styles.overlayCell}
+              style={cellStyle}
+            />
+          );
+        })}
       </div>
 
       <div className={styles.content}>

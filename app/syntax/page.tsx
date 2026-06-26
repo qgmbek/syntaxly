@@ -39,18 +39,18 @@ export default function Syntax() {
   const [fontSize, setFontSize] = useState(16);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [tsOnly, setTsOnly] = useState(false);
+  const [uniqueOnly, setUniqueOnly] = useState(false);
   const [shortcutsOpen, setShortcutsOpen] = useState(false);
   const [focusMode, setFocusMode] = useState(false);
 
   const COLUMNS: ColumnData[] = useMemo(() => {
-    if (!tsOnly) return Data;
+    if (!uniqueOnly) return Data;
     return Data.reduce<ColumnData[]>((acc, col) => {
       const filtered = col.blocks.filter((b) => b.unique === true);
       if (filtered.length > 0) acc.push({ ...col, blocks: filtered });
       return acc;
     }, []);
-  }, [tsOnly]);
+  }, [uniqueOnly]);
 
   const openSearch = useCallback(() => {
     setSearchQuery("");
@@ -61,8 +61,8 @@ export default function Syntax() {
     setSearchOpen(false);
   }, []);
 
-  const toggleTsOnly = useCallback(() => {
-    setTsOnly((v) => !v);
+  const toggleUniqueOnly = useCallback(() => {
+    setUniqueOnly((v) => !v);
     setSelected(null);
   }, []);
 
@@ -93,7 +93,7 @@ export default function Syntax() {
 
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "u") {
         e.preventDefault();
-        toggleTsOnly();
+        toggleUniqueOnly();
         return;
       }
 
@@ -177,7 +177,7 @@ export default function Syntax() {
     COLUMNS,
     openSearch,
     closeSearch,
-    toggleTsOnly,
+    toggleUniqueOnly,
     toggleFocusMode,
   ]);
 
@@ -266,16 +266,16 @@ export default function Syntax() {
           </button>
 
           <button
-            onClick={toggleTsOnly}
+            onClick={toggleUniqueOnly}
             title={
-              tsOnly
+              uniqueOnly
                 ? "Show all blocks"
-                : "Show TypeScript-only syntax (Ctrl+U)"
+                : "Show unique blocks only (Ctrl+U)"
             }
-            aria-pressed={tsOnly}
-            className={`${styles.expandButton} ${tsOnly ? styles.expandButtonCompact : ""}`}
+            aria-pressed={uniqueOnly}
+            className={`${styles.expandButton} ${uniqueOnly ? styles.expandButtonCompact : ""}`}
           >
-            <DiamondsFour size={18} weight={tsOnly ? "fill" : "regular"} />
+            <DiamondsFour size={18} weight={uniqueOnly ? "fill" : "regular"} />
           </button>
 
           <button
@@ -325,10 +325,10 @@ export default function Syntax() {
           </Fragment>
         ))}
 
-        {tsOnly && COLUMNS.length === 0 && (
+        {uniqueOnly && COLUMNS.length === 0 && (
           <div className={styles.emptyFilter}>
             <DiamondsFour size={32} weight="thin" />
-            <p>No TypeScript-unique blocks found.</p>
+            <p>No unique blocks found.</p>
           </div>
         )}
       </div>

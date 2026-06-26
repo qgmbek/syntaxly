@@ -168,7 +168,7 @@ export const Data: ColumnData[] = [
           blockTitle: "break / continue",
           what: "`break` immediately exits the innermost loop or `switch`. `continue` skips the rest of the current iteration and proceeds to the next one.",
           how: "Both can be used in all loop types (`for`, `while`, `do...while`). They can also work with labels to break outer loops.",
-          example: `for (let i = 0; i < 5; i++) {\n  if (i === 2) continue; // skip 2\n  console.log(i); // 0, 1, 3, 4\n}\n\nouter: for (let a = 0; a < 3; a++) {\n  for (let b = 0; b < 3; b++) {\n    if (a === 1 && b === 1) break outer; // exit both loops\n    console.log(a, b);\n  }\n}`,
+          example: `for (let i = 0; i < 5; i++) {\n  if (i === 2) continue; // skip 2\n  console.log(i); // 0, 1, 3, 4\n\nouter: for (let a = 0; a < 3; a++) {\n  for (let b = 0; b < 3; b++) {\n    if (a === 1 && b === 1) break outer; // exit both loops\n    console.log(a, b);\n  }\n}`,
           tip: "Overusing `break` and `continue` can make loops hard to follow. Consider refactoring the loop body into a function and using `return` for clarity.",
           version: "ES5",
           difficulty: "beginner",
@@ -215,6 +215,7 @@ export const Data: ColumnData[] = [
         title: "Arrow Functions",
         code: `const add = (a, b) => a + b;`,
         language: "js",
+        unique: true,
         explanation: {
           blockTitle: "Arrow Functions",
           what: "Arrow functions provide a shorter syntax and do not bind their own `this`, `arguments`, or `super`. They are excellent for short callbacks.",
@@ -230,6 +231,7 @@ export const Data: ColumnData[] = [
         title: "Rest Parameters",
         code: `function sum(...nums) {\n  return nums.reduce((a,b) => a + b, 0);\n}`,
         language: "js",
+        unique: true,
         explanation: {
           blockTitle: "Rest Parameters",
           what: "Rest parameters collect all remaining arguments into a real array. It replaces the need for the `arguments` object in most cases.",
@@ -245,6 +247,7 @@ export const Data: ColumnData[] = [
         title: "Default Parameters",
         code: `function greet(name = "Guest") {\n  return "Hello " + name;\n}`,
         language: "js",
+        unique: true,
         explanation: {
           blockTitle: "Default Parameters",
           what: "Default parameters allow a function to be called with fewer arguments. Missing or `undefined` parameters are replaced with the default value.",
@@ -311,6 +314,7 @@ export const Data: ColumnData[] = [
         title: "Destructuring",
         code: `const { name, age } = user;`,
         language: "js",
+        unique: true,
         explanation: {
           blockTitle: "Destructuring",
           what: "Destructuring unpacks values from arrays or properties from objects into distinct variables, making it easy to extract data.",
@@ -326,6 +330,7 @@ export const Data: ColumnData[] = [
         title: "Spread Operator",
         code: `const arr2 = [...arr1, 4, 5];`,
         language: "js",
+        unique: true,
         explanation: {
           blockTitle: "Spread Operator",
           what: "The spread operator (`...`) expands an iterable (like an array) or object properties into individual elements or key‑value pairs.",
@@ -362,6 +367,7 @@ export const Data: ColumnData[] = [
         title: "Promises",
         code: `fetch(url).then(res => res.json());`,
         language: "js",
+        unique: true,
         explanation: {
           blockTitle: "Promises",
           what: "A Promise is an object representing the eventual completion (or failure) of an asynchronous operation. It provides `.then()`, `.catch()`, and `.finally()` methods.",
@@ -377,6 +383,7 @@ export const Data: ColumnData[] = [
         title: "Async / Await",
         code: `async function getData() {\n  const res = await fetch(url);\n  return res.json();\n}`,
         language: "js",
+        unique: true,
         explanation: {
           blockTitle: "Async / Await",
           what: "`async/await` is syntactic sugar over Promises, allowing you to write asynchronous code that reads like synchronous code.",
@@ -428,6 +435,7 @@ export const Data: ColumnData[] = [
         title: "Template Literals",
         code: `\`Hello \${name}\``,
         language: "js",
+        unique: true,
         explanation: {
           blockTitle: "Template Literals",
           what: "Template literals (backtick strings) allow embedded expressions and multi‑line strings without concatenation.",
@@ -443,6 +451,7 @@ export const Data: ColumnData[] = [
         title: "Optional Chaining",
         code: `user?.address?.city`,
         language: "js",
+        unique: true,
         explanation: {
           blockTitle: "Optional Chaining",
           what: "Optional chaining (`?.`) safely accesses deeply nested properties without having to check each intermediate reference for `null` or `undefined`.",
@@ -458,6 +467,7 @@ export const Data: ColumnData[] = [
         title: "Nullish Coalescing",
         code: `value ?? "default"`,
         language: "js",
+        unique: true,
         explanation: {
           blockTitle: "Nullish Coalescing",
           what: "The nullish coalescing operator (`??`) returns the right‑hand operand when the left‑hand operand is `null` or `undefined`; otherwise it returns the left‑hand operand.",
@@ -473,6 +483,7 @@ export const Data: ColumnData[] = [
         title: "Modules (import/export)",
         code: `import { func } from './module.js';`,
         language: "js",
+        unique: true,
         explanation: {
           blockTitle: "Modules",
           what: "ES modules allow you to split code into reusable files. You can `export` variables, functions, or classes and `import` them in other files.",
@@ -488,6 +499,7 @@ export const Data: ColumnData[] = [
         title: "Map & Set",
         code: `const map = new Map();\nmap.set('key', 'value');`,
         language: "js",
+        unique: true,
         explanation: {
           blockTitle: "Map & Set",
           what: "`Map` is a collection of keyed data items where keys can be any type. `Set` is a collection of unique values.",
@@ -509,6 +521,7 @@ export const Data: ColumnData[] = [
         title: "Closures",
         code: `function outer() {\n  let x = 1;\n  return function() { return x; };\n}`,
         language: "js",
+        unique: true,
         explanation: {
           blockTitle: "Closures",
           what: "A closure is a function that remembers its lexical scope even when the function is executed outside that scope. It “closes over” the variables of its outer function.",
@@ -524,6 +537,7 @@ export const Data: ColumnData[] = [
         title: "Prototypes",
         code: `function Dog(name) {\n  this.name = name;\n}\nDog.prototype.bark = function() {\n  console.log("Woof!");\n};`,
         language: "js",
+        unique: true,
         explanation: {
           blockTitle: "Prototypes",
           what: "Every JavaScript object has an internal link to another object called its prototype. This prototype chain is the mechanism for inheritance and shared methods.",
@@ -554,6 +568,7 @@ export const Data: ColumnData[] = [
         title: "Event Loop",
         code: `console.log('start');\nsetTimeout(() => console.log('async'), 0);\nconsole.log('end');`,
         language: "js",
+        unique: true,
         explanation: {
           blockTitle: "Event Loop",
           what: "The event loop is JavaScript’s mechanism for handling asynchronous callbacks. It continuously checks the call stack and task queues, executing code in a non‑blocking fashion.",

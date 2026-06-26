@@ -9,11 +9,48 @@ export interface ExplanationData {
   how: string;
   example: string;
   tip?: string;
+  version?: string;
+  difficulty?: "beginner" | "intermediate" | "advanced";
+  memoryUsage?: number;
 }
 
 interface ExplanationColumnProps {
   data: ExplanationData | null;
   onClose: () => void;
+}
+
+const MEMORY_MAX = 128;
+function memoryBarWidth(bytes: number): string {
+  return `${Math.min((bytes / MEMORY_MAX) * 100, 100)}%`;
+}
+function memoryLabel(bytes: number): string {
+  if (bytes <= 8) return "Low";
+  if (bytes <= 32) return "Medium";
+  if (bytes <= 64) return "High";
+  return "Very High";
+}
+function memoryBarColor(bytes: number): string {
+  const t = Math.min(bytes, MEMORY_MAX);
+  if (t <= 8) return "hsl(120, 80%, 50%)";
+  if (t <= 32) {
+    const ratio = (t - 8) / (32 - 8);
+    const hue = 120 + ratio * (30 - 120);
+    return `hsl(${hue}, 80%, 50%)`;
+  }
+  if (t <= 64) {
+    const ratio = (t - 32) / (64 - 32);
+    const hue = 30 + ratio * (0 - 30);
+    return `hsl(${hue}, 80%, 50%)`;
+  }
+  return "hsl(0, 80%, 50%)";
+}
+function difficultyColor(level: string): string {
+  switch (level) {
+    case "beginner": return "#00e676";
+    case "intermediate": return "#ffb74d";
+    case "advanced": return "#ef5350";
+    default: return "#aaa";
+  }
 }
 
 export default function ExplanationColumn({
@@ -77,6 +114,54 @@ export default function ExplanationColumn({
                   <div className={styles.sectionLabel}>tip</div>
                   <p className={styles.sectionText}>{rendered.tip}</p>
                 </section>
+              )}
+
+              {(rendered.version || rendered.difficulty || rendered.memoryUsage != null) && (
+                <div className={styles.metaGroup}>
+                  <hr className={styles.divider} />
+
+                  {rendered.version && (
+                    <div className={styles.metaRow}>
+                      <span className={styles.metaLabel}>Version</span>
+                      <span className={styles.metaValue}>{rendered.version}</span>
+                    </div>
+                  )}
+
+                  {rendered.difficulty && (
+                    <div className={styles.metaRow}>
+                      <span className={styles.metaLabel}>Difficulty</span>
+                      <span
+                        className={styles.difficultyBadge}
+                        style={{ background: difficultyColor(rendered.difficulty) }}
+                      >
+                        {rendered.difficulty}
+                      </span>
+                    </div>
+                  )}
+
+                  {rendered.memoryUsage != null && (
+                    <div className={styles.memorySection}>
+                      <div className={styles.metaRow}>
+                        <span className={styles.metaLabel}>Memory Footprint</span>
+                        <span className={styles.metaValue}>
+                          {rendered.memoryUsage} B
+                        </span>
+                      </div>
+                      <div className={styles.memoryBarTrack}>
+                        <div
+                          className={styles.memoryBarFill}
+                          style={{
+                            width: memoryBarWidth(rendered.memoryUsage),
+                            background: memoryBarColor(rendered.memoryUsage),
+                          }}
+                        />
+                      </div>
+                      <div className={styles.memoryQualifier}>
+                        {memoryLabel(rendered.memoryUsage)}
+                      </div>
+                    </div>
+                  )}
+                </div>
               )}
             </>
           )}

@@ -1,3 +1,6 @@
+:root{
+  --green: rgb(0, 255, 208);
+}
 html {
   height: 100%;
 }
@@ -10,6 +13,10 @@ body {
 
 body {
   min-height: 100%;
+  font-family: var(--font-space-grotesk), sans-serif;
+  /* font-family: var(--font-oxanium), sans-serif;
+  font-family: var(--font-genos), sans-serif;
+  font-family: var(--font-sansation), sans-serif; */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -36,7 +43,7 @@ a {
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #07ff8f;
+  background-color: var(--green);
 }
 
 ::-webkit-scrollbar-thumb:hover {

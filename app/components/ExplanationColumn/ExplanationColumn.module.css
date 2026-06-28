@@ -22,7 +22,7 @@
   min-height: 80px;
   width: 100%;
   padding: 10px 10px 10px 20px;
-  background-color: rgb(255, 220, 80);
+  background-color: rgb(255, 218, 71);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -57,7 +57,9 @@
   opacity: 0.7;
   padding: 4px 6px;
   border-radius: 6px;
-  transition: opacity 150ms, background 150ms;
+  transition:
+    opacity 150ms,
+    background 150ms;
   line-height: 1;
 }
 
@@ -82,7 +84,7 @@
   font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 0.14em;
-  color: aquamarine;
+  color: var(--green);
   margin-bottom: 8px;
   font-weight: 600;
 }
@@ -110,14 +112,14 @@
 
 .tipSection {
   background: rgba(0, 222, 148, 0.08);
-  border-left: 3px solid aquamarine;
+  border-left: 3px solid var(--green);
   border-radius: 0 8px 8px 0;
   padding: 12px 14px;
   margin-top: 4px;
 }
 
 .tipSection .sectionLabel {
-  color: rgb(0, 255, 200);
+  color: var(--green);
 }
 
 .tipSection .sectionText {
@@ -141,7 +143,7 @@
   font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 0.14em;
-  color: aquamarine;
+  color: var(--green);
   font-weight: 600;
   min-width: 80px;
 }

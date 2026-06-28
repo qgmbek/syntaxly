@@ -15,8 +15,9 @@
   height: 12%;
   width: 100%;
   padding: 10px 10px 10px 20px;
-  background-color: rgb(30, 255, 180);
+  background-color: var(--green);
   border-right: 1px solid #000;
+  font-family: var(--font-sansation), sans-serif;
 }
 
 .number {
@@ -44,6 +45,7 @@
   height: 88%;
   width: 100%;
   padding: 10px;
+  background-color: rgb(54, 0, 148);
   background-color: rgb(44, 0, 120);
   overflow-y: auto;
 }
@@ -74,7 +76,7 @@
 }
 
 .block.blockActive {
-  outline: 3px solid aquamarine;
+  outline: 3px solid var(--green);
   box-shadow: 0 0 0 4px rgba(0, 255, 200, 0.18);
 }
 
@@ -88,7 +90,7 @@
   border-top-left-radius: 12px;
   border-bottom-right-radius: 12px;
   text-align: center;
-  background-color: aquamarine;
+  background-color: var(--green);
 }
 
 .block:hover :global(.copyBtn) {
@@ -161,4 +163,3 @@
   font-size: 12px;
   white-space: nowrap;
 }
-

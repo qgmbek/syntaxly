@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, Fragment, useMemo, useEffect, useCallback } from "react";
+import { useState, useMemo, useEffect, useCallback, useRef } from "react";
 import {
   Columns,
   DiamondsFour,
@@ -43,6 +43,8 @@ export default function Syntax() {
   const [shortcutsOpen, setShortcutsOpen] = useState(false);
   const [focusMode, setFocusMode] = useState(false);
 
+  const columnGroupRefs = useRef<(HTMLDivElement | null)[]>([]);
+
   const COLUMNS: ColumnData[] = useMemo(() => {
     if (!uniqueOnly) return Data;
     return Data.reduce<ColumnData[]>((acc, col) => {
@@ -51,6 +53,18 @@ export default function Syntax() {
       return acc;
     }, []);
   }, [uniqueOnly]);
+
+  useEffect(() => {
+    if (selected === null) return;
+    const el = columnGroupRefs.current[selected.columnIndex];
+    if (el) {
+      el.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+        inline: "nearest",
+      });
+    }
+  }, [selected?.columnIndex, selected?.blockIndex]);
 
   const openSearch = useCallback(() => {
     setSearchQuery("");
@@ -97,7 +111,11 @@ export default function Syntax() {
         return;
       }
 
-      if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key.toLowerCase() === "f") {
+      if (
+        (e.metaKey || e.ctrlKey) &&
+        e.shiftKey &&
+        e.key.toLowerCase() === "f"
+      ) {
         e.preventDefault();
         toggleFocusMode();
         return;
@@ -299,7 +317,13 @@ export default function Syntax() {
 
       <div className={styles.mainbar}>
         {COLUMNS.map((col, colIndex) => (
-          <Fragment key={col.number}>
+          <div
+            key={col.number}
+            className={styles.columnGroup}
+            ref={(el) => {
+              columnGroupRefs.current[colIndex] = el;
+            }}
+          >
             <Column
               data={col}
               fontSize={fontSize}
@@ -322,7 +346,7 @@ export default function Syntax() {
                 onClose={() => setSelected(null)}
               />
             )}
-          </Fragment>
+          </div>
         ))}
 
         {uniqueOnly && COLUMNS.length === 0 && (

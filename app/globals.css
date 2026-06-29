@@ -1,5 +1,7 @@
-:root{
+:root {
   --green: rgb(0, 255, 208);
+  --purple: rgb(191, 0, 255);
+  --main-black: rgb(0, 0, 0);
 }
 html {
   height: 100%;

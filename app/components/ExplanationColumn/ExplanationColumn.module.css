@@ -23,6 +23,7 @@
   width: 100%;
   padding: 10px 10px 10px 20px;
   background-color: rgb(255, 218, 71);
+  background-color: var(--purple);
   display: flex;
   flex-direction: column;
   justify-content: center;

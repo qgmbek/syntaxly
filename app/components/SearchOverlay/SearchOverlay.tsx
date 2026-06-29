@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  MagnifyingGlass,
-  ArrowRight,
-  X,
-  ArrowsVertical,
-  ArrowBendDownLeft,
-} from "@phosphor-icons/react";
+import { MagnifyingGlass, ArrowRight, X } from "@phosphor-icons/react";
 
 import styles from "./Searchoverlay.module.css";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -133,14 +127,14 @@ export default function SearchOverlay({
     <div className={styles.backdrop} onClick={onClose}>
       <div
         className={styles.panel}
-        onClick={(e) => e.stopPropagation()}
+        onClick={(e: { stopPropagation: () => void }) => e.stopPropagation()}
         role="dialog"
         aria-modal="true"
         aria-label="Search blocks"
       >
         <div className={styles.inputRow}>
           <MagnifyingGlass
-            size={15}
+            size={16}
             weight="regular"
             className={styles.searchIcon}
             aria-hidden="true"
@@ -167,8 +161,6 @@ export default function SearchOverlay({
             </button>
           )}
 
-          <kbd className={styles.esc}>ESC</kbd>
-
           {query && <div className={styles.scanLine} key={`scan-${scanKey}`} />}
         </div>
 
@@ -176,7 +168,7 @@ export default function SearchOverlay({
           {!query.trim() && (
             <div className={styles.idle}>
               <div className={styles.idleIcon}>
-                <MagnifyingGlass size={24} weight="thin" />
+                <MagnifyingGlass size={30} weight="light" />
               </div>
 
               <p className={styles.idleText}>Type to scan across all columns</p>
@@ -244,18 +236,7 @@ export default function SearchOverlay({
                 } FOUND`
               : `${columns.length} COLUMNS · ${totalBlocks} BLOCKS INDEXED`}
           </span>
-
-          <span
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "8px",
-            }}
-          >
-            <ArrowsVertical size={14} />
-            NAVIGATE ·
-            <ArrowBendDownLeft size={14} /> OPEN · ESC CLOSE
-          </span>
+          ESC CLOSE
         </div>
       </div>
     </div>

@@ -44,16 +44,16 @@ export default function KeyboardShortcutsModal({
       <div
         onClick={(e) => e.stopPropagation()}
         style={{
-          backgroundColor: "#1e1e1e",
-          color: "#f5f5f5",
+          backgroundColor: "#010101",
+          color: "#fffcfc",
           borderRadius: "12px",
           width: "480px",
           maxWidth: "90vw",
           padding: "24px",
           boxShadow:
             "0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.4)",
-          border: "1px solid #333",
-          fontFamily: "system-ui, -apple-system, sans-serif",
+          border: "1px solid #110e0e",
+          fontFamily: "var(--font-sansation), sans-serif",
         }}
       >
         <div
@@ -66,10 +66,10 @@ export default function KeyboardShortcutsModal({
         >
           <h3
             style={{
-              margin: 0,
-              fontSize: "18px",
-              fontWeight: 600,
+              fontSize: "25px",
+              fontWeight: 500,
               letterSpacing: "-0.5px",
+              color: "var(--purple)",
             }}
           >
             Keyboard Shortcuts
@@ -85,10 +85,10 @@ export default function KeyboardShortcutsModal({
                 justifyContent: "space-between",
                 alignItems: "center",
                 paddingBottom: "10px",
-                borderBottom: "1px solid #2a2a2a",
+                borderBottom: "1px solid #3d3d3d",
               }}
             >
-              <span style={{ fontSize: "14px", color: "#b3b3b3" }}>
+              <span style={{ fontSize: "14px", color: "#dadada" }}>
                 {item.desc}
               </span>
               <div
@@ -98,12 +98,12 @@ export default function KeyboardShortcutsModal({
                   <Fragment key={kIdx}>
                     <kbd
                       style={{
-                        backgroundColor: "#2d2d2d",
-                        border: "1px solid #444",
+                        backgroundColor: "#1f1f1f",
+                        border: "1px solid #6d6c6c",
                         borderRadius: "4px",
                         padding: "3px 6px",
                         fontSize: "12px",
-                        fontWeight: 600,
+                        fontWeight: 500,
                         fontFamily: "monospace",
                         color: "#fff",
                         boxShadow: "0 1px 1px rgba(0,0,0,0.2)",
@@ -126,7 +126,7 @@ export default function KeyboardShortcutsModal({
           style={{
             marginTop: "24px",
             width: "100%",
-            backgroundColor: "#860088",
+            backgroundColor: "#656565",
             color: "#fff",
             border: "none",
             borderRadius: "6px",
@@ -136,8 +136,8 @@ export default function KeyboardShortcutsModal({
             cursor: "pointer",
             transition: "background-color 0.15s ease",
           }}
-          onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#444")}
-          onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#333")}
+          onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "var(--purple)")}
+          onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#656565")}
         >
           Dismiss
         </button>

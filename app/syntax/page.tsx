@@ -15,6 +15,7 @@ import ExplanationColumn, {
 import SearchOverlay from "../components/SearchOverlay/SearchOverlay";
 import Minimap from "../components/Minimap/Minimap";
 import KeyboardShortcutsModal from "../components/KeyboardShortcutsModal/KeyboardShortcutsModal";
+import ThemeSwitcher from "../components/ThemeSwitcher/ThemeSwitcher";
 
 import styles from "./syntax.module.css";
 import { Data, ColumnData } from "./data";
@@ -312,6 +313,11 @@ export default function Syntax() {
           >
             <Keyboard size={18} weight="regular" />
           </button>
+
+          <ThemeSwitcher
+            buttonClassName={styles.expandButton}
+            activeButtonClassName={styles.expandButtonCompact}
+          />
         </div>
       )}
 

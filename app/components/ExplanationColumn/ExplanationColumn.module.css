@@ -22,8 +22,8 @@
   min-height: 80px;
   width: 100%;
   padding: 10px 10px 10px 20px;
-  background-color: rgb(255, 218, 71);
   background-color: var(--purple);
+  color: var(--explanation-meta-fg);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -73,7 +73,7 @@
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
-  background-color: rgb(20, 0, 80);
+  background-color: var(--explanation-main-bg);
   padding: 18px 16px;
 }
 
@@ -105,14 +105,14 @@
   padding: 14px 16px;
   font-size: 12.5px;
   line-height: 1.7;
-  color: rgb(200, 255, 200);
+  color: var(--explanation-code-color);
   margin: 0;
   white-space: pre-wrap;
   word-break: break-word;
 }
 
 .tipSection {
-  background: rgba(0, 222, 148, 0.08);
+  background: var(--explanation-tip-bg);
   border-left: 3px solid var(--green);
   border-radius: 0 8px 8px 0;
   padding: 12px 14px;
@@ -178,7 +178,7 @@
 
 .memoryBarFill {
   height: 100%;
-  background: linear-gradient(90deg, #00e676, #ffb74d, #ef5350);
+  background: var(--memory-bar-gradient);
   border-radius: 4px;
   transition: width 0.6s ease;
 }

@@ -1,8 +1,90 @@
-:root {
+:root,
+[data-theme="default"] {
   --green: rgb(0, 255, 208);
   --purple: rgb(191, 0, 255);
   --main-black: rgb(0, 0, 0);
+  --main-white: rgb(255, 255, 255);
+
+  --sidebar-btn-bg: rgba(255, 255, 255, 0.12);
+  --sidebar-btn-active: aquamarine;
+  --sidebar-border: rgba(0, 0, 0, 0.08);
+
+  --column-main-bg: rgb(44, 0, 120);
+  --column-block-bg: rgb(242, 233, 251);
+  --column-block-active-glow: rgba(0, 255, 200, 0.18);
+  --column-meta-border: #000;
+
+  --explanation-main-bg: rgb(20, 0, 80);
+  --explanation-code-color: rgb(200, 255, 200);
+  --explanation-tip-bg: rgba(0, 222, 148, 0.08);
+  --explanation-meta-fg: rgb(255, 255, 255);
+
+  --minimap-pill-bg: rgba(0, 0, 0, 0.22);
+  --minimap-pill-hover-bg: var(--purple);
+  --minimap-pill-active-bg: var(--purple);
+  --minimap-pill-active-glow: rgba(237, 74, 240, 0.5);
+  --minimap-label-fg: var(--purple);
+  --minimap-vertical-label-fg: rgba(0, 0, 0, 0.55);
+  --minimap-lane-divider: rgba(0, 0, 0, 0.12);
+  --minimap-border: rgba(0, 0, 0, 0.1);
+
+  --search-mark-bg: rgba(74, 240, 180, 0.18);
+  --memory-bar-gradient: linear-gradient(90deg, #00e676, #ffb74d, #ef5350);
+
+  --panel-border: rgba(0, 0, 0, 0.2);
+  --panel-muted: rgba(0, 0, 0, 0.55);
+  --panel-option-hover: rgba(0, 0, 0, 0.06);
+
+  --modal-bg: #010101;
+  --modal-fg: #fffcfc;
+  --modal-border: #110e0e;
+  --modal-accent: var(--purple);
+  --modal-btn-bg: #656565;
 }
+
+[data-theme="monochrome"] {
+  --green: rgb(255, 255, 255);
+  --purple: rgb(0, 0, 0);
+  --main-black: rgb(0, 0, 0);
+  --main-white: rgb(255, 255, 255);
+
+  --sidebar-btn-bg: rgba(0, 0, 0, 0.08);
+  --sidebar-btn-active: rgb(220, 220, 220);
+  --sidebar-border: rgba(0, 0, 0, 0.12);
+
+  --column-main-bg: rgb(24, 24, 24);
+  --column-block-bg: rgb(245, 245, 245);
+  --column-block-active-glow: rgba(255, 255, 255, 0.22);
+  --column-meta-border: rgb(0, 0, 0);
+
+  --explanation-main-bg: rgb(16, 16, 16);
+  --explanation-code-color: rgb(220, 220, 220);
+  --explanation-tip-bg: rgba(255, 255, 255, 0.06);
+  --explanation-meta-fg: rgb(255, 255, 255);
+
+  --minimap-pill-bg: rgba(0, 0, 0, 0.28);
+  --minimap-pill-hover-bg: rgb(0, 0, 0);
+  --minimap-pill-active-bg: rgb(0, 0, 0);
+  --minimap-pill-active-glow: rgba(0, 0, 0, 0.35);
+  --minimap-label-fg: rgba(0, 0, 0, 0.78);
+  --minimap-vertical-label-fg: rgba(0, 0, 0, 0.6);
+  --minimap-lane-divider: rgba(0, 0, 0, 0.14);
+  --minimap-border: rgba(0, 0, 0, 0.12);
+
+  --search-mark-bg: rgba(0, 0, 0, 0.12);
+  --memory-bar-gradient: linear-gradient(90deg, #bdbdbd, #757575, #424242);
+
+  --panel-border: rgba(0, 0, 0, 0.18);
+  --panel-muted: rgba(0, 0, 0, 0.55);
+  --panel-option-hover: rgba(0, 0, 0, 0.06);
+
+  --modal-bg: #ffffff;
+  --modal-fg: #111111;
+  --modal-border: #d8d8d8;
+  --modal-accent: var(--purple);
+  --modal-btn-bg: #e8e8e8;
+}
+
 html {
   height: 100%;
 }
@@ -31,7 +113,7 @@ body {
 
 a {
   text-decoration: none;
-  color: #000;
+  color: var(--main-black);
 }
 
 ::-webkit-scrollbar {
@@ -54,5 +136,5 @@ a {
 
 ::selection {
   background: transparent;
-  color: #000;
+  color: var(--main-black);
 }

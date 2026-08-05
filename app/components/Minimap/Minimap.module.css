@@ -7,9 +7,8 @@
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  background: rgba(0, 0, 0, 0.03);
   background-color: var(--green);
-  border-left: 1px solid rgba(0, 0, 0, 0.08);
+  border-left: 1px solid var(--minimap-border);
   z-index: 100;
   box-sizing: border-box;
 }
@@ -47,9 +46,10 @@
 .laneLabel {
   font-size: 8px;
   letter-spacing: 0.06em;
-  color: var(--purple);
+  color: var(--minimap-label-fg);
   line-height: 1;
   user-select: none;
+  font-weight: 600;
 }
 
 .pills {
@@ -70,7 +70,7 @@
   border: none;
   cursor: pointer;
   padding: 0;
-  background: rgba(255, 255, 255, 0.66);
+  background: var(--minimap-pill-bg);
   transition:
     background 0.15s,
     transform 0.15s,
@@ -78,18 +78,18 @@
 }
 
 .pill:hover {
-  background-color: var(--purple);
+  background-color: var(--minimap-pill-hover-bg);
   transform: scaleX(1.2);
 }
 
 .pillActive {
-  background: var(--purple) !important;
-  box-shadow: 0 0 6px rgba(237, 74, 240, 0.5);
+  background: var(--minimap-pill-active-bg) !important;
+  box-shadow: 0 0 6px var(--minimap-pill-active-glow);
 }
 
 .lane + .lane {
   padding-top: 6px;
-  border-top: 0.5px solid rgba(0, 0, 0, 0.07);
+  border-top: 0.5px solid var(--minimap-lane-divider);
 }
 
 .verticalLabel {
@@ -97,11 +97,11 @@
   padding: 8px 0;
   font-size: 8px;
   letter-spacing: 0.12em;
-  color: #000000;
+  color: var(--minimap-vertical-label-fg);
   writing-mode: vertical-rl;
   text-orientation: mixed;
   transform: rotate(180deg);
   user-select: none;
-  opacity: 0.6;
   align-self: center;
+  font-weight: 600;
 }

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Space_Grotesk, Oxanium, Genos, Sansation } from "next/font/google";
+
 import ThemeScript from "./components/ThemeScript";
 import "./globals.css";
 
@@ -44,6 +45,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={`
         ${spaceGrotesk.variable}
         ${oxanium.variable}

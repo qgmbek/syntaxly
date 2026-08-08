@@ -22,7 +22,7 @@
 .panel {
   width: 520px;
   max-width: calc(100vw - 32px);
-  background: var(--green);
+  background: var(--primary);
   border: 1px solid rgba(0, 0, 0, 0.2);
   border-radius: 12px;
   overflow: hidden;
@@ -39,7 +39,7 @@
 }
 
 .searchIcon {
-  color: var(--main-black);
+  color: var(--black);
   flex-shrink: 0;
 }
 
@@ -50,8 +50,8 @@
   outline: none;
   font-size: 13px;
   letter-spacing: 0.04em;
-  color: var(--main-black);
-  caret-color: var(--main-black);
+  color: var(--black);
+  caret-color: var(--black);
 }
 
 .input::placeholder {
@@ -64,7 +64,7 @@
   cursor: pointer;
   font-size: 18px;
   line-height: 1;
-  color: var(--main-black);
+  color: var(--black);
   padding: 0 2px;
   display: flex;
   align-items: center;
@@ -81,7 +81,7 @@
   top: 0;
   height: 100%;
   width: 1px;
-  background: var(--purple);
+  background: var(--secondary);
   border-radius: 0 1px 1px 0;
   animation: scan 0.9s ease-out forwards;
   pointer-events: none;
@@ -122,7 +122,7 @@
   justify-content: center;
   padding: 32px 16px;
   gap: 6px;
-  color: var(--main-black);
+  color: var(--black);
 }
 
 .idleIcon {
@@ -152,7 +152,7 @@
 
 .emptyCode {
   font-size: 13px;
-  color: var(--main-black);
+  color: var(--black);
   letter-spacing: 0.04em;
   margin-bottom: 3px;
 }
@@ -184,7 +184,7 @@
 
 .colLabel {
   font-size: 10px;
-  color: var(--purple);
+  color: var(--secondary);
   letter-spacing: 0.08em;
   min-width: 20px;
   flex-shrink: 0;
@@ -201,7 +201,7 @@
 
 .blockTitle {
   font-size: 15px;
-  color: var(--main-black);
+  color: var(--black);
   font-weight: 400;
   white-space: nowrap;
   overflow: hidden;
@@ -227,13 +227,13 @@
 
 .resultItem:hover .arrow,
 .resultItemActive .arrow {
-  color: var(--purple);
+  color: var(--secondary);
   transform: translateX(2px);
 }
 
 .mark {
-  background: var(--search-mark-bg);
-  color: var(--purple);
+  background: rgba(0, 255, 208, 0.18);
+  color: var(--secondary);
   border-radius: 2px;
   padding: 0 1px;
 }
@@ -246,5 +246,5 @@
   border-top: 1px solid rgba(0, 0, 0, 0.4);
   font-size: 11px;
   letter-spacing: 0.06em;
-  color: var(--main-black);
+  color: var(--black);
 }

@@ -44,15 +44,15 @@ export default function KeyboardShortcutsModal({
       <div
         onClick={(e) => e.stopPropagation()}
         style={{
-          backgroundColor: "var(--modal-bg)",
-          color: "var(--modal-fg)",
+          backgroundColor: "#010101",
+          color: "#fffcfc",
           borderRadius: "12px",
           width: "480px",
           maxWidth: "90vw",
           padding: "24px",
           boxShadow:
             "0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.4)",
-          border: "1px solid var(--modal-border)",
+          border: "1px solid #110e0e",
           fontFamily: "var(--font-sansation), sans-serif",
         }}
       >
@@ -69,7 +69,7 @@ export default function KeyboardShortcutsModal({
               fontSize: "25px",
               fontWeight: 500,
               letterSpacing: "-0.5px",
-              color: "var(--modal-accent)",
+              color: "var(--secondary)",
             }}
           >
             Keyboard Shortcuts
@@ -126,7 +126,7 @@ export default function KeyboardShortcutsModal({
           style={{
             marginTop: "24px",
             width: "100%",
-            backgroundColor: "var(--modal-btn-bg)",
+            backgroundColor: "#656565",
             color: "#fff",
             border: "none",
             borderRadius: "6px",
@@ -137,12 +137,12 @@ export default function KeyboardShortcutsModal({
             transition: "background-color 0.15s ease",
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = "var(--modal-accent)";
-            e.currentTarget.style.color = "var(--main-white)";
+            e.currentTarget.style.backgroundColor = "var(--secondary)";
+            e.currentTarget.style.color = "var(--white)";
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = "var(--modal-btn-bg)";
-            e.currentTarget.style.color = "var(--modal-fg)";
+            e.currentTarget.style.backgroundColor = "#656565";
+            e.currentTarget.style.color = "#fffcfc";
           }}
         >
           Dismiss

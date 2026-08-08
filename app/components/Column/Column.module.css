@@ -15,8 +15,8 @@
   height: 12%;
   width: 100%;
   padding: 10px 10px 10px 20px;
-  background-color: var(--green);
-  border-right: 1px solid var(--column-meta-border);
+  background-color: var(--primary);
+  border-right: 1px solid var(--black);
   font-family: var(--font-sansation), sans-serif;
 }
 
@@ -45,7 +45,7 @@
   height: 88%;
   width: 100%;
   padding: 10px;
-  background-color: var(--column-main-bg);
+  background-color: var(--column-bg);
   overflow-y: auto;
 }
 
@@ -75,8 +75,8 @@
 }
 
 .block.blockActive {
-  outline: 3px solid var(--green);
-  box-shadow: 0 0 0 4px var(--column-block-active-glow);
+  outline: 3px solid var(--primary);
+  box-shadow: 0 0 0 4px rgba(0, 255, 208, 0.18);
 }
 
 .blockTitle {
@@ -89,7 +89,7 @@
   border-top-left-radius: 12px;
   border-bottom-right-radius: 12px;
   text-align: center;
-  background-color: var(--green);
+  background-color: var(--primary);
 }
 
 .block:hover :global(.copyBtn) {

@@ -7,13 +7,13 @@
   max-width: 80px;
   height: 100vh;
   padding-top: 20px;
-  background-color: var(--green);
+  background-color: var(--primary);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 40px;
-  border-right: 1px solid var(--sidebar-border);
+  border-right: 1px solid rgba(0, 0, 0, 0.08);
 }
 
 .expandButton {
@@ -22,8 +22,8 @@
   height: 36px;
   border-radius: 50%;
   border: none;
-  background: var(--sidebar-btn-bg);
-  color: var(--main-black);
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--black);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -32,7 +32,7 @@
 }
 
 .expandButtonCompact {
-  background: var(--sidebar-btn-active);
+  background: var(--primary);
 }
 
 .fontControls {
@@ -81,8 +81,7 @@
 .name {
   writing-mode: vertical-rl;
   text-orientation: upright;
-  color: var(--purple);
-  color: var(--main-black);
+  color: var(--black);
   font-size: 28px;
 }
 

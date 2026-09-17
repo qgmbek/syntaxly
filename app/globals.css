@@ -178,3 +178,10 @@ a {
     transform: translateY(0);
   }
 }
+
+
+/* @media (pointer: fine) {
+  html, body, *, *::before, *::after {
+    cursor: none !important;
+  }
+} */

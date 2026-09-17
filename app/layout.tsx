@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Space_Grotesk, Oxanium, Genos, Sansation } from "next/font/google";
+// import CustomCursor from "./components/Cursor/Cursor";
 
 import ThemeScript from "./components/ThemeScript";
 import "./globals.css";
@@ -54,6 +55,7 @@ export default function RootLayout({
       `}
     >
       <body>
+        {/* <CustomCursor /> */}
         <ThemeScript />
         {children}
       </body>

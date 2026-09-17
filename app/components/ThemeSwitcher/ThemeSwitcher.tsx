@@ -63,6 +63,7 @@ export default function ThemeSwitcher({
         <div className={styles.options}>
           {THEMES.map((option) => {
             const isActive = theme === option.id;
+            const preview = THEME_PREVIEW_COLORS[option.id];
             return (
               <button
                 key={option.id}
@@ -72,7 +73,10 @@ export default function ThemeSwitcher({
                 className={`${styles.option} ${isActive ? styles.optionActive : ""}`}
                 onClick={() => selectTheme(option.id)}
               >
-                <span className={styles.optionLabel}>{option.label}</span>
+                <div className={styles.optionHeader}>
+                  <span className={styles.optionLabel}>{option.label}</span>
+                  {isActive && <span className={styles.activeDot} />}
+                </div>
                 <span className={styles.optionDescription}>
                   {option.description}
                 </span>
@@ -80,15 +84,23 @@ export default function ThemeSwitcher({
                   <span
                     className={styles.swatch}
                     style={{
-                      background: THEME_PREVIEW_COLORS[option.id].primary,
+                      background: preview.primary,
                     }}
                   />
                   <span
                     className={styles.swatch}
                     style={{
-                      background: THEME_PREVIEW_COLORS[option.id].secondary,
+                      background: preview.secondary,
                     }}
                   />
+                  {preview.accent && (
+                    <span
+                      className={styles.swatch}
+                      style={{
+                        background: preview.accent,
+                      }}
+                    />
+                  )}
                 </span>
               </button>
             );

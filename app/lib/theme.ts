@@ -1,4 +1,4 @@
-export type ThemeId = "default" | "monochrome";
+export type ThemeId = "default" | "monochrome" | "satisfying-fun";
 
 export interface ThemeOption {
   id: ThemeId;
@@ -10,18 +10,23 @@ export const THEMES: ThemeOption[] = [
   {
     id: "default",
     label: "Default",
-    description: "Green & purple",
+    description: "Cyan & Electric Purple",
   },
   {
     id: "monochrome",
     label: "Dark & White",
-    description: "White & black",
+    description: "Monochrome Minimal",
+  },
+  {
+    id: "satisfying-fun",
+    label: "Satisfying Fun",
+    description: "Soft Coral & Cosmic Violet",
   },
 ];
 
 export const THEME_PREVIEW_COLORS: Record<
   ThemeId,
-  { primary: string; secondary: string }
+  { primary: string; secondary: string; accent?: string }
 > = {
   default: {
     primary: "rgb(0, 255, 208)",
@@ -30,6 +35,11 @@ export const THEME_PREVIEW_COLORS: Record<
   monochrome: {
     primary: "rgb(255, 255, 255)",
     secondary: "rgb(0, 0, 0)",
+  },
+  "satisfying-fun": {
+    primary: "#FF6584",
+    secondary: "#7C5CFC",
+    accent: "#4ECCA3",
   },
 };
 
@@ -42,7 +52,7 @@ interface StoredTheme {
 }
 
 export function isThemeId(value: unknown): value is ThemeId {
-  return value === "default" || value === "monochrome";
+  return value === "default" || value === "monochrome" || value === "satisfying-fun";
 }
 
 export function loadTheme(): ThemeId {

@@ -121,7 +121,7 @@ a:hover {
 }
 
 ::selection {
-  background: var(--accent-soft);
+  background: var(--black);
   color: var(--secondary);
 }
 

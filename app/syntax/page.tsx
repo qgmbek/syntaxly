@@ -6,6 +6,8 @@ import {
   DiamondsFour,
   MagnifyingGlass,
   Keyboard,
+  ArrowLeft,
+  ArrowRight,
 } from "@phosphor-icons/react";
 
 import Column from "../components/Column/Column";
@@ -45,6 +47,7 @@ export default function Syntax() {
   const [focusMode, setFocusMode] = useState(false);
 
   const columnGroupRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const mainbarRef = useRef<HTMLDivElement>(null);
 
   const COLUMNS: ColumnData[] = useMemo(() => {
     if (!uniqueOnly) return Data;
@@ -84,6 +87,24 @@ export default function Syntax() {
   const toggleFocusMode = useCallback(() => {
     setFocusMode((prev) => !prev);
     setSelected(null);
+  }, []);
+
+  const scrollLeft = useCallback(() => {
+    if (mainbarRef.current) {
+      mainbarRef.current.scrollTo({
+        left: mainbarRef.current.scrollLeft - 500,
+        behavior: "smooth",
+      });
+    }
+  }, []);
+
+  const scrollRight = useCallback(() => {
+    if (mainbarRef.current) {
+      mainbarRef.current.scrollTo({
+        left: mainbarRef.current.scrollLeft + 500,
+        behavior: "smooth",
+      });
+    }
   }, []);
 
   useEffect(() => {
@@ -321,7 +342,7 @@ export default function Syntax() {
         </div>
       )}
 
-      <div className={styles.mainbar}>
+      <div className={styles.mainbar} ref={mainbarRef}>
         {COLUMNS.map((col, colIndex) => (
           <div
             key={col.number}
@@ -386,6 +407,24 @@ export default function Syntax() {
         isOpen={shortcutsOpen}
         onClose={() => setShortcutsOpen(false)}
       />
+
+      <button
+        className={`${styles.scrollButton} ${styles.scrollButtonLeft}`}
+        onClick={scrollLeft}
+        title="Scroll left"
+        aria-label="Scroll left"
+      >
+        <ArrowLeft size={24} weight="bold" />
+      </button>
+
+      <button
+        className={`${styles.scrollButton} ${styles.scrollButtonRight}`}
+        onClick={scrollRight}
+        title="Scroll right"
+        aria-label="Scroll right"
+      >
+        <ArrowRight size={24} weight="bold" />
+      </button>
     </div>
   );
 }

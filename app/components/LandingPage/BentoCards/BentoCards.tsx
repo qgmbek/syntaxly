@@ -16,6 +16,7 @@ import {
   Stack,
   Command,
   Cpu,
+  CubeTransparentIcon,
 } from "@phosphor-icons/react";
 
 import styles from "./BentoCards.module.css";
@@ -95,8 +96,8 @@ export default function BentoCards() {
 
       <div className={styles.headerWrapper}>
         <span className={styles.badge}>
-          <Sparkle size={14} weight="fill" />
-          WHAT&apos;S IN SYNTAXLY?
+          <CubeTransparentIcon size={32} />
+          WHAT IS IN SYNTAXLY?
         </span>
 
         <h2 className={styles.mainHeading}>
@@ -127,10 +128,8 @@ export default function BentoCards() {
             }`}
           />
 
-          <div className={styles.cardNoise} />
-
           <div className={styles.cardContent}>
-            <div className={styles.cardTopRow}>
+            <h3 className={styles.cardTitle}>
               <div className={styles.iconContainer}>
                 <ClockCounterClockwise
                   size={30}
@@ -146,14 +145,8 @@ export default function BentoCards() {
                   }}
                 />
               </div>
-
-              <div className={styles.livePill}>
-                <Pulse size={12} weight="fill" />
-                Instant
-              </div>
-            </div>
-
-            <h3 className={styles.cardTitle}>Built for Instant Recall</h3>
+              Built for Instant Recall
+            </h3>
 
             <p className={styles.cardDescription}>
               You haven&apos;t touched React or Go for months, and your mind
@@ -218,10 +211,9 @@ export default function BentoCards() {
             }`}
           />
 
-          <div className={styles.cardNoise} />
-
           <div className={styles.cardContent}>
-            <div className={styles.cardTopRow}>
+            <h3 className={styles.cardTitle}>
+              Single Page Execution
               <div className={styles.iconContainer}>
                 <SquaresFour
                   size={30}
@@ -237,14 +229,7 @@ export default function BentoCards() {
                   }}
                 />
               </div>
-
-              <div className={styles.livePill}>
-                <Cube size={12} weight="fill" />
-                Modular
-              </div>
-            </div>
-
-            <h3 className={styles.cardTitle}>Single Page Execution</h3>
+            </h3>
 
             <p className={styles.cardDescription}>
               Entire frameworks parsed into categorized modules on one
@@ -271,26 +256,14 @@ export default function BentoCards() {
         </div>
 
         <div className={`${styles.bentoCard} ${styles.fullWidthCard}`}>
-          <div className={styles.cardNoise} />
-
           <div className={styles.interactivePlaygroundHeader}>
             <div>
-              <span className={styles.previewLabel}>
-                <Command size={12} weight="bold" />
-                Live Engine Preview
-              </span>
-
               <h3
                 className={styles.cardTitle}
                 style={{ marginTop: "4px", marginBottom: 0 }}
               >
                 Pure Snippet Extraction
               </h3>
-            </div>
-
-            <div className={styles.onViewIndicator}>
-              <span className={styles.pulseDot} />
-              Interactive Component
             </div>
           </div>
 
@@ -318,29 +291,17 @@ export default function BentoCards() {
                           {syntaxData[typedKey].icon}
                         </div>
 
-                        <span
-                          className={`${styles.syntaxName} ${
-                            isSelected ? styles.syntaxNameActive : ""
-                          }`}
-                        >
+                        <span className={styles.syntaxName}>
                           {syntaxData[typedKey].name}
                         </span>
                       </div>
 
-                      <span
-                        className={`${styles.syntaxLang} ${
-                          isSelected ? styles.syntaxLangActive : ""
-                        }`}
-                      >
+                      <span className={styles.syntaxLang}>
                         {syntaxData[typedKey].lang}
                       </span>
                     </div>
 
-                    <code
-                      className={`${styles.inlineCodePreview} ${
-                        isSelected ? styles.inlineCodePreviewActive : ""
-                      }`}
-                    >
+                    <code className={styles.inlineCodePreview}>
                       {syntaxData[typedKey].shortCode}
                     </code>
                   </div>
@@ -353,11 +314,6 @@ export default function BentoCards() {
                 <span className={styles.breakdownLabel}>
                   <Lightning size={12} weight="fill" />
                   Real-time Breakdown
-                </span>
-
-                <span className={styles.fileName}>
-                  <FileCode size={12} />
-                  {syntaxData[activeBlock].name}.json
                 </span>
               </div>
 
@@ -393,10 +349,7 @@ export default function BentoCards() {
                 <div className={styles.detailItem}>
                   <div className={styles.detailLabel}>PRO TIPS</div>
 
-                  <div
-                    className={styles.detailValue}
-                    style={{ color: "#fbbf24" }}
-                  >
+                  <div className={styles.detailValue}>
                     {syntaxData[activeBlock].tips}
                   </div>
                 </div>

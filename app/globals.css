@@ -34,31 +34,34 @@
 }
 
 [data-theme="satisfying-fun"] {
-  --primary: #FF6584;
+  --primary: #ff6584;
   /* --primary: #00f2ff;
   --primary: #00aeff;
   --primary: #00d5ff; */
 
-
-
-  --secondary: #7C5CFC;
-  --black: #1E1A34;
-  --white: #FFFDFB;
-  --column-bg: #1B172E;
-  --column-block-bg: #FDF9F7;
+  --secondary: #7c5cfc;
+  --black: #1e1a34;
+  --white: #fffdfb;
+  --column-bg: #1b172e;
+  --column-block-bg: #fdf9f7;
   --explanation-bg: #151126;
-  --explanation-code: #5EEAD4;
-  --memory-gradient: linear-gradient(90deg, #5EEAD4 0%, #FCD34D 50%, #FF6584 100%);
+  --explanation-code: #5eead4;
+  --memory-gradient: linear-gradient(
+    90deg,
+    #5eead4 0%,
+    #fcd34d 50%,
+    #ff6584 100%
+  );
   --accent-soft: rgba(255, 101, 132, 0.18);
-  --tag-bg: #FFD5DE;
-  --tag-text: #5A162B;
+  --tag-bg: #ffd5de;
+  --tag-text: #5a162b;
   --card-border: rgba(124, 92, 252, 0.18);
   --glow-color: rgba(255, 101, 132, 0.35);
-  --fun-mint: #5EEAD4;
-  --fun-peach: #FF9E7D;
-  --fun-yellow: #FDE68A;
-  --fun-lavender: #DDD6FE;
-  --fun-gradient: linear-gradient(135deg, #FF6584 0%, #7C5CFC 100%);
+  --fun-mint: #5eead4;
+  --fun-peach: #ff9e7d;
+  --fun-yellow: #fde68a;
+  --fun-lavender: #ddd6fe;
+  --fun-gradient: linear-gradient(135deg, #ff6584 0%, #7c5cfc 100%);
 }
 
 html {
@@ -76,7 +79,9 @@ body {
   font-family: var(--font-space-grotesk), sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  transition: background-color 0.3s cubic-bezier(0.16, 1, 0.3, 1), color 0.3s ease;
+  transition:
+    background-color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+    color 0.3s ease;
 }
 
 * {
@@ -88,6 +93,11 @@ body {
 a {
   text-decoration: none;
   color: var(--black);
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: var(--secondary);
 }
 
 ::-webkit-scrollbar {
@@ -116,7 +126,6 @@ a {
 }
 
 @keyframes softPulse {
-
   0%,
   100% {
     transform: scale(1);
@@ -130,7 +139,6 @@ a {
 }
 
 @keyframes subtleFloat {
-
   0%,
   100% {
     transform: translateY(0);
@@ -178,7 +186,6 @@ a {
     transform: translateY(0);
   }
 }
-
 
 /* @media (pointer: fine) {
   html, body, *, *::before, *::after {

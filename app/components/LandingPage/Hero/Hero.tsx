@@ -188,6 +188,8 @@ export default function Hero() {
 
   return (
     <div ref={containerRef} className={styles.container}>
+      <div className={styles.bgOrb} />
+
       <div className={styles.overlayContainer}>
         {cells.map((cell, idx) => {
           const opacity = highlightOpacities[idx] || 0;
@@ -196,37 +198,39 @@ export default function Hero() {
             left: cell.left,
             width: cell.width,
             height: cell.height,
-            backgroundColor: `rgba(255, 215, 0, ${opacity})`,
+            backgroundColor: `rgba(0, 255, 208, ${opacity})`,
           };
 
           if (opacity > 0) {
             const blur = 20 * opacity;
             const spread = 6 * opacity;
-            cellStyle.boxShadow = `0 0 ${blur}px ${spread}px rgba(255, 215, 0, ${opacity * 0.7})`;
+            cellStyle.boxShadow = `0 0 ${blur}px ${spread}px rgba(0, 255, 208, ${opacity * 0.7})`;
           }
 
           return (
-            <div
-              key={idx}
-              className={styles.overlayCell}
-              style={cellStyle}
-            />
+            <div key={idx} className={styles.overlayCell} style={cellStyle} />
           );
         })}
       </div>
 
       <div className={styles.content}>
-        <div className={styles.title}>Syntax cheatsheet for programming.</div>
+        <div className={styles.title}>
+          Syntax <span className={styles.highlighted}>cheatsheet</span> for{" "}
+          <br /> programming.
+        </div>
         <div className={styles.subtitle}>
           Browse every syntax at a glance, organized into blocks by topic. Click
           any one to see a quick refresher: definition, usage, example, and
           tips.
         </div>
         <div className={styles.buttonContainer}>
-          <a href="/syntax" className={styles.getButton}>
+          <a href="/syntax" className={` ${styles.button} ${styles.getButton}`}>
             Get Started
           </a>
-          <a href="/syntax" className={styles.learnButton}>
+          <a
+            href="/syntax"
+            className={` ${styles.button} ${styles.learnButton}`}
+          >
             Learn Syntaxly
           </a>
         </div>

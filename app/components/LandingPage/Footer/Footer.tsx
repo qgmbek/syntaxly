@@ -1,3 +1,4 @@
+import Link from "next/link";
 import styles from "./Footer.module.css";
 
 export default function Footer() {
@@ -14,34 +15,34 @@ export default function Footer() {
         <div className={styles.linksGrid}>
           <div className={styles.column}>
             <div className={styles.heading}>Product</div>
-            <a href="#">How it works</a>
-            <a href="#">Features</a>
-            <a href="#">Pricing</a>
-            <a href="#">FAQ</a>
+            <Link href="/how-it-works">How it works</Link>
+            <Link href="/features">Features</Link>
+            <Link href="/pricing">Pricing</Link>
+            <Link href="/faq">FAQ</Link>
           </div>
 
           <div className={styles.column}>
             <div className={styles.heading}>Company</div>
-            <a href="#">About</a>
-            <a href="#">Careers</a>
-            <a href="#">Brand</a>
-            <a href="#">Contact</a>
+            <Link href="/about">About</Link>
+            <Link href="/careers">Careers</Link>
+            <Link href="/brand">Brand</Link>
+            <Link href="/contact">Contact</Link>
           </div>
 
           <div className={styles.column}>
             <div className={styles.heading}>Resources</div>
-            <a href="#">Download</a>
-            <a href="#">Terms of Use</a>
-            <a href="#">Privacy Policy</a>
-            <a href="#">Support</a>
+            <Link href="/download">Download</Link>
+            <Link href="/terms">Terms of Use</Link>
+            <Link href="/privacy">Privacy Policy</Link>
+            <Link href="/support">Support</Link>
           </div>
 
           <div className={styles.column}>
             <div className={styles.heading}>Connect</div>
-            <a href="#">X (Twitter)</a>
-            <a href="#">Instagram</a>
-            <a href="#">LinkedIn</a>
-            <a href="#">YouTube</a>
+            <Link href="/x">X (Twitter)</Link>
+            <Link href="/instagram">Instagram</Link>
+            <Link href="/linkedin">LinkedIn</Link>
+            <Link href="/youtube">YouTube</Link>
           </div>
         </div>
       </div>

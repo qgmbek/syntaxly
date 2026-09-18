@@ -78,7 +78,6 @@ export default function ExplanationColumn({
     >
       <div className={styles.column}>
         <div className={styles.meta}>
-          <div className={styles.label}>explanation</div>
           <div className={styles.title}>{rendered?.blockTitle ?? ""}</div>
           <button
             className={styles.close}
@@ -118,8 +117,6 @@ export default function ExplanationColumn({
 
               {(rendered.version || rendered.difficulty || rendered.memoryUsage != null) && (
                 <div className={styles.metaGroup}>
-                  <hr className={styles.divider} />
-
                   {rendered.version && (
                     <div className={styles.metaRow}>
                       <span className={styles.metaLabel}>Version</span>

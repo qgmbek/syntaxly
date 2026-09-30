@@ -299,10 +299,10 @@ export default function Syntax() {
           <button
             onClick={openSearch}
             title="Search blocks (Ctrl+K)"
-            className={`${styles.expandButton} ${searchOpen ? styles.expandButtonCompact : ""}`}
+            className={`${styles.sidebarButton} ${searchOpen ? styles.sidebarButtonCompact : ""}`}
             aria-label="Search blocks"
           >
-            <MagnifyingGlass size={18} weight="regular" aria-hidden="true" />
+            <MagnifyingGlass size={22} weight="light" aria-hidden="true" />
           </button>
 
           <button
@@ -313,31 +313,31 @@ export default function Syntax() {
                 : "Show unique blocks only (Ctrl+U)"
             }
             aria-pressed={uniqueOnly}
-            className={`${styles.expandButton} ${uniqueOnly ? styles.expandButtonCompact : ""}`}
+            className={`${styles.sidebarButton} ${uniqueOnly ? styles.sidebarButtonCompact : ""}`}
           >
-            <DiamondsFour size={18} weight={uniqueOnly ? "fill" : "regular"} />
+            <DiamondsFour size={22} weight={uniqueOnly ? "fill" : "light"} />
           </button>
 
           <button
             onClick={() => setCompact((c) => !c)}
             title={compact ? "Expand columns" : "Overview"}
-            className={`${styles.expandButton} ${compact ? styles.expandButtonCompact : ""}`}
+            className={`${styles.sidebarButton} ${compact ? styles.sidebarButtonCompact : ""}`}
           >
-            <Columns size={18} weight={compact ? "fill" : "regular"} />
+            <Columns size={22} weight={compact ? "fill" : "light"} />
           </button>
 
           <button
             onClick={() => setShortcutsOpen(true)}
             title="Keyboard Shortcuts"
-            className={styles.expandButton}
+            className={styles.sidebarButton}
             aria-label="View Keyboard Shortcuts"
           >
-            <Keyboard size={18} weight="regular" />
+            <Keyboard size={18} weight="light" />
           </button>
 
           <ThemeSwitcher
-            buttonClassName={styles.expandButton}
-            activeButtonClassName={styles.expandButtonCompact}
+            buttonClassName={styles.sidebarButton}
+            activeButtonClassName={styles.sidebarButtonCompact}
           />
         </div>
       )}

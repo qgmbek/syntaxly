@@ -33,9 +33,9 @@ export default function CopyButton({ text }: CopyButtonProps) {
       aria-label={copied ? "Copied" : "Copy code to clipboard"}
     >
       {copied ? (
-        <Check size={16} weight="bold" />
+        <Check size={18} weight="regular" className={styles.icon} />
       ) : (
-        <Copy size={16} weight="regular" />
+        <Copy size={18} weight="regular" className={styles.icon} />
       )}
     </button>
   );

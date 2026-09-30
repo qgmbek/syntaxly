@@ -6,33 +6,20 @@
 .sidebar {
   max-width: 80px;
   height: 100vh;
-  padding-top: 20px;
   background-color: var(--primary);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 40px;
-  border-right: 1px solid rgba(0, 0, 0, 0.08);
+  border-right: 1px solid rgba(0, 0, 0, 0.11);
 }
 
-.expandButton {
-  z-index: 100;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  border: none;
-  background: rgba(255, 255, 255, 0.12);
+.name {
+  writing-mode: vertical-rl;
+  text-orientation: upright;
   color: var(--black);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 200ms ease;
-}
-
-.expandButtonCompact {
-  background: var(--primary);
+  font-size: 28px;
 }
 
 .fontControls {
@@ -60,11 +47,11 @@
 }
 
 .fontBtn:hover {
-  background: rgba(0, 0, 0, 0.08);
+  color: var(--secondary);
 }
 
 .fontBtn:active {
-  background: rgba(0, 0, 0, 0.15);
+  background: var(--accent-soft);
 }
 
 .fontValue {
@@ -78,11 +65,25 @@
   user-select: none;
 }
 
-.name {
-  writing-mode: vertical-rl;
-  text-orientation: upright;
+.sidebarButton {
+  z-index: 100;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
   color: var(--black);
-  font-size: 28px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 100ms ease;
+}
+
+.sidebarButton:hover{
+  color: var(--secondary);
+}
+
+.sidebarButtonCompact {
+  color: var(--secondary);
 }
 
 .mainbar {
@@ -142,7 +143,7 @@
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
 }
 
-.scrollButtonLeft{
+.scrollButtonLeft {
   left: 50px;
   right: auto;
 }

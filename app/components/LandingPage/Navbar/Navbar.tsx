@@ -1,218 +1,234 @@
 "use client";
 
-import { useState } from "react";
-import { CaretDown } from "@phosphor-icons/react";
+import { useEffect, useState, type ReactNode } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+
+import {
+  CaretDown,
+  List,
+  X,
+  Lightning,
+  Stack,
+  BracketsCurly,
+  MagnifyingGlass,
+  DiamondsFour,
+  Columns,
+  Palette,
+} from "@phosphor-icons/react";
 
 import styles from "./Navbar.module.css";
 
-type MenuType = "offers" | "audience" | null;
+type MenuKey = "features" | "tools";
+
+type MenuItem = {
+  icon: ReactNode;
+  title: string;
+  text: string;
+  href: string;
+};
+
+const MENUS: Record<MenuKey, { label: string; items: MenuItem[] }> = {
+  features: {
+    label: "Features",
+    items: [
+      {
+        icon: <Lightning size={26} weight="duotone" />,
+        title: "Instant recall",
+        text: "The boilerplate you forgot, in two seconds instead of a documentation detour.",
+        href: "/syntax",
+      },
+      {
+        icon: <Stack size={26} weight="duotone" />,
+        title: "One canvas",
+        text: "Every topic sits in a column on a single page. Scan a whole language at a glance.",
+        href: "/syntax",
+      },
+      {
+        icon: <BracketsCurly size={26} weight="duotone" />,
+        title: "Live breakdown",
+        text: "Click any block for what it is, how it's used, an example, and a tip.",
+        href: "/syntax",
+      },
+    ],
+  },
+  tools: {
+    label: "Tools",
+    items: [
+      {
+        icon: <MagnifyingGlass size={26} weight="duotone" />,
+        title: "Quick search",
+        text: "Jump to any block from anywhere with Ctrl K.",
+        href: "/syntax",
+      },
+      {
+        icon: <DiamondsFour size={26} weight="duotone" />,
+        title: "Unique filter",
+        text: "Show only the syntax that is unique to the language. Ctrl U.",
+        href: "/syntax",
+      },
+      {
+        icon: <Columns size={26} weight="duotone" />,
+        title: "Focus mode",
+        text: "Hide the chrome and keep only the columns. Ctrl Shift F.",
+        href: "/syntax",
+      },
+      {
+        icon: <Palette size={26} weight="duotone" />,
+        title: "Themes",
+        text: "Three palettes, one click, same layout.",
+        href: "/syntax",
+      },
+    ],
+  },
+};
+
+const LINKS = [
+  { label: "About", href: "/about" },
+  { label: "Contact", href: "/contact" },
+];
 
 export default function Navbar() {
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-  const [activeMenu, setActiveMenu] = useState<MenuType>(null);
+  const pathname = usePathname();
+  const [menu, setMenu] = useState<MenuKey | null>(null);
+  const [shown, setShown] = useState<MenuKey>("features");
+  const [mobileOpen, setMobileOpen] = useState(false);
 
-  const handleMouseEnter = (index: number, menu: MenuType) => {
-    setHoveredIndex(index);
-    setActiveMenu(menu);
+  const open = (key: MenuKey) => {
+    setMenu(key);
+    setShown(key);
   };
 
-  const handleMouseLeave = () => {
-    setHoveredIndex(null);
-    setActiveMenu(null);
-  };
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setMenu(null);
+        setMobileOpen(false);
+      }
+    };
+
+    window.addEventListener("keydown", onKey);
+
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
 
   return (
-    <div className={styles.headerWrapper} onMouseLeave={handleMouseLeave}>
+    <div className={styles.headerWrapper} onMouseLeave={() => setMenu(null)}>
       <header className={styles.navbar}>
-        <div className={styles.logo}>
-          <div className={styles.logoIcon}>✦</div>
+        <Link href="/" className={styles.logo} aria-label="Syntaxly home">
+          <span className={styles.logoMark}>✦</span>
           <span className={styles.logoText}>syntaxly</span>
-        </div>
+        </Link>
 
-        <nav className={styles.centerNav}>
-          <div
-            className={styles.navItem}
-            onMouseEnter={() => handleMouseEnter(0, "offers")}
-          >
-            <button
-              className={`${styles.navButton} ${
-                activeMenu === "offers" || hoveredIndex === 0
-                  ? styles.activeButton
-                  : ""
-              }`}
+        <nav className={styles.centerNav} aria-label="Main">
+          {(Object.keys(MENUS) as MenuKey[]).map((key) => (
+            <div
+              key={key}
+              className={styles.navItem}
+              onMouseEnter={() => open(key)}
             >
-              What we offer
-              <div
-                className={`${styles.caret} ${
-                  activeMenu === "offers" ? styles.caretRotate : ""
+              <button
+                className={`${styles.navButton} ${
+                  menu === key ? styles.navActive : ""
                 }`}
+                aria-expanded={menu === key}
+                aria-haspopup="true"
+                onClick={() => (menu === key ? setMenu(null) : open(key))}
+                onFocus={() => open(key)}
               >
-                <CaretDown size={13} weight="bold" />
-              </div>
-            </button>
+                {MENUS[key].label}
 
+                <span
+                  className={`${styles.caret} ${
+                    menu === key ? styles.caretRotate : ""
+                  }`}
+                >
+                  <CaretDown size={13} weight="bold" />
+                </span>
+              </button>
+            </div>
+          ))}
+
+          {LINKS.map((l) => (
             <div
-              className={`${styles.hoverBackground} ${
-                hoveredIndex === 0 ? styles.hoverVisible : ""
-              }`}
-            />
-          </div>
-
-          <div
-            className={styles.navItem}
-            onMouseEnter={() => handleMouseEnter(1, "audience")}
-          >
-            <button
-              className={`${styles.navButton} ${
-                activeMenu === "audience" || hoveredIndex === 1
-                  ? styles.activeButton
-                  : ""
-              }`}
+              key={l.href}
+              className={styles.navItem}
+              onMouseEnter={() => setMenu(null)}
             >
-              Who&apos;s it for
-              <div
-                className={`${styles.caret} ${
-                  activeMenu === "audience" ? styles.caretRotate : ""
+              <Link
+                href={l.href}
+                className={`${styles.navButton} ${
+                  pathname === l.href ? styles.current : ""
                 }`}
+                aria-current={pathname === l.href ? "page" : undefined}
               >
-                <CaretDown size={13} weight="bold" />
-              </div>
-            </button>
-
-            <div
-              className={`${styles.hoverBackground} ${
-                hoveredIndex === 1 ? styles.hoverVisible : ""
-              }`}
-            />
-          </div>
-
-          <div
-            className={styles.navItem}
-            onMouseEnter={() => handleMouseEnter(2, null)}
-          >
-            <button
-              className={`${styles.navButton} ${
-                hoveredIndex === 2 ? styles.activeButton : ""
-              }`}
-            >
-              Pricing
-            </button>
-
-            <div
-              className={`${styles.hoverBackground} ${
-                hoveredIndex === 2 ? styles.hoverVisible : ""
-              }`}
-            />
-          </div>
-
-          <div
-            className={styles.navItem}
-            onMouseEnter={() => handleMouseEnter(3, null)}
-          >
-            <button
-              className={`${styles.navButton} ${
-                hoveredIndex === 3 ? styles.activeButton : ""
-              }`}
-            >
-              About
-            </button>
-
-            <div
-              className={`${styles.hoverBackground} ${
-                hoveredIndex === 3 ? styles.hoverVisible : ""
-              }`}
-            />
-          </div>
+                {l.label}
+              </Link>
+            </div>
+          ))}
         </nav>
 
-        <button className={styles.ctaButton}>Get started</button>
+        <div className={styles.right}>
+          <Link href="/syntax" className={styles.ctaButton}>
+            Get started
+          </Link>
+
+          <button
+            className={styles.menuToggle}
+            onClick={() => setMobileOpen((v) => !v)}
+            aria-label={mobileOpen ? "Close menu" : "Open menu"}
+            aria-expanded={mobileOpen}
+          >
+            {mobileOpen ? <X size={24} /> : <List size={24} />}
+          </button>
+        </div>
       </header>
 
-      <div
-        className={`${styles.megaMenu} ${activeMenu ? styles.menuOpen : ""}`}
-      >
-        <div className={styles.menuContainer}>
-          {activeMenu === "offers" && (
-            <>
-              <div className={styles.card}>
-                <img
-                  src="/img1.jpg"
-                  alt="AI Practice"
-                  sizes="110px"
-                  className={styles.cardImage}
-                />
+      <div className={`${styles.megaMenu} ${menu ? styles.menuOpen : ""}`}>
+        <div className={styles.menuContainer} key={shown}>
+          {MENUS[shown].items.map((item) => (
+            <Link
+              key={item.title}
+              href={item.href}
+              className={styles.item}
+              tabIndex={menu ? 0 : -1}
+            >
+              <span className={styles.itemIcon}>{item.icon}</span>
 
-                <div>
-                  <h3 className={styles.cardTitle}>AI Practice Management</h3>
-
-                  <p className={styles.cardDescription}>
-                    Your clients, meetings, and tasks - captured by AI,
-                    searchable in seconds.
-                  </p>
-                </div>
-              </div>
-
-              <div className={styles.card}>
-                <img
-                  src="/img2.jpg"
-                  alt="AI Practice"
-                  sizes="110px"
-                  className={styles.cardImage}
-                />
-
-                <div>
-                  <h3 className={styles.cardTitle}>Execution & Custody</h3>
-
-                  <p className={styles.cardDescription}>
-                    Trade, rebalance, and custody - all in one seamless,
-                    high-performance interface.
-                  </p>
-                </div>
-              </div>
-            </>
-          )}
-
-          {activeMenu === "audience" && (
-            <>
-              <div className={styles.card}>
-                <img
-                  src="/img1.jpg"
-                  alt="AI Practice"
-                  sizes="110px"
-                  className={styles.cardImage}
-                />
-
-                <div>
-                  <h3 className={styles.cardTitle}>AI Practice Management</h3>
-
-                  <p className={styles.cardDescription}>
-                    Your clients, meetings, and tasks - captured by AI,
-                    searchable in seconds.
-                  </p>
-                </div>
-              </div>
-
-              <div className={styles.card}>
-                <img
-                  src="/img2.jpg"
-                  alt="AI Practice"
-                  sizes="110px"
-                  className={styles.cardImage}
-                />
-
-                <div>
-                  <h3 className={styles.cardTitle}>Execution & Custody</h3>
-
-                  <p className={styles.cardDescription}>
-                    Trade, rebalance, and custody - all in one seamless,
-                    high-performance interface.
-                  </p>
-                </div>
-              </div>
-            </>
-          )}
+              <span>
+                <span className={styles.itemTitle}>{item.title}</span>
+                <span className={styles.itemText}>{item.text}</span>
+              </span>
+            </Link>
+          ))}
         </div>
       </div>
+
+      {mobileOpen && (
+        <div className={styles.mobilePanel}>
+          {(Object.keys(MENUS) as MenuKey[]).flatMap((key) =>
+            MENUS[key].items.map((item) => (
+              <Link
+                key={item.title}
+                href={item.href}
+                className={styles.mobileLink}
+              >
+                {item.title}
+              </Link>
+            )),
+          )}
+
+          {LINKS.map((l) => (
+            <Link key={l.href} href={l.href} className={styles.mobileLink}>
+              {l.label}
+            </Link>
+          ))}
+
+          <Link href="/syntax" className={styles.mobileCta}>
+            Get started
+          </Link>
+        </div>
+      )}
     </div>
   );
 }

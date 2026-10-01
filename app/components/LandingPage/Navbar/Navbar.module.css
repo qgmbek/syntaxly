@@ -3,54 +3,60 @@
   top: 0;
   left: 0;
   width: 100%;
-  font-family:
-    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  z-index: 100;
+  font-family: inherit;
 }
 
 .navbar {
+  position: relative;
+  z-index: 100;
   width: 100%;
   height: 84px;
-  padding: 0px 86px;
+  padding: 0 5vw;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  position: relative;
-  z-index: 100;
   background: transparent;
-  color: #000;
+  color: var(--black);
 }
 
 .logo {
   display: flex;
   align-items: center;
-  gap: 12px;
-  cursor: pointer;
+  gap: 10px;
+  color: var(--black);
 }
 
-.logoIcon {
+.logoMark {
   width: 28px;
   height: 28px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 50%;
-  border: 1.5px dashed rgba(255, 255, 255, 0.6);
-  font-size: 0.8rem;
+  font-size: 0.85rem;
+  color: var(--black);
+  background: var(--primary);
+  border-radius: 2px;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.logo:hover .logoMark {
+  transform: rotate(90deg);
 }
 
 .logoText {
-  font-size: 1.6rem;
-  font-weight: 400;
-  letter-spacing: -0.02em;
+  font-size: 1.5rem;
+  font-weight: 500;
+  letter-spacing: -0.04em;
 }
 
 .centerNav {
-  display: flex;
-  align-items: center;
-  gap: 4px;
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .navItem {
@@ -58,72 +64,88 @@
 }
 
 .navButton {
-  height: 44px;
-  padding: 0px 18px;
-  border: none;
-  outline: none;
-  background: transparent;
-  color: rgb(0, 0, 0);
+  position: relative;
+  height: 40px;
+  padding: 0 16px;
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 0.95rem;
-  font-weight: 400;
+  font: inherit;
+  font-size: 16px;
+  color: var(--black);
+  background: transparent;
+  border: 0;
+  border-radius: 2px;
   cursor: pointer;
-  position: relative;
-  z-index: 2;
-  transition: color 0.25s ease;
+  transition: background 0.2s ease;
 }
 
-.activeButton {
-  color: #ff7700;
+.navButton:hover,
+.navActive {
+  background: var(--accent-soft);
+  color: var(--black);
 }
 
-.hoverBackground {
+.navButton:focus-visible,
+.ctaButton:focus-visible,
+.menuToggle:focus-visible,
+.item:focus-visible {
+  outline: 2px solid var(--secondary);
+  outline-offset: 2px;
+}
+
+.current::after {
+  content: "";
   position: absolute;
-  inset: 0;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.06);
-  opacity: 0;
-  transform: scale(0.95);
-  transition:
-    opacity 0.2s ease,
-    transform 0.2s ease;
-  z-index: 1;
-}
-
-.hoverVisible {
-  opacity: 1;
-  transform: scale(1);
+  left: 16px;
+  right: 16px;
+  bottom: 3px;
+  height: 2px;
+  background: var(--primary);
+  border-radius: 2px;
 }
 
 .caret {
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   display: flex;
   align-items: center;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .caretRotate {
   transform: rotate(180deg);
 }
 
+.right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
 .ctaButton {
-  height: 40px;
-  padding: 0 20px;
-  font-size: 15px;
-  font-weight: 400;
-  border-radius: 999px;
-  cursor: pointer;
-  background: rgba(0, 0, 0, 0.045);
-  border: 1px solid rgba(0, 0, 0, 0.2);
-  transition:
-    background 0.25s ease,
-    border-color 0.25s ease;
+  padding: 12px 20px;
+  font-size: 16px;
+  color: #fff;
+  background: #000;
+  border-radius: 2px;
+  transition: transform 0.2s ease;
 }
 
 .ctaButton:hover {
-  background: rgba(0, 0, 0, 0.08);
-  border-color: rgba(0, 0, 0, 0.4);
+  color: #fff;
+  transform: translateY(-3px);
+}
+
+.menuToggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  color: var(--black);
+  background: transparent;
+  border: 1px solid #000;
+  border-radius: 2px;
+  cursor: pointer;
 }
 
 .megaMenu {
@@ -131,19 +153,17 @@
   top: 84px;
   left: 0;
   width: 100%;
-  background-color: #fffefe;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-  height: fit-content;
-  min-height: 190px;
+  z-index: 90;
+  background: #fff;
+  border-top: 1px solid rgba(15, 23, 42, 0.08);
+  border-bottom: 1px solid rgba(15, 23, 42, 0.12);
   opacity: 0;
   visibility: hidden;
   transform: translateY(-8px);
   transition:
     opacity 0.25s ease,
-    transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
     visibility 0.25s;
-  z-index: 90;
-  overflow: hidden;
 }
 
 .menuOpen {
@@ -153,44 +173,150 @@
 }
 
 .menuContainer {
-  width: fit-content;
+  max-width: 1150px;
   margin: 0 auto;
-  padding: 24px 86px;
-  height: 100%;
+  padding: 28px 24px 32px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 24px;
+  animation: menuSwap 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes menuSwap {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.item {
+  position: relative;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
+  gap: 16px;
+  padding: 20px;
+  color: #111;
+  border-radius: 2px;
+  overflow: hidden;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.card {
+.item::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at top left,
+    rgba(0, 255, 208, 0.16),
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.item:hover {
+  color: #111;
+  transform: translateY(-3px);
+}
+
+.item:hover::before {
+  opacity: 1;
+}
+
+.itemIcon {
+  position: relative;
   display: flex;
-  flex-direction: row;
-  align-items: center;
-  width: fit-content;
-  gap: 20px;
+  flex-shrink: 0;
 }
 
-.cardImage {
-  width: 125px;
-  height: 175px;
-  object-fit: contain;
-  opacity: 0.8;
+.itemTitle {
+  position: relative;
+  display: block;
+  margin-bottom: 6px;
+  font-size: 20px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
 }
 
-.cardTitle {
-  font-size: 1.25rem;
-  font-weight: 400;
-  color: #000000;
-  margin: 0 0 4px 0;
-  font-family: "Times New Roman", Times, serif;
-  letter-spacing: -0.01em;
-}
-
-.cardDescription {
-  font-size: 0.88rem;
+.itemText {
+  position: relative;
+  display: block;
+  font-size: 15px;
   line-height: 1.4;
-  color: rgba(0, 0, 0, 0.45);
-  margin: 0;
-  max-width: 340px;
+  color: #525252;
+}
+
+.mobilePanel {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .centerNav,
+  .megaMenu {
+    display: none;
+  }
+
+  .menuToggle {
+    display: flex;
+  }
+
+  .mobilePanel {
+    position: absolute;
+    top: 84px;
+    left: 0;
+    width: 100%;
+    z-index: 90;
+    display: flex;
+    flex-direction: column;
+    padding: 8px 5vw 28px;
+    background: #fff;
+    border-bottom: 1px solid rgba(15, 23, 42, 0.12);
+  }
+
+  .mobileLink {
+    padding: 16px 0;
+    font-size: 22px;
+    letter-spacing: -0.02em;
+    color: var(--black);
+    border-bottom: 1px solid rgba(15, 23, 42, 0.1);
+  }
+
+  .mobileCta {
+    margin-top: 20px;
+    padding: 14px 22px;
+    text-align: center;
+    font-size: 17px;
+    color: #fff;
+    background: #000;
+    border-radius: 2px;
+  }
+
+  .mobileCta:hover {
+    color: #fff;
+  }
+}
+
+@media (max-width: 640px) {
+  .ctaButton {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .logoMark,
+  .caret,
+  .ctaButton,
+  .megaMenu,
+  .item {
+    transition: none;
+  }
+
+  .menuContainer {
+    animation: none;
+  }
 }

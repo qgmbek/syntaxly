@@ -78,7 +78,7 @@
   transition: color 100ms ease;
 }
 
-.sidebarButton:hover{
+.sidebarButton:hover {
   color: var(--secondary);
 }
 

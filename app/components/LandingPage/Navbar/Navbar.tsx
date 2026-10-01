@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 import { CaretDown } from "@phosphor-icons/react";
 
 import styles from "./Navbar.module.css";

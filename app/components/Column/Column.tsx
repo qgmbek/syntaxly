@@ -55,10 +55,7 @@ export default function Column({
             tabIndex={0}
             onKeyDown={(e) => e.key === "Enter" && onBlockClick?.(block, i)}
           >
-            <div
-              className={styles.blockTitle}
-              style={{ fontSize }}
-            >
+            <div className={styles.blockTitle} style={{ fontSize }}>
               {block.title}
             </div>
             <CopyButton text={block.code} />

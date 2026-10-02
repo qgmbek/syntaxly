@@ -8,9 +8,10 @@
   flex-direction: column;
   align-items: stretch;
   background-color: var(--primary);
-  border-left: 1px solid rgba(0, 0, 0, 0.1);
+  border-left: 1px solid rgba(0, 0, 0, 0.11);
   z-index: 100;
   box-sizing: border-box;
+  font-family: var(--font-sansation), sans-serif;
 }
 
 .scroll {
@@ -39,69 +40,156 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
+  gap: 5px;
   width: 100%;
 }
 
+.lane + .lane {
+  padding-top: 8px;
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+}
+
 .laneLabel {
-  font-size: 8px;
-  letter-spacing: 0.06em;
-  color: var(--secondary);
-  line-height: 1;
-  user-select: none;
+  padding: 2px 3px;
+  font-size: 9px;
   font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+  color: var(--black);
+  opacity: 0.6;
+  border-radius: 2px;
+  user-select: none;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.laneLabelActive {
+  opacity: 1;
+  color: var(--primary);
+  background: var(--black);
 }
 
 .pills {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 3px;
+  gap: 4px;
   width: 100%;
-  padding: 0 8px;
+  padding: 0 7px;
   box-sizing: border-box;
 }
 
 .pill {
   display: block;
   width: 100%;
-  height: 5px;
-  border-radius: 4px;
-  border: none;
-  cursor: pointer;
+  height: 6px;
   padding: 0;
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
   background: rgba(0, 0, 0, 0.22);
   transition:
-    background 0.15s,
-    transform 0.15s,
-    box-shadow 0.15s;
+    background 0.15s ease,
+    transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.2s ease;
 }
 
 .pill:hover {
-  background-color: var(--secondary);
-  transform: scaleX(1.2);
+  background: var(--secondary);
+  transform: scaleX(1.25);
 }
 
-.pillActive {
-  background: var(--secondary) !important;
-  box-shadow: 0 0 6px rgba(191, 0, 255, 0.5);
+.pill:focus-visible {
+  outline: 2px solid var(--black);
+  outline-offset: 2px;
 }
 
-.lane + .lane {
-  padding-top: 6px;
-  border-top: 0.5px solid rgba(0, 0, 0, 0.12);
+.pillActive,
+.pillActive:hover {
+  background: var(--secondary);
+  transform: scaleX(1.25);
+  box-shadow:
+    0 0 0 2px var(--primary),
+    0 0 0 3.5px var(--black);
 }
 
 .verticalLabel {
   flex-shrink: 0;
-  padding: 8px 0;
+  align-self: center;
+  padding: 10px 0 12px;
   font-size: 8px;
-  letter-spacing: 0.12em;
+  font-weight: 600;
+  letter-spacing: 0.14em;
   color: rgba(0, 0, 0, 0.55);
   writing-mode: vertical-rl;
   text-orientation: mixed;
   transform: rotate(180deg);
   user-select: none;
-  align-self: center;
-  font-weight: 600;
+}
+
+.tip {
+  position: fixed;
+  right: 40px;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 7px 12px;
+  white-space: nowrap;
+  pointer-events: none;
+  background: var(--column-bg);
+  border: 1px solid var(--primary);
+  border-radius: 2px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+  animation: tipIn 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.tip::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: -5px;
+  width: 8px;
+  height: 8px;
+  background: var(--column-bg);
+  border-top: 1px solid var(--primary);
+  border-right: 1px solid var(--primary);
+  transform: translateY(-50%) rotate(45deg);
+}
+
+.tipBlock {
+  font-size: 14px;
+  color: var(--column-block-bg);
+}
+
+.tipColumn {
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--primary);
+}
+
+@keyframes tipIn {
+  from {
+    opacity: 0;
+    transform: translate(6px, -50%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(0, -50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tip {
+    animation: none;
+  }
+
+  .pill,
+  .laneLabel {
+    transition: none;
+  }
 }

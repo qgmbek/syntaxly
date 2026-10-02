@@ -47,6 +47,15 @@
   padding: 10px;
   background-color: var(--column-bg);
   overflow-y: auto;
+
+  background-image: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.07) 1.2px,
+    transparent 1.8px
+  );
+  background-size: 24px 24px;
+  background-position: 0 0;
+  background-repeat: round repeat;
 }
 
 .block {
@@ -135,10 +144,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 18px;
-  border-radius: 9px;
-  border: 1px solid #ff6200;
+  width: 36px;
+  height: 24px;
+  padding: 2px 3px;
+  border-radius: 8px;
+  border: 1px solid var(--secondary);
   font-size: 20px;
   font-weight: 600;
   color: inherit;

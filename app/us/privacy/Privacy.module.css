@@ -405,3 +405,89 @@
     transition: none;
   }
 }
+
+.glance {
+  background: var(--column-bg);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.11);
+}
+
+.glanceInner {
+  max-width: 1150px;
+  margin: 0 auto;
+  padding: 36px 24px 44px;
+}
+
+.glanceLabel {
+  display: block;
+  margin-bottom: 20px;
+  font-family: var(--font-sansation), sans-serif;
+  font-size: 14px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--primary);
+}
+
+.glanceGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.gBlock {
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  color: var(--black);
+  background: var(--column-block-bg);
+  outline: 2px solid transparent;
+  transition:
+    transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+    outline-color 0.2s ease,
+    box-shadow 0.3s ease;
+}
+
+.gBlock:hover {
+  transform: translateY(-4px);
+  outline-color: var(--primary);
+  box-shadow: 0 0 0 4px var(--glow-color);
+}
+
+.gTab {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 5px 10px;
+  font-size: 16px;
+  background: var(--primary);
+  border-top-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+}
+
+.gCode {
+  margin: 0;
+  padding: 52px 18px 8px;
+  font-family: "JetBrains Mono", "Fira Code", monospace;
+  font-size: 18px;
+  overflow-x: auto;
+}
+
+.gText {
+  margin: 0;
+  padding: 0 18px 18px;
+  font-size: 14px;
+  line-height: 1.4;
+  color: #3b3b3b;
+}
+
+@media (max-width: 900px) {
+  .glanceGrid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gBlock {
+    transition: none;
+  }
+}

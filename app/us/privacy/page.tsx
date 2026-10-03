@@ -3,15 +3,33 @@
 import { Fragment, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { ArrowUpRight } from "@phosphor-icons/react";
-import styles from "./Terms.module.css";
+import styles from "./Privacy.module.css";
 
 const UPDATED = "October 2, 2026";
 
 const PH: Record<string, string> = {
-  OWNER: "[Your name or company]",
-  EMAIL: "hello@yourdomain.com",
-  JURISDICTION: "[Your country]",
+  OWNER: "[Khogambyek Yersin]",
+  EMAIL: "hogambek011@gmail.com",
+  HOST: "[...]",
 };
+
+const GLANCE = [
+  {
+    title: "Collected",
+    code: "personal: none",
+    text: "No accounts and no sign-up. Nothing to hand over.",
+  },
+  {
+    title: "On your device",
+    code: "theme · font size",
+    text: "Preferences stay in your browser and never reach us.",
+  },
+  {
+    title: "Sold",
+    code: "never",
+    text: "Your information is not for sale, to anyone.",
+  },
+];
 
 type Section = {
   title: string;
@@ -21,90 +39,95 @@ type Section = {
 
 const SECTIONS: Section[] = [
   {
-    title: "Acceptance of these terms",
-    short: "Using Syntaxly means you agree to this page.",
+    title: "Who we are",
+    short: "One person's project, one contact.",
     body: [
-      "By accessing or using Syntaxly (the “Service”), you agree to be bound by these Terms of Use. If you do not agree, please do not use the Service.",
-      "You must be legally able to agree to these terms where you live.",
+      "Syntaxly (the “Service”) is operated by {OWNER}. This policy explains what happens to information when you use it. For anything privacy-related, write to {EMAIL}.",
     ],
   },
   {
-    title: "What Syntaxly is",
-    short: "A free syntax cheatsheet. It can change.",
+    title: "What we collect",
+    short: "Nothing personal by default.",
     body: [
-      "Syntaxly is a reference that organizes programming syntax into columns and blocks, each with a short explanation, an example and a tip. It is provided for general learning and quick recall.",
-      "We may add, change or remove features, languages or content at any time, with or without notice.",
+      "Syntaxly has no accounts, so we don't ask for your name, email address or a password. We do not knowingly collect personal information through the Service.",
+      "If you contact us (for example by email), we receive whatever you choose to send, such as your name, address and message.",
     ],
   },
   {
-    title: "Using the Service",
-    short: "Be decent. Don't break it.",
+    title: "Stored in your browser",
+    short: "Your settings stay on your device.",
     body: [
-      "You agree to use the Service lawfully and not to:",
+      "Syntaxly may save preferences such as your theme and font size in your browser (for example in local storage) so it can remember them next time. This data stays on your device and is not sent to us.",
+      "You can remove it at any time by clearing site data in your browser settings.",
+    ],
+  },
+  {
+    title: "Hosting and logs",
+    short: "Our host keeps basic technical logs.",
+    body: [
+      "Syntaxly is hosted by {HOST}. Like most hosts, it may automatically log technical details such as IP address, browser type, pages requested and timestamps.",
+      "These logs are used to keep the Service running and secure.",
+    ],
+  },
+  {
+    title: "Analytics and cookies",
+    short: "No ad trackers. We'll say so if that changes.",
+    body: [
+      "Syntaxly does not currently use advertising trackers. If we add analytics or cookies in the future, we will update this page and describe what they do.",
+    ],
+  },
+  {
+    title: "Other websites",
+    short: "Their rules apply once you leave.",
+    body: [
+      "Syntaxly may link to other websites, such as official documentation. We don't control them and aren't responsible for their privacy practices, so please read their policies.",
+    ],
+  },
+  {
+    title: "Sharing",
+    short: "No selling. Only the essentials.",
+    body: [
+      "We do not sell personal information. We share information only:",
       [
-        "disrupt or overload the Service or the infrastructure behind it;",
-        "scrape or crawl it in a way that degrades performance for other people;",
-        "circumvent technical limits or security measures;",
-        "present Syntaxly's content, design or branding as your own.",
+        "with service providers needed to run Syntaxly, such as our host;",
+        "when the law requires it;",
+        "to protect the rights, safety and security of Syntaxly and its users.",
       ],
     ],
   },
   {
-    title: "Content and code snippets",
-    short: "Copy the snippets. Don't clone the site.",
+    title: "Retention and security",
+    short: "Kept only as long as needed.",
     body: [
-      "Code examples in Syntaxly are meant to be copied. You may use the snippets in your own projects.",
-      "The design, text, explanations, layout, name and logo of Syntaxly belong to {OWNER}. You may not copy or redistribute them as a whole without permission.",
+      "Messages you send us are kept as long as needed to respond and to keep a record of the conversation. We take reasonable steps to protect information, but no method of transmission or storage is completely secure.",
     ],
   },
   {
-    title: "Third-party names",
-    short: "We're independent of the tools we document.",
+    title: "Your rights",
+    short: "Ask and we'll help.",
     body: [
-      "React, TypeScript, JavaScript and other technology names are trademarks of their respective owners. Syntaxly is independent and is not affiliated with or endorsed by them.",
+      "Depending on where you live, you may have the right to access, correct or delete personal information we hold about you, or to object to how it is used. To exercise any of these rights, write to {EMAIL}.",
     ],
   },
   {
-    title: "Accuracy",
-    short: "Great for recall. Check the docs for production.",
+    title: "Children",
+    short: "Not built for young kids.",
     body: [
-      "Examples are simplified for quick recall and can be incomplete or out of date. Always check the official documentation before relying on them in production.",
+      "Syntaxly is not directed at young children, and we do not knowingly collect personal information from them. If you believe a child has sent us information, contact us and we will delete it.",
     ],
   },
   {
-    title: "Disclaimer and liability",
-    short: "It's provided as is.",
+    title: "Changes to this policy",
+    short: "The date at the top tells you.",
     body: [
-      "The Service is provided “as is” and “as available”, without warranties of any kind, express or implied.",
-      "To the fullest extent permitted by law, {OWNER} is not liable for any indirect, incidental or consequential damages, or for loss of data, profits or business, arising from your use of the Service.",
-    ],
-  },
-  {
-    title: "Privacy",
-    short: "The Privacy Policy covers your data.",
-    body: [
-      "Our Privacy Policy explains what information Syntaxly collects and how it is used. By using the Service you also accept it.",
-    ],
-  },
-  {
-    title: "Changes to these terms",
-    short: "We'll update the date when we change them.",
-    body: [
-      "We may update these terms from time to time. The date at the top of this page shows when they last changed. Continuing to use the Service after an update means you accept the new terms.",
-    ],
-  },
-  {
-    title: "Governing law",
-    short: "Local law applies.",
-    body: [
-      "These terms are governed by the laws of {JURISDICTION}, without regard to conflict-of-law rules. Disputes will be handled in the courts of {JURISDICTION}, unless your local law requires otherwise.",
+      "We may update this policy from time to time. The date at the top of this page shows when it last changed. Continuing to use the Service after an update means you accept the new policy.",
     ],
   },
   {
     title: "Contact",
     short: "Questions? Say hello.",
     body: [
-      "Questions about these terms? Use the contact page or write to {EMAIL}.",
+      "Questions about privacy? Use the contact page or write to {EMAIL}.",
     ],
   },
 ];
@@ -122,7 +145,7 @@ const fill = (text: string) =>
     );
   });
 
-export default function Terms() {
+export default function Privacy() {
   const [active, setActive] = useState(0);
   const bar = useRef<HTMLDivElement>(null);
   const layoutRef = useRef<HTMLDivElement>(null);
@@ -209,26 +232,43 @@ export default function Terms() {
         <div className={styles.heroInner}>
           <h1 className={styles.title}>
             <span className={styles.line}>
-              <span>Terms of</span>
+              <span>Privacy</span>
             </span>
 
             <span className={styles.line}>
               <span style={{ animationDelay: "0.12s" }}>
-                <em className={styles.hl}>Use.</em>
+                <em className={styles.hl}>Policy.</em>
               </span>
             </span>
           </h1>
 
           <div className={styles.heroFoot}>
             <p className={styles.lead}>
-              The rules for using Syntaxly. Every section starts with a one-line
-              summary, and the full text below is the part that counts.
+              What happens to your information when you use Syntaxly. The short
+              version: very little. The details are below, one section at a
+              time.
             </p>
 
             <span className={styles.updated}>Last updated {UPDATED}</span>
           </div>
         </div>
       </header>
+
+      <section className={styles.glance} aria-label="Privacy at a glance">
+        <div className={styles.glanceInner}>
+          <span className={styles.glanceLabel}>At a glance</span>
+
+          <div className={styles.glanceGrid}>
+            {GLANCE.map((g) => (
+              <div key={g.title} className={styles.gBlock}>
+                <span className={styles.gTab}>{g.title}</span>
+                <pre className={styles.gCode}>{g.code}</pre>
+                <p className={styles.gText}>{g.text}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
       <div className={styles.layout} ref={layoutRef}>
         <div className={styles.tocCol}>

@@ -26,28 +26,28 @@ const ITEMS: Item[] = [
   {
     id: "github",
     label: "GitHub",
-    value: "github.com/yourname",
-    icon: <GithubLogo size={34} weight="duotone" />,
-    href: "https://github.com/yourname",
+    value: "github.com",
+    icon: <GithubLogo size={34} weight="regular" />,
+    href: "https://github.com",
   },
   {
     id: "email",
     label: "Email",
-    value: "hello@yourdomain.com",
-    icon: <EnvelopeSimple size={34} weight="duotone" />,
+    value: "hogambek011@gmail.com",
+    icon: <EnvelopeSimple size={34} weight="regular" />,
   },
   {
     id: "discord",
     label: "Discord",
-    value: "yourname",
-    icon: <DiscordLogo size={34} weight="duotone" />,
+    value: "@",
+    icon: <DiscordLogo size={34} weight="regular" />,
   },
   {
     id: "tiktok",
     label: "TikTok",
-    value: "@yourname",
-    icon: <TiktokLogo size={34} weight="duotone" />,
-    href: "https://www.tiktok.com/@yourname",
+    value: "@",
+    icon: <TiktokLogo size={34} weight="regular" />,
+    href: "https://www.tiktok.com",
   },
 ];
 

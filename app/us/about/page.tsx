@@ -28,17 +28,17 @@ const BLOCK_CODE = "useEffect(() => {\n  return () => {};\n}, [dep]);";
 
 const PRINCIPLES = [
   {
-    icon: <Lightning size={26} weight="duotone" />,
+    icon: <Lightning size={26} weight="regular" />,
     title: "Recall, not tutorials",
     text: "You already learned it. Syntaxly gives back the shape of it, fast enough that you never leave your editor's rhythm.",
   },
   {
-    icon: <Stack size={26} weight="duotone" />,
+    icon: <Stack size={26} weight="regular" />,
     title: "One canvas per language",
     text: "Every topic sits in a block on a single page. Scan the whole language at a glance, then open only what you need.",
   },
   {
-    icon: <BracketsCurly size={26} weight="duotone" />,
+    icon: <BracketsCurly size={26} weight="regular" />,
     title: "Short on purpose",
     text: "If an entry needs scrolling, it is documentation. Each one stays small enough to read in two seconds.",
   },
@@ -224,9 +224,9 @@ export default function About() {
         <h2 className={styles.sectionTitle}>Who&apos;s behind it</h2>
 
         <p className={styles.makerText}>
-          Syntaxly is built by Yer, a computer science student who got tired of
-          re-reading docs for things he already knew. It&apos;s made with
-          Next.js and TypeScript, and it grows one language at a time.
+          Syntaxly is built by Khogambyek Yersin, a computer science student who
+          got tired of re-reading docs for things he already knew. It&apos;s
+          made with Next.js and TypeScript, and it grows one language at a time.
         </p>
       </section>
 
@@ -235,7 +235,7 @@ export default function About() {
 
         <div className={styles.buttons}>
           <Link
-            href="/syntax"
+            href="/syntaxs"
             className={`${styles.button} ${styles.primaryButton}`}
           >
             Get Started

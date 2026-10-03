@@ -33,19 +33,19 @@ const MENUS: Record<MenuKey, { label: string; items: MenuItem[] }> = {
     label: "Features",
     items: [
       {
-        icon: <Lightning size={26} weight="duotone" />,
+        icon: <Lightning size={26} weight="regular" />,
         title: "Instant recall",
         text: "The boilerplate you forgot, in two seconds instead of a documentation detour.",
         href: "/syntax",
       },
       {
-        icon: <Stack size={26} weight="duotone" />,
+        icon: <Stack size={26} weight="regular" />,
         title: "One canvas",
         text: "Every topic sits in a column on a single page. Scan a whole language at a glance.",
         href: "/syntax",
       },
       {
-        icon: <BracketsCurly size={26} weight="duotone" />,
+        icon: <BracketsCurly size={26} weight="regular" />,
         title: "Live breakdown",
         text: "Click any block for what it is, how it's used, an example, and a tip.",
         href: "/syntax",
@@ -56,25 +56,25 @@ const MENUS: Record<MenuKey, { label: string; items: MenuItem[] }> = {
     label: "Tools",
     items: [
       {
-        icon: <MagnifyingGlass size={26} weight="duotone" />,
+        icon: <MagnifyingGlass size={26} weight="regular" />,
         title: "Quick search",
         text: "Jump to any block from anywhere with Ctrl K.",
         href: "/syntax",
       },
       {
-        icon: <DiamondsFour size={26} weight="duotone" />,
+        icon: <DiamondsFour size={26} weight="regular" />,
         title: "Unique filter",
         text: "Show only the syntax that is unique to the language. Ctrl U.",
         href: "/syntax",
       },
       {
-        icon: <Columns size={26} weight="duotone" />,
+        icon: <Columns size={26} weight="regular" />,
         title: "Focus mode",
         text: "Hide the chrome and keep only the columns. Ctrl Shift F.",
         href: "/syntax",
       },
       {
-        icon: <Palette size={26} weight="duotone" />,
+        icon: <Palette size={26} weight="regular" />,
         title: "Themes",
         text: "Three palettes, one click, same layout.",
         href: "/syntax",
@@ -84,8 +84,8 @@ const MENUS: Record<MenuKey, { label: string; items: MenuItem[] }> = {
 };
 
 const LINKS = [
-  { label: "About", href: "/about" },
-  { label: "Contact", href: "/contact" },
+  { label: "About", href: "/us/about" },
+  { label: "Contact", href: "/us/contact" },
 ];
 
 export default function Navbar() {

@@ -15,42 +15,51 @@ export default function Footer() {
         <div className={styles.linksGrid}>
           <div className={styles.column}>
             <div className={styles.heading}>Product</div>
-            <Link href="/how-it-works">How it works</Link>
-            <Link href="/features">Features</Link>
-            <Link href="/pricing">Pricing</Link>
-            <Link href="/faq">FAQ</Link>
+            <Link href="/syntax">Open Syntaxly</Link>
+            <Link href="/us/how-it-works">How it works</Link>
+            <Link href="/us/features">Features</Link>
+            <Link href="/us/faq">FAQ</Link>
           </div>
 
           <div className={styles.column}>
             <div className={styles.heading}>Company</div>
             <Link href="/us/about">About</Link>
-            <Link href="/us/careers">Careers</Link>
+            <Link href="/us/roadmap">Roadmap</Link>
             <Link href="/us/brand">Brand</Link>
             <Link href="/us/contact">Contact</Link>
           </div>
 
           <div className={styles.column}>
             <div className={styles.heading}>Resources</div>
-            <Link href="/download">Download</Link>
+            <Link href="/us/download">Download</Link>
             <Link href="/us/terms">Terms of Use</Link>
             <Link href="/us/privacy">Privacy Policy</Link>
-            <Link href="/support">Support</Link>
           </div>
 
           <div className={styles.column}>
             <div className={styles.heading}>Connect</div>
-            <Link href="/x">X (Twitter)</Link>
-            <Link href="/instagram">Instagram</Link>
-            <Link href="/linkedin">LinkedIn</Link>
-            <Link href="/youtube">YouTube</Link>
+            <a
+              href="https://github.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              GitHub
+            </a>
+            <a
+              href="https://www.tiktok.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              TikTok
+            </a>
+            <Link href="/us/contact">Discord</Link>
+            <a href="">Email</a>
           </div>
         </div>
       </div>
 
       <div className={styles.bottom}>
-        <p className={styles.copyright}>
-          © 2026 Syntaxly, Inc. All rights reserved.
-        </p>
+        <p className={styles.copyright}>Syntaxly. All rights reserved.</p>
 
         <h1 className={styles.bigText}>Syntaxly</h1>
       </div>

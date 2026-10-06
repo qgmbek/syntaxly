@@ -3,6 +3,7 @@ import { Space_Grotesk, Oxanium, Genos, Sansation } from "next/font/google";
 
 import ThemeScript from "./components/ThemeScript";
 import "./globals.css";
+import Link from "next/link";
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
@@ -57,6 +58,10 @@ export default function RootLayout({
         <head>
           <ThemeScript />
         </head>
+        <Link className="bigMark" href="/">
+          <span className="bigGlyph">✦</span>
+        </Link>
+
         {children}
       </body>
     </html>

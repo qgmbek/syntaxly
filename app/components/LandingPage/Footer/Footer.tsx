@@ -34,6 +34,7 @@ export default function Footer() {
             <Link href="/us/download">Download</Link>
             <Link href="/us/terms">Terms of Use</Link>
             <Link href="/us/privacy">Privacy Policy</Link>
+            <Link href="/us/resources">Resources</Link>
           </div>
 
           <div className={styles.column}>

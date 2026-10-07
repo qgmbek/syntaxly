@@ -82,9 +82,8 @@
   width: fit-content;
   height: fit-content;
   margin-top: 120px;
-
   z-index: 2;
-  color: rgba(17, 17, 17, 0.45);
+  color: rgba(0, 0, 0, 0.7);
   font-size: 16px;
 }
 
@@ -95,8 +94,7 @@
   line-height: 0.8;
   letter-spacing: -0.08em;
   font-weight: 600;
-
-  color: #111;
+  color: #000;
   white-space: nowrap;
   pointer-events: none;
 }

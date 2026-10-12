@@ -22,6 +22,21 @@
   font-size: 28px;
 }
 
+.nameClickable {
+  cursor: pointer;
+  transition: color 200ms ease, text-shadow 200ms ease;
+  user-select: none;
+}
+
+.nameClickable:hover {
+  color: var(--secondary);
+  text-shadow: 0 0 20px var(--glow-color);
+}
+
+.nameActive {
+  color: var(--secondary);
+}
+
 .fontControls {
   display: flex;
   flex-direction: column;

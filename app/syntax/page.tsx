@@ -10,6 +10,10 @@ import {
   ArrowRight,
 } from "@phosphor-icons/react";
 
+import LanguageInfoColumn, {
+  LanguageInfoData,
+} from "../components/LanguageInfoColumn/LanguageInfoColumn";
+
 import Column from "../components/Column/Column";
 import ExplanationColumn, {
   ExplanationData,
@@ -21,6 +25,57 @@ import ThemeSwitcher from "../components/ThemeSwitcher/ThemeSwitcher";
 
 import styles from "./syntax.module.css";
 import { Data, ColumnData } from "./data";
+
+const LANGUAGE_INFO: LanguageInfoData = {
+  name: "React",
+  tagline: "A JavaScript library for building user interfaces",
+  description:
+    "React is a free and open-source front-end JavaScript library for building user interfaces based on components. It lets you compose complex UIs from small, isolated pieces of code called components. React can be used to develop single-page, mobile, or server-rendered applications with frameworks like Next.js.",
+  category: "UI Library",
+  createdBy: "Jordan Walke (Meta)",
+  yearCreated: 2013,
+  latestVersion: "19.1.0",
+  license: "MIT",
+  website: "react.dev",
+  githubStars: "233k",
+  weeklyDownloads: "27M+",
+  popularityRank: "#1",
+  usedBy: [
+    "Meta",
+    "Netflix",
+    "Airbnb",
+    "Uber",
+    "Discord",
+    "Shopify",
+    "Notion",
+    "Figma",
+    "Reddit",
+    "X (Twitter)",
+  ],
+  keyFeatures: [
+    "Virtual DOM",
+    "JSX Syntax",
+    "Component-Based",
+    "Unidirectional Data Flow",
+    "Hooks",
+    "Server Components",
+    "Concurrent Rendering",
+    "Suspense",
+  ],
+  history:
+    "React was created by Jordan Walke, a software engineer at Facebook (now Meta). It was first deployed on Facebook's News Feed in 2011 and later on Instagram in 2012. It was open-sourced at JSConf US in May 2013. React Native for mobile development followed in 2015. React 16 introduced Fiber (2017), React 16.8 brought Hooks (2019), and React 18 added concurrent features (2022). React 19, released in 2024, introduced Server Components and Actions as stable features.",
+  useCases: [
+    "Single-page applications (SPAs)",
+    "Progressive web apps (PWAs)",
+    "Server-side rendered websites",
+    "Mobile apps via React Native",
+    "Dashboards and admin panels",
+    "E-commerce storefronts",
+    "Interactive data visualizations",
+  ],
+  ecosystem:
+    "React has an enormous ecosystem. Popular tools include Next.js for full-stack frameworks, React Router for navigation, Redux and Zustand for state management, React Query (TanStack Query) for data fetching, Framer Motion for animations, and Storybook for component development. The React team also maintains React Native for cross-platform mobile apps.",
+};
 
 interface Block {
   title: string;
@@ -45,6 +100,7 @@ export default function Syntax() {
   const [uniqueOnly, setUniqueOnly] = useState(false);
   const [shortcutsOpen, setShortcutsOpen] = useState(false);
   const [focusMode, setFocusMode] = useState(false);
+  const [languageInfoOpen, setLanguageInfoOpen] = useState(false);
 
   const columnGroupRefs = useRef<(HTMLDivElement | null)[]>([]);
   const mainbarRef = useRef<HTMLDivElement>(null);
@@ -276,7 +332,18 @@ export default function Syntax() {
     <div className={styles.container}>
       {!focusMode && (
         <div className={styles.sidebar}>
-          <div className={styles.name}>REACT</div>
+          <div
+            className={`${styles.name} ${styles.nameClickable} ${languageInfoOpen ? styles.nameActive : ""}`}
+            onClick={() => setLanguageInfoOpen((v) => !v)}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) =>
+              e.key === "Enter" && setLanguageInfoOpen((v) => !v)
+            }
+            title="View language details"
+          >
+            REACT
+          </div>
 
           <div className={styles.fontControls}>
             <button
@@ -341,6 +408,11 @@ export default function Syntax() {
           />
         </div>
       )}
+
+      <LanguageInfoColumn
+        data={languageInfoOpen ? LANGUAGE_INFO : null}
+        onClose={() => setLanguageInfoOpen(false)}
+      />
 
       <div className={styles.mainbar} ref={mainbarRef}>
         {COLUMNS.map((col, colIndex) => (

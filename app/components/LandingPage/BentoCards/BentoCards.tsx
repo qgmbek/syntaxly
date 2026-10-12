@@ -20,6 +20,7 @@ import {
 } from "@phosphor-icons/react";
 
 import styles from "./BentoCards.module.css";
+import useReveal from "../../../hooks/useReveal";
 
 type SyntaxKey = "useState" | "useRef" | "useEffect";
 
@@ -35,6 +36,7 @@ type SyntaxItem = {
 };
 
 export default function BentoCards() {
+  const sectionRef = useReveal<HTMLElement>(0.15);
   const [activeBlock, setActiveBlock] = useState<SyntaxKey>("useState");
   const [hoveredCard, setHoveredCard] = useState<number | null>(null);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
@@ -90,21 +92,21 @@ export default function BentoCards() {
   };
 
   return (
-    <section className={styles.sectionContainer}>
+    <section ref={sectionRef} className={styles.sectionContainer}>
       <div className={styles.bgOrbOne} />
       <div className={styles.bgOrbTwo} />
 
       <div className={styles.headerWrapper}>
-        <span className={styles.badge}>
+        <span className={styles.badge} data-reveal>
           <CubeTransparentIcon size={32} />
           WHAT IS IN SYNTAXLY?
         </span>
 
-        <h2 className={styles.mainHeading}>
+        <h2 className={styles.mainHeading} data-reveal>
           Everything you need to recall on the fly.
         </h2>
 
-        <p className={styles.subHeading}>
+        <p className={styles.subHeading} data-reveal>
           Ditch deep documentations when you just need the boilerplate syntax.
           Built for instant recall.
         </p>
@@ -115,6 +117,7 @@ export default function BentoCards() {
           className={`${styles.bentoCard} ${styles.largeCard} ${
             hoveredCard === 1 ? styles.cardActive : ""
           }`}
+          data-reveal
           onMouseEnter={() => setHoveredCard(1)}
           onMouseLeave={() => {
             setHoveredCard(null);
@@ -198,6 +201,7 @@ export default function BentoCards() {
           className={`${styles.bentoCard} ${styles.smallCard} ${
             hoveredCard === 2 ? styles.cardActive : ""
           }`}
+          data-reveal
           onMouseEnter={() => setHoveredCard(2)}
           onMouseLeave={() => {
             setHoveredCard(null);
@@ -255,7 +259,7 @@ export default function BentoCards() {
           </div>
         </div>
 
-        <div className={`${styles.bentoCard} ${styles.fullWidthCard}`}>
+        <div className={`${styles.bentoCard} ${styles.fullWidthCard}`} data-reveal>
           <div className={styles.interactivePlaygroundHeader}>
             <div>
               <h3

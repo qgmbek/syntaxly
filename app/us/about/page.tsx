@@ -12,6 +12,7 @@ import {
 } from "@phosphor-icons/react";
 
 import styles from "./About.module.css";
+import useReveal from "../../hooks/useReveal";
 
 type Field = "What it is" | "How it's used" | "Example" | "Tip";
 
@@ -51,6 +52,7 @@ const STATS = [
 ];
 
 export default function About() {
+  const revealRef = useReveal<HTMLElement>(0.15);
   const [field, setField] = useState<Field>("What it is");
   const isCode = field === "Example";
   const [blockCopied, setBlockCopied] = useState(false);
@@ -64,7 +66,7 @@ export default function About() {
   };
 
   return (
-    <main className={styles.page}>
+    <main ref={revealRef} className={styles.page}>
       <section className={styles.hero}>
         <aside className={styles.rail}>
           <span className={styles.railName}>ABOUT</span>
@@ -109,9 +111,9 @@ export default function About() {
       </section>
 
       <section className={styles.story}>
-        <h2 className={styles.sectionTitle}>Why it exists</h2>
+        <h2 className={styles.sectionTitle} data-reveal style={{ transitionDelay: "0s" }}>Why it exists</h2>
 
-        <div className={styles.storyText}>
+        <div className={styles.storyText} data-reveal style={{ transitionDelay: "0.08s" }}>
           <p>
             Every developer has the same moment. You come back to a framework
             after a few months, your hands know what they want, and your memory
@@ -128,11 +130,11 @@ export default function About() {
       </section>
 
       <section className={styles.principles}>
-        <h2 className={styles.sectionTitle}>How it&apos;s built</h2>
+        <h2 className={styles.sectionTitle} data-reveal style={{ transitionDelay: "0s" }}>How it&apos;s built</h2>
 
         <div className={styles.rows}>
-          {PRINCIPLES.map((p) => (
-            <article key={p.title} className={styles.row}>
+          {PRINCIPLES.map((p, index) => (
+            <article key={p.title} className={styles.row} data-reveal style={{ transitionDelay: `${index * 0.08}s` }}>
               <div className={styles.rowIcon}>{p.icon}</div>
               <h3 className={styles.rowTitle}>{p.title}</h3>
               <p className={styles.rowText}>{p.text}</p>
@@ -143,14 +145,14 @@ export default function About() {
 
       <section className={styles.anatomy}>
         <div className={styles.anatomyIntro}>
-          <h2 className={styles.sectionTitle}>Anatomy of an entry</h2>
+          <h2 className={styles.sectionTitle} data-reveal>Anatomy of an entry</h2>
 
-          <p className={styles.anatomyText}>
+          <p className={styles.anatomyText} data-reveal style={{ transitionDelay: "0.08s" }}>
             Every syntax is broken into the same four fields, so you always know
             where to look. Pick one.
           </p>
 
-          <div className={styles.miniColumn}>
+          <div className={styles.miniColumn} data-reveal style={{ transitionDelay: "0.16s" }}>
             <div className={styles.miniBlock}>
               <div className={styles.miniTitle}>useEffect</div>
 
@@ -182,7 +184,7 @@ export default function About() {
           </div>
         </div>
 
-        <div className={styles.panel}>
+        <div className={styles.panel} data-reveal style={{ transitionDelay: "0.24s" }}>
           <div className={styles.tabs} role="tablist">
             {(Object.keys(FIELDS) as Field[]).map((f) => (
               <button
@@ -212,8 +214,8 @@ export default function About() {
       </section>
 
       <section className={styles.stats}>
-        {STATS.map((s) => (
-          <div key={s.label} className={styles.stat}>
+        {STATS.map((s, index) => (
+          <div key={s.label} className={styles.stat} data-reveal style={{ transitionDelay: `${index * 0.1}s` }}>
             <span className={styles.statValue}>{s.value}</span>
             <span className={styles.statLabel}>{s.label}</span>
           </div>
@@ -221,9 +223,9 @@ export default function About() {
       </section>
 
       <section className={styles.maker}>
-        <h2 className={styles.sectionTitle}>Who&apos;s behind it</h2>
+        <h2 className={styles.sectionTitle} data-reveal style={{ transitionDelay: "0s" }}>Who&apos;s behind it</h2>
 
-        <p className={styles.makerText}>
+        <p className={styles.makerText} data-reveal style={{ transitionDelay: "0.08s" }}>
           Syntaxly is built by Khogambyek Yersin, a computer science student who
           got tired of re-reading docs for things he already knew. It&apos;s
           made with Next.js and TypeScript, and it grows one language at a time.
@@ -231,9 +233,9 @@ export default function About() {
       </section>
 
       <section className={styles.cta}>
-        <h2 className={styles.ctaTitle}>Stop scrolling docs.</h2>
+        <h2 className={styles.ctaTitle} data-reveal style={{ transitionDelay: "0s" }}>Stop scrolling docs.</h2>
 
-        <div className={styles.buttons}>
+        <div className={styles.buttons} data-reveal style={{ transitionDelay: "0.08s" }}>
           <Link
             href="/syntaxs"
             className={`${styles.button} ${styles.primaryButton}`}

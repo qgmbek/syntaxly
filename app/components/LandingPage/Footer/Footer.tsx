@@ -1,11 +1,16 @@
+"use client";
+
 import Link from "next/link";
 import styles from "./Footer.module.css";
+import useReveal from "../../../hooks/useReveal";
 
 export default function Footer() {
+  const footerRef = useReveal<HTMLElement>(0.1);
+
   return (
-    <footer className={styles.footer}>
+    <footer ref={footerRef} className={styles.footer}>
       <div className={styles.top}>
-        <div className={styles.brandSection}>
+        <div className={styles.brandSection} data-reveal>
           <div className={styles.logoWrapper}>
             <div className={styles.logo}></div>
             <span className={styles.brand}>Syntaxly</span>
@@ -13,7 +18,7 @@ export default function Footer() {
         </div>
 
         <div className={styles.linksGrid}>
-          <div className={styles.column}>
+          <div className={styles.column} data-reveal style={{ transitionDelay: "0.08s" }}>
             <div className={styles.heading}>Product</div>
             <Link href="/syntax">Open Syntaxly</Link>
             <Link href="/us/how-it-works">How it works</Link>
@@ -21,7 +26,7 @@ export default function Footer() {
             <Link href="/us/faq">FAQ</Link>
           </div>
 
-          <div className={styles.column}>
+          <div className={styles.column} data-reveal style={{ transitionDelay: "0.16s" }}>
             <div className={styles.heading}>Company</div>
             <Link href="/us/about">About</Link>
             <Link href="/us/roadmap">Roadmap</Link>
@@ -29,7 +34,7 @@ export default function Footer() {
             <Link href="/us/contact">Contact</Link>
           </div>
 
-          <div className={styles.column}>
+          <div className={styles.column} data-reveal style={{ transitionDelay: "0.24s" }}>
             <div className={styles.heading}>Resources</div>
             <Link href="/us/download">Download</Link>
             <Link href="/us/terms">Terms of Use</Link>
@@ -37,7 +42,7 @@ export default function Footer() {
             <Link href="/us/resources">Resources</Link>
           </div>
 
-          <div className={styles.column}>
+          <div className={styles.column} data-reveal style={{ transitionDelay: "0.32s" }}>
             <div className={styles.heading}>Connect</div>
             <a
               href="https://github.com/"
@@ -60,9 +65,9 @@ export default function Footer() {
       </div>
 
       <div className={styles.bottom}>
-        <p className={styles.copyright}>Syntaxly. All rights reserved.</p>
+        <p className={styles.copyright} data-reveal style={{ transitionDelay: "0.4s" }}>Syntaxly. All rights reserved.</p>
 
-        <h1 className={styles.bigText}>Syntaxly</h1>
+        <h1 className={styles.bigText} data-reveal style={{ transitionDelay: "0.48s" }}>Syntaxly</h1>
       </div>
     </footer>
   );

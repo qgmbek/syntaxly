@@ -19,6 +19,12 @@ export default function Hero() {
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
   const [highlightOpacities, setHighlightOpacities] = useState<number[]>([]);
   const lastHoverCellRef = useRef<number | null>(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    const id = requestAnimationFrame(() => setMounted(true));
+    return () => cancelAnimationFrame(id);
+  }, []);
 
   useEffect(() => {
     const updateDimensions = () => {
@@ -180,7 +186,6 @@ export default function Hero() {
     if (cells.length > 0) {
       const cols = Math.ceil(dimensions.width / CELL_SIZE) + 1;
       const rows = Math.ceil(dimensions.height / CELL_SIZE) + 1;
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setHighlightOpacities(new Array(rows * cols).fill(0));
       lastHoverCellRef.current = null;
     }
@@ -188,7 +193,7 @@ export default function Hero() {
 
   return (
     <div ref={containerRef} className={styles.container}>
-      <div className={styles.bgOrb} />
+      <div className={`${styles.bgOrb} ${mounted ? styles.orbIn : ""}`} />
 
       <div className={styles.overlayContainer}>
         {cells.map((cell, idx) => {
@@ -214,16 +219,22 @@ export default function Hero() {
       </div>
 
       <div className={styles.content}>
-        <div className={styles.title}>
+        <div className={`${styles.title} ${mounted ? styles.fadeUp : ""}`}>
           Syntax <span className={styles.highlighted}>cheatsheet</span> for{" "}
-          <br /> programming.
+          <br />programming.
         </div>
-        <div className={styles.subtitle}>
+        <div
+          className={`${styles.subtitle} ${mounted ? styles.fadeUp : ""}`}
+          style={{ transitionDelay: "0.12s" }}
+        >
           Browse every syntax at a glance, organized into blocks by topic. Click
           any one to see a quick refresher: definition, usage, example, and
           tips.
         </div>
-        <div className={styles.buttonContainer}>
+        <div
+          className={`${styles.buttonContainer} ${mounted ? styles.fadeUp : ""}`}
+          style={{ transitionDelay: "0.24s" }}
+        >
           <a href="/syntax" className={` ${styles.button} ${styles.getButton}`}>
             Get Started
           </a>

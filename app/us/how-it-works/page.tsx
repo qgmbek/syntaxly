@@ -11,6 +11,7 @@ import {
 } from "@phosphor-icons/react";
 
 import styles from "./HowItWorks.module.css";
+import useReveal from "../../hooks/useReveal";
 
 const STEPS = ["Scan", "Search", "Open", "Copy"];
 
@@ -170,13 +171,14 @@ function Meta({
   n,
   title,
   count,
+  ...props
 }: {
   n: number;
   title: string;
   count: number;
-}) {
+} & React.HTMLAttributes<HTMLDivElement>) {
   return (
-    <div className={styles.meta}>
+    <div className={styles.meta} {...props}>
       <div className={styles.metaInner}>
         <div>
           <div className={styles.metaNum}>{n}</div>
@@ -189,6 +191,7 @@ function Meta({
 }
 
 export default function HowItWorks() {
+  const revealRef = useReveal<HTMLElement>(0.15);
   const [run, setRun] = useState(0);
   const [started, setStarted] = useState(false);
   const [step, setStep] = useState(0);
@@ -290,7 +293,7 @@ export default function HowItWorks() {
   }, [step, run, started]);
 
   return (
-    <main className={styles.page}>
+    <main ref={revealRef} className={styles.page}>
       <section className={styles.hero}>
         <aside className={styles.rail}>
           <span className={styles.railName}>HOW IT WORKS</span>
@@ -328,7 +331,7 @@ export default function HowItWorks() {
       </section>
 
       <section id="demo" className={styles.demo}>
-        <Meta n={1} title="The loop" count={4} />
+        <Meta n={1} title="The loop" count={4} data-reveal />
 
         <div className={styles.stageWrap} ref={stageRef}>
           <div className={styles.bar}>
@@ -509,9 +512,9 @@ export default function HowItWorks() {
       </section>
 
       <section>
-        <Meta n={2} title="How we write it" count={PIPE.length} />
+        <Meta n={2} title="How we write it" count={PIPE.length} data-reveal />
 
-        <div className={styles.body}>
+        <div className={styles.body} data-reveal style={{ transitionDelay: "0.08s" }}>
           <p className={styles.intro}>
             Every block is distilled from somewhere. This is the route a syntax
             takes through the official docs, the search bar and real code before
@@ -519,10 +522,10 @@ export default function HowItWorks() {
           </p>
         </div>
 
-        <div className={styles.pipeBand}>
+        <div className={styles.pipeBand} data-reveal style={{ transitionDelay: "0.08s" }}>
           <div className={styles.pipe}>
-            {PIPE.map((c) => (
-              <div key={c.n} className={styles.pCol}>
+            {PIPE.map((c, index) => (
+              <div key={c.n} className={styles.pCol} data-reveal style={{ transitionDelay: `${0.16 + index * 0.08}s` }}>
                 <div className={styles.pMeta}>
                   <span>{c.n}</span>
                   {c.title}
@@ -545,7 +548,7 @@ export default function HowItWorks() {
           </div>
         </div>
 
-        <div className={styles.body}>
+        <div className={styles.body} data-reveal style={{ transitionDelay: "0.56s" }}>
           <p className={styles.rule}>
             The test: if it takes longer to read than to retype,{" "}
             <mark>cut it.</mark>
@@ -554,16 +557,16 @@ export default function HowItWorks() {
       </section>
 
       <section>
-        <Meta n={3} title="Keyboard first" count={KEYS.length} />
+        <Meta n={3} title="Keyboard first" count={KEYS.length} data-reveal />
 
-        <div className={styles.body}>
+        <div className={styles.body} data-reveal style={{ transitionDelay: "0.08s" }}>
           <p className={styles.intro}>
             You never have to leave the home row. Every move above has a key.
           </p>
 
           <div className={styles.keyGrid}>
-            {KEYS.map((k) => (
-              <div key={k.text} className={styles.keyTile}>
+            {KEYS.map((k, index) => (
+              <div key={k.text} className={styles.keyTile} data-reveal style={{ transitionDelay: `${0.08 + index * 0.06}s` }}>
                 <span className={styles.fill} />
 
                 <span className={styles.keyRow}>
@@ -582,9 +585,9 @@ export default function HowItWorks() {
       </section>
 
       <section>
-        <Meta n={4} title="Under the hood" count={1} />
+        <Meta n={4} title="Under the hood" count={1} data-reveal />
 
-        <div className={`${styles.body} ${styles.hood}`}>
+        <div className={`${styles.body} ${styles.hood}`} data-reveal style={{ transitionDelay: "0.08s" }}>
           <div>
             <p className={styles.intro}>
               Every language is a typed list of columns and blocks. Add one
@@ -597,7 +600,7 @@ export default function HowItWorks() {
             </p>
           </div>
 
-          <div className={styles.darkPanel}>
+          <div className={styles.darkPanel} data-reveal style={{ transitionDelay: "0.16s" }}>
             <div className={`${styles.block} ${styles.shape}`}>
               <span className={styles.tab}>data.ts</span>
               <pre className={styles.code}>{SHAPE}</pre>
@@ -607,9 +610,9 @@ export default function HowItWorks() {
       </section>
 
       <section className={styles.cta}>
-        <h2 className={styles.ctaTitle}>Your turn. Beat 1.84s.</h2>
+        <h2 className={styles.ctaTitle} data-reveal>Your turn. Beat 1.84s.</h2>
 
-        <Link href="/syntax" className={`${styles.btn} ${styles.btnA}`}>
+        <Link href="/syntax" className={`${styles.btn} ${styles.btnA}`} data-reveal style={{ transitionDelay: "0.08s" }}>
           Get Started
         </Link>
       </section>

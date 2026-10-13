@@ -219,10 +219,14 @@ export default function Hero() {
       </div>
 
       <div className={styles.content}>
-        <div className={`${styles.title} ${mounted ? styles.fadeUp : ""}`}>
-          Syntax <span className={styles.highlighted}>cheatsheet</span> for{" "}
-          <br />programming.
-        </div>
+        <h1 className={styles.title}>
+          <span className={styles.line}>
+            <span>Syntax <span className={styles.highlighted}>cheatsheet</span> for</span>
+          </span>
+          <span className={styles.line}>
+            <span style={{ animationDelay: "0.12s" }}>programming.</span>
+          </span>
+        </h1>
         <div
           className={`${styles.subtitle} ${mounted ? styles.fadeUp : ""}`}
           style={{ transitionDelay: "0.12s" }}

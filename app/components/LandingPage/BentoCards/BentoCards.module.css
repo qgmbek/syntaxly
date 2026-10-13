@@ -104,6 +104,11 @@
   transform: translateY(0);
 }
 
+.mainHeading[data-in] {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 .subHeading {
   font-size: 20px;
   line-height: 1.2;

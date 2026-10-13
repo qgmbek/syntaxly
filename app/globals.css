@@ -4,9 +4,9 @@
   --secondary: rgb(153, 0, 255);
   --black: rgb(0, 0, 0);
   --white: rgb(255, 255, 255);
-  --column-bg: rgb(44, 0, 120);
+  --column-bg: rgb(44, 0, 110);
   --column-block-bg: rgb(242, 233, 251);
-  --explanation-bg: rgb(48, 1, 89);
+  --explanation-bg: rgb(44, 9, 75);
   --explanation-code: rgb(242, 233, 251);
   --memory-gradient: linear-gradient(90deg, #00f47e, #ffb03a, #dd1d1a);
   --accent-soft: rgba(0, 255, 208, 0.15);

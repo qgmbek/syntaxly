@@ -87,7 +87,6 @@
   margin-top: 60px;
 }
 
-.title,
 .subtitle,
 .buttonContainer {
   opacity: 0;
@@ -106,6 +105,28 @@
   font-size: 84px;
   font-weight: 600;
   text-align: center;
+  line-height: 1.02;
+  letter-spacing: -0.055em;
+}
+
+.line {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.08em;
+}
+
+.line > span {
+  display: inline-block;
+  animation: rise 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes rise {
+  from {
+    transform: translateY(110%);
+  }
+  to {
+    transform: translateY(0);
+  }
 }
 
 .highlighted {

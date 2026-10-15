@@ -1,7 +1,235 @@
 .page {
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+
   background: #fff;
   color: #171717;
   overflow-x: clip;
+}
+
+.reveal {
+  opacity: 0;
+}
+
+.reveal[data-in] {
+  opacity: 1;
+  animation-duration: var(--dur, 0.9s);
+  animation-timing-function: var(--ease);
+  animation-delay: var(--delay, 0s);
+  animation-fill-mode: backwards;
+}
+
+.fade {
+  --dist: 12px;
+  --dur: 0.9s;
+}
+
+.wipe {
+  --dist: 20px;
+  --dur: 1.05s;
+}
+
+.slide {
+  --dist: 56px;
+  --dur: 0.95s;
+}
+
+.up {
+  --vx: 0;
+  --vy: 1;
+  --clip: inset(100% -10% -10% -10%);
+}
+
+.down {
+  --vx: 0;
+  --vy: -1;
+  --clip: inset(-10% -10% 100% -10%);
+}
+
+.left {
+  --vx: 1;
+  --vy: 0;
+  --clip: inset(-10% -10% -10% 100%);
+}
+
+.right {
+  --vx: -1;
+  --vy: 0;
+  --clip: inset(-10% 100% -10% -10%);
+}
+
+.reveal[data-in].fade {
+  animation-name: kFade;
+}
+
+.reveal[data-in].wipe {
+  animation-name: kWipe;
+}
+
+.reveal[data-in].slide {
+  animation-name: kSlide;
+}
+
+@keyframes kFade {
+  from {
+    opacity: 0;
+    filter: blur(8px);
+    transform: translate(
+      calc(var(--vx) * var(--dist)),
+      calc(var(--vy) * var(--dist))
+    );
+  }
+}
+
+@keyframes kWipe {
+  from {
+    opacity: 0;
+    clip-path: var(--clip);
+    transform: translate(
+      calc(var(--vx) * var(--dist)),
+      calc(var(--vy) * var(--dist))
+    );
+  }
+  to {
+    opacity: 1;
+    clip-path: inset(-10% -10% -10% -10%);
+  }
+}
+
+@keyframes kSlide {
+  from {
+    opacity: 0;
+    transform: translate(
+      calc(var(--vx) * var(--dist)),
+      calc(var(--vy) * var(--dist))
+    );
+  }
+  35% {
+    opacity: 1;
+  }
+}
+
+@keyframes kLeadIn {
+  from {
+    opacity: 0;
+    filter: blur(8px);
+    transform: translate3d(-12px, 0, 0);
+  }
+}
+
+@keyframes kBtnIn {
+  0% {
+    opacity: 0;
+    transform: translate3d(24px, 0, 0) scale(0.96);
+  }
+  75% {
+    opacity: 1;
+    transform: translate3d(-2px, 0, 0) scale(1.01);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes kLine {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+@keyframes kRailIn {
+  from {
+    clip-path: inset(0 0 100% 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes kTextIn {
+  from {
+    opacity: 0;
+    transform: translate3d(-10px, 0, 0);
+  }
+}
+
+@keyframes kOrbIn {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes kMark {
+  from {
+    background-size: 0% 100%;
+  }
+  to {
+    background-size: 100% 100%;
+  }
+}
+
+@keyframes kSharpen {
+  from {
+    opacity: 0.4;
+    filter: blur(10px);
+  }
+}
+
+@keyframes kTitleIn {
+  from {
+    opacity: 0;
+    clip-path: inset(100% -10% -10% -10%);
+    transform: translate3d(0, 14px, 0);
+  }
+  to {
+    opacity: 1;
+    clip-path: inset(-10% -10% -10% -10%);
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes kPop {
+  0% {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  65% {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes kDemoIn {
+  from {
+    opacity: 0;
+    clip-path: inset(-10% 100% -10% -10%);
+  }
+  to {
+    opacity: 1;
+    clip-path: inset(-10% -10% -10% -10%);
+  }
+}
+
+@keyframes kColIn {
+  from {
+    opacity: 0;
+    clip-path: inset(-10% -10% 100% -10%);
+  }
+  to {
+    opacity: 1;
+    clip-path: inset(-10% -10% -10% -10%);
+  }
+}
+
+@keyframes kCellIn {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 8px, 0) scale(0.96);
+  }
 }
 
 .hero {
@@ -17,6 +245,7 @@
   justify-content: center;
   background: var(--primary);
   border-right: 1px solid rgba(0, 0, 0, 0.11);
+  animation: kRailIn 1s var(--ease) backwards;
 }
 
 .railName {
@@ -24,6 +253,7 @@
   text-orientation: upright;
   font-size: 24px;
   color: var(--black);
+  animation: kTextIn 0.8s var(--ease) 0.5s backwards;
 }
 
 .heroMain {
@@ -51,7 +281,9 @@
   top: -220px;
   right: -200px;
   pointer-events: none;
-  animation: drift 14s ease-in-out infinite;
+  animation:
+    drift 14s ease-in-out infinite,
+    kOrbIn 2.4s ease backwards;
 }
 
 @keyframes drift {
@@ -104,19 +336,36 @@
 }
 
 .hl {
+  display: inline-block;
   font-style: normal;
   padding: 0 0.12em;
-  background: var(--accent-soft);
+  background: linear-gradient(var(--accent-soft), var(--accent-soft)) no-repeat
+    left center / 0% 100%;
   border-radius: 2px;
+  animation:
+    kMark 0.9s var(--ease) 0.95s forwards,
+    kSharpen 1.1s var(--ease) 0.85s backwards;
 }
 
 .heroFoot {
+  position: relative;
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
   gap: 32px;
   padding-top: 28px;
-  border-top: 1px solid #171717;
+}
+
+.heroFoot::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: #171717;
+  transform-origin: left;
+  animation: kLine 1.2s var(--ease) 0.7s backwards;
 }
 
 .lead {
@@ -124,6 +373,7 @@
   margin: 0;
   font-size: 22px;
   line-height: 1.4;
+  animation: kLeadIn 0.9s var(--ease) 0.9s backwards;
 }
 
 .btn {
@@ -149,6 +399,10 @@
   color: #fff;
 }
 
+.heroBtn {
+  animation: kBtnIn 0.7s var(--ease) 1.05s backwards;
+}
+
 .meta {
   margin-top: 120px;
   background: var(--primary);
@@ -156,6 +410,18 @@
   border-top: 1px solid rgba(0, 0, 0, 0.11);
   border-bottom: 1px solid rgba(0, 0, 0, 0.11);
   font-family: var(--font-sansation), sans-serif;
+}
+
+.meta[data-in] .metaNum {
+  animation: kTextIn 0.7s var(--ease) calc(var(--delay, 0s) + 0.25s) backwards;
+}
+
+.meta[data-in] .metaTitle {
+  animation: kTitleIn 0.9s var(--ease) calc(var(--delay, 0s) + 0.2s) backwards;
+}
+
+.meta[data-in] .metaCount {
+  animation: kTextIn 0.8s var(--ease) calc(var(--delay, 0s) + 0.45s) backwards;
 }
 
 #big .meta {
@@ -188,19 +454,6 @@
   font-size: 12px;
   opacity: 0.7;
   letter-spacing: 0.04em;
-}
-
-.reveal {
-  opacity: 0;
-  transform: translateY(28px);
-  transition:
-    opacity 0.7s ease calc(var(--d, 0) * 100ms),
-    transform 0.9s cubic-bezier(0.16, 1, 0.3, 1) calc(var(--d, 0) * 100ms);
-}
-
-.reveal[data-in] {
-  opacity: 1;
-  transform: none;
 }
 
 .bento {
@@ -236,14 +489,43 @@
   overflow: hidden;
   transition:
     border-color 0.3s ease,
-    box-shadow 0.4s ease,
-    opacity 0.7s ease calc(var(--d, 0) * 100ms),
-    transform 0.9s cubic-bezier(0.16, 1, 0.3, 1) calc(var(--d, 0) * 100ms);
+    box-shadow 0.4s ease;
 }
 
 .card:hover {
   border-color: rgba(0, 255, 208, 0.45);
   box-shadow: 0 30px 60px rgba(15, 23, 42, 0.06);
+}
+
+.card[data-in] .cardIcon {
+  animation: kPop 0.7s var(--ease) calc(var(--delay, 0s) + 0.25s) backwards;
+}
+
+.card[data-in] .cardTitle {
+  animation: kTitleIn 0.8s var(--ease) calc(var(--delay, 0s) + 0.3s) backwards;
+}
+
+.card[data-in] .cardText {
+  animation: kTextIn 0.8s var(--ease) calc(var(--delay, 0s) + 0.4s) backwards;
+}
+
+.card[data-in] .demo {
+  animation: kDemoIn 1s var(--ease) calc(var(--delay, 0s) + 0.5s) backwards;
+}
+
+.card[data-in] .ovCol {
+  animation: kColIn 0.9s var(--ease)
+    calc(var(--delay, 0s) + 0.6s + var(--c, 0) * 0.09s) backwards;
+}
+
+.card[data-in] .collapse {
+  animation: kTextIn 0.7s var(--ease)
+    calc(var(--delay, 0s) + 0.6s + var(--c, 0) * 0.06s) backwards;
+}
+
+.card[data-in] .cell {
+  animation: kCellIn 0.7s var(--ease)
+    calc(var(--delay, 0s) + 0.6s + var(--c, 0) * 0.05s) backwards;
 }
 
 .glow {
@@ -902,6 +1184,14 @@
   border-bottom: 1px solid rgba(15, 23, 42, 0.12);
 }
 
+.tile[data-in] .tileNum {
+  animation: kTextIn 0.7s var(--ease) calc(var(--delay, 0s) + 0.3s) backwards;
+}
+
+.tile[data-in] .tileBody {
+  animation: kTextIn 0.8s var(--ease) calc(var(--delay, 0s) + 0.4s) backwards;
+}
+
 .tile:nth-child(3n) {
   border-right: 0;
 }
@@ -974,6 +1264,22 @@
   font-weight: 500;
   letter-spacing: -0.05em;
   line-height: 1.1;
+}
+
+.mask {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.08em;
+}
+
+.maskIn {
+  display: inline-block;
+  transform: translateY(110%);
+}
+
+.ctaTitle[data-in] .maskIn {
+  transform: none;
+  animation: rise 1s var(--ease) backwards;
 }
 
 @media (max-width: 900px) {
@@ -1051,11 +1357,30 @@
 @media (prefers-reduced-motion: reduce) {
   .orb,
   .line > span,
-  .sHit {
+  .sHit,
+  .rail,
+  .railName,
+  .lead,
+  .heroBtn,
+  .heroFoot::before,
+  .hl,
+  .reveal[data-in],
+  .meta[data-in] .metaNum,
+  .meta[data-in] .metaTitle,
+  .meta[data-in] .metaCount,
+  .card[data-in] .cardIcon,
+  .card[data-in] .cardTitle,
+  .card[data-in] .cardText,
+  .card[data-in] .demo,
+  .card[data-in] .ovCol,
+  .card[data-in] .collapse,
+  .card[data-in] .cell,
+  .tile[data-in] .tileNum,
+  .tile[data-in] .tileBody,
+  .ctaTitle[data-in] .maskIn {
     animation: none;
   }
 
-  .reveal,
   .card,
   .collapse,
   .ovCol,
@@ -1067,8 +1392,7 @@
     transition: none;
   }
 
-  .reveal {
-    opacity: 1;
-    transform: none;
+  .hl {
+    background-size: 100% 100%;
   }
 }

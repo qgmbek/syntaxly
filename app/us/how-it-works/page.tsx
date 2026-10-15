@@ -167,6 +167,12 @@ const PIPE = [
   },
 ];
 
+const at = (seconds: number, distance?: number) =>
+  ({
+    "--delay": `${seconds}s`,
+    ...(distance ? { "--dist": `${distance}px` } : {}),
+  }) as CSSProperties;
+
 function Meta({
   n,
   title,
@@ -178,7 +184,12 @@ function Meta({
   count: number;
 } & React.HTMLAttributes<HTMLDivElement>) {
   return (
-    <div className={styles.meta} {...props}>
+    <div
+      className={`${styles.meta} ${styles.reveal} ${styles.wipe} ${
+        n % 2 ? styles.right : styles.left
+      }`}
+      {...props}
+    >
       <div className={styles.metaInner}>
         <div>
           <div className={styles.metaNum}>{n}</div>
@@ -245,18 +256,19 @@ export default function HowItWorks() {
 
     const timers: ReturnType<typeof setTimeout>[] = [];
 
-    const at = (ms: number, fn: () => void) => timers.push(setTimeout(fn, ms));
+    const after = (ms: number, fn: () => void) =>
+      timers.push(setTimeout(fn, ms));
 
-    at(1800, () => setStep(1));
+    after(1800, () => setStep(1));
 
     QUERY.split("").forEach((_, i) =>
-      at(2300 + i * 170, () => setTyped(QUERY.slice(0, i + 1))),
+      after(2300 + i * 170, () => setTyped(QUERY.slice(0, i + 1))),
     );
 
-    at(3700, () => setStep(2));
-    at(5800, () => setStep(3));
-    at(6600, () => setCopied(true));
-    at(7200, () => setDone(true));
+    after(3700, () => setStep(2));
+    after(5800, () => setStep(3));
+    after(6600, () => setCopied(true));
+    after(7200, () => setDone(true));
 
     return () => timers.forEach(clearTimeout);
   }, [run, started]);
@@ -305,11 +317,11 @@ export default function HowItWorks() {
           <div className={styles.heroInner}>
             <h1 className={styles.title}>
               <span className={styles.line}>
-                <span>Four moves.</span>
+                <span style={{ animationDelay: "0.2s" }}>Four moves.</span>
               </span>
 
               <span className={styles.line}>
-                <span style={{ animationDelay: "0.12s" }}>
+                <span style={{ animationDelay: "0.34s" }}>
                   <em className={styles.hl}>Two seconds.</em>
                 </span>
               </span>
@@ -321,7 +333,10 @@ export default function HowItWorks() {
                 and watch it run against a stopwatch.
               </p>
 
-              <a href="#demo" className={`${styles.btn} ${styles.btnA}`}>
+              <a
+                href="#demo"
+                className={`${styles.btn} ${styles.btnA} ${styles.heroBtn}`}
+              >
                 Watch it run
                 <ArrowDown size={18} weight="bold" />
               </a>
@@ -333,7 +348,11 @@ export default function HowItWorks() {
       <section id="demo" className={styles.demo}>
         <Meta n={1} title="The loop" count={4} data-reveal />
 
-        <div className={styles.stageWrap} ref={stageRef}>
+        <div
+          className={styles.stageWrap}
+          ref={stageRef}
+          {...(started ? { "data-in": "" } : {})}
+        >
           <div className={styles.bar}>
             <div className={styles.clock} aria-live="off">
               {t.toFixed(2).padStart(5, "0")}
@@ -368,14 +387,16 @@ export default function HowItWorks() {
 
           <div className={styles.stage}>
             <div
-              className={`${styles.view} ${step === 0 ? styles.on : ""}`}
+              className={`${styles.view} ${
+                started && step === 0 ? styles.on : ""
+              }`}
               aria-hidden={step !== 0}
             >
               <div className={styles.cols}>
                 {COLS.map((c, ci) => (
                   <div
                     key={c.n}
-                    className={`${styles.col} ${styles.stag}`}
+                    className={`${styles.col} ${styles.stag} ${styles.sWipeDown}`}
                     style={{ "--i": ci } as CSSProperties}
                   >
                     <div className={styles.colMeta}>
@@ -402,12 +423,14 @@ export default function HowItWorks() {
             </div>
 
             <div
-              className={`${styles.view} ${step === 1 ? styles.on : ""}`}
+              className={`${styles.view} ${
+                started && step === 1 ? styles.on : ""
+              }`}
               aria-hidden={step !== 1}
             >
               <div className={styles.search}>
                 <div
-                  className={`${styles.searchRow} ${styles.stag}`}
+                  className={`${styles.searchRow} ${styles.stag} ${styles.sSlideDown}`}
                   style={{ "--i": 0 } as CSSProperties}
                 >
                   <MagnifyingGlass size={20} />
@@ -419,7 +442,7 @@ export default function HowItWorks() {
                 </div>
 
                 <div
-                  className={`${styles.result} ${styles.stag}`}
+                  className={`${styles.result} ${styles.stag} ${styles.sWipeRight}`}
                   style={{ "--i": 2 } as CSSProperties}
                 >
                   <span className={styles.resTag}>02 · Hooks</span>
@@ -438,14 +461,18 @@ export default function HowItWorks() {
             </div>
 
             <div
-              className={`${styles.view} ${step >= 2 ? styles.on : ""}`}
+              className={`${styles.view} ${
+                started && step >= 2 ? styles.on : ""
+              }`}
               aria-hidden={step < 2}
             >
               <div className={styles.open}>
                 <div
                   className={`${styles.block} ${styles.blockBig} ${
                     styles.active
-                  } ${styles.stag} ${copied ? styles.pressed : ""}`}
+                  } ${styles.stag} ${styles.sSlideRight} ${
+                    copied ? styles.pressed : ""
+                  }`}
                   style={{ "--i": 0 } as CSSProperties}
                 >
                   <span className={styles.tab}>useState</span>
@@ -466,7 +493,7 @@ export default function HowItWorks() {
                 </div>
 
                 <div
-                  className={`${styles.explain} ${styles.stag}`}
+                  className={`${styles.explain} ${styles.stag} ${styles.sWipeLeft}`}
                   style={{ "--i": 2 } as CSSProperties}
                 >
                   <div className={styles.eHead}>useState</div>
@@ -514,18 +541,27 @@ export default function HowItWorks() {
       <section>
         <Meta n={2} title="How we write it" count={PIPE.length} data-reveal />
 
-        <div className={styles.body} data-reveal style={{ transitionDelay: "0.08s" }}>
-          <p className={styles.intro}>
+        <div className={styles.body}>
+          <p
+            className={`${styles.intro} ${styles.reveal} ${styles.fade} ${styles.right}`}
+            data-reveal
+            style={at(0.1)}
+          >
             Every block is distilled from somewhere. This is the route a syntax
             takes through the official docs, the search bar and real code before
             it earns a spot.
           </p>
         </div>
 
-        <div className={styles.pipeBand} data-reveal style={{ transitionDelay: "0.08s" }}>
+        <div className={styles.pipeBand}>
           <div className={styles.pipe}>
             {PIPE.map((c, index) => (
-              <div key={c.n} className={styles.pCol} data-reveal style={{ transitionDelay: `${0.16 + index * 0.08}s` }}>
+              <div
+                key={c.n}
+                className={`${styles.pCol} ${styles.reveal} ${styles.wipe} ${styles.down}`}
+                data-reveal
+                style={at(index * 0.09)}
+              >
                 <div className={styles.pMeta}>
                   <span>{c.n}</span>
                   {c.title}
@@ -548,8 +584,12 @@ export default function HowItWorks() {
           </div>
         </div>
 
-        <div className={styles.body} data-reveal style={{ transitionDelay: "0.56s" }}>
-          <p className={styles.rule}>
+        <div className={styles.body}>
+          <p
+            className={`${styles.rule} ${styles.reveal} ${styles.wipe} ${styles.up}`}
+            data-reveal
+            style={at(0, 28)}
+          >
             The test: if it takes longer to read than to retype,{" "}
             <mark>cut it.</mark>
           </p>
@@ -559,19 +599,32 @@ export default function HowItWorks() {
       <section>
         <Meta n={3} title="Keyboard first" count={KEYS.length} data-reveal />
 
-        <div className={styles.body} data-reveal style={{ transitionDelay: "0.08s" }}>
-          <p className={styles.intro}>
+        <div className={styles.body}>
+          <p
+            className={`${styles.intro} ${styles.reveal} ${styles.fade} ${styles.right}`}
+            data-reveal
+            style={at(0.1)}
+          >
             You never have to leave the home row. Every move above has a key.
           </p>
 
           <div className={styles.keyGrid}>
             {KEYS.map((k, index) => (
-              <div key={k.text} className={styles.keyTile} data-reveal style={{ transitionDelay: `${0.08 + index * 0.06}s` }}>
+              <div
+                key={k.text}
+                className={`${styles.keyTile} ${styles.reveal} ${styles.slide} ${styles.up}`}
+                data-reveal
+                style={at(((index % 3) + Math.floor(index / 3)) * 0.08, 28)}
+              >
                 <span className={styles.fill} />
 
                 <span className={styles.keyRow}>
-                  {k.keys.map((x) => (
-                    <kbd key={x} className={styles.kbd}>
+                  {k.keys.map((x, ki) => (
+                    <kbd
+                      key={x}
+                      className={styles.kbd}
+                      style={{ "--k": ki } as CSSProperties}
+                    >
                       {x}
                     </kbd>
                   ))}
@@ -587,20 +640,32 @@ export default function HowItWorks() {
       <section>
         <Meta n={4} title="Under the hood" count={1} data-reveal />
 
-        <div className={`${styles.body} ${styles.hood}`} data-reveal style={{ transitionDelay: "0.08s" }}>
+        <div className={`${styles.body} ${styles.hood}`}>
           <div>
-            <p className={styles.intro}>
+            <p
+              className={`${styles.intro} ${styles.reveal} ${styles.fade} ${styles.right}`}
+              data-reveal
+              style={at(0.1)}
+            >
               Every language is a typed list of columns and blocks. Add one
               block and it shows up in the column, the search, the minimap and
               the keyboard navigation. Nothing else to wire.
             </p>
 
-            <p className={styles.small}>
+            <p
+              className={`${styles.small} ${styles.reveal} ${styles.fade} ${styles.right}`}
+              data-reveal
+              style={at(0.25)}
+            >
               Next.js · TypeScript · CSS modules · no backend
             </p>
           </div>
 
-          <div className={styles.darkPanel} data-reveal style={{ transitionDelay: "0.16s" }}>
+          <div
+            className={`${styles.darkPanel} ${styles.reveal} ${styles.wipe} ${styles.left}`}
+            data-reveal
+            style={at(0.05, 36)}
+          >
             <div className={`${styles.block} ${styles.shape}`}>
               <span className={styles.tab}>data.ts</span>
               <pre className={styles.code}>{SHAPE}</pre>
@@ -610,9 +675,18 @@ export default function HowItWorks() {
       </section>
 
       <section className={styles.cta}>
-        <h2 className={styles.ctaTitle} data-reveal>Your turn. Beat 1.84s.</h2>
+        <h2 className={styles.ctaTitle} data-reveal>
+          <span className={styles.mask}>
+            <span className={styles.maskIn}>Your turn. Beat 1.84s.</span>
+          </span>
+        </h2>
 
-        <Link href="/syntax" className={`${styles.btn} ${styles.btnA}`} data-reveal style={{ transitionDelay: "0.08s" }}>
+        <Link
+          href="/syntax"
+          className={`${styles.btn} ${styles.btnA} ${styles.reveal} ${styles.wipe} ${styles.right}`}
+          data-reveal
+          style={at(0.4)}
+        >
           Get Started
         </Link>
       </section>

@@ -31,6 +31,9 @@ type Block = {
   u: boolean;
 };
 
+type RevealType = "fade" | "wipe" | "slide";
+type RevealDir = "up" | "down" | "left" | "right";
+
 const BLOCKS: Block[] = [
   { t: "Variables", c: "let x = 42;", tag: "01 · Basics", u: false },
   {
@@ -93,6 +96,12 @@ const SMALL = [
   ["Esc clears it", "Close overlays, deselect, start over."],
 ];
 
+const at = (seconds: number, distance?: number) =>
+  ({
+    "--delay": `${seconds}s`,
+    ...(distance ? { "--dist": `${distance}px` } : {}),
+  }) as CSSProperties;
+
 function Hl({ text, q }: { text: string; q: string }) {
   const i = q ? text.toLowerCase().indexOf(q) : -1;
 
@@ -117,7 +126,12 @@ function Meta({
   count: number;
 }) {
   return (
-    <div className={styles.meta}>
+    <div
+      className={`${styles.meta} ${styles.reveal} ${styles.wipe} ${
+        n % 2 ? styles.right : styles.left
+      }`}
+      data-reveal
+    >
       <div className={styles.metaInner}>
         <div>
           <div className={styles.metaNum}>{n}</div>
@@ -134,21 +148,27 @@ function Card({
   title,
   text,
   span,
+  type,
+  dir,
   delay = 0,
+  distance,
   children,
 }: {
   icon: React.ReactNode;
   title: string;
   text: string;
   span: string;
+  type: RevealType;
+  dir: RevealDir;
   delay?: number;
+  distance?: number;
   children: React.ReactNode;
 }) {
   return (
     <article
-      className={`${styles.card} ${styles.reveal} ${span}`}
+      className={`${styles.card} ${styles.reveal} ${styles[type]} ${styles[dir]} ${span}`}
       data-reveal
-      style={{ "--d": delay } as CSSProperties}
+      style={at(delay, distance)}
     >
       <div className={styles.glow} />
 
@@ -274,6 +294,7 @@ function KeyboardDemo() {
                 className={`${styles.cell} ${
                   pos.c === ci && pos.r === ri ? styles.cellOn : ""
                 }`}
+                style={{ "--c": ci + ri } as CSSProperties}
               >
                 {b}
               </span>
@@ -311,10 +332,11 @@ function UniqueDemo() {
       </button>
 
       <div className={styles.uqList}>
-        {BLOCKS.map((b) => (
+        {BLOCKS.map((b, i) => (
           <div
             key={b.t}
             className={`${styles.collapse} ${on && !b.u ? styles.off : ""}`}
+            style={{ "--c": i } as CSSProperties}
           >
             <div>
               <div className={styles.uqRow}>
@@ -353,7 +375,11 @@ function OverviewDemo() {
 
       <div className={`${styles.ov} ${compact ? styles.ovCompact : ""}`}>
         {OVERVIEW.map((t, i) => (
-          <div key={t} className={styles.ovCol}>
+          <div
+            key={t}
+            className={styles.ovCol}
+            style={{ "--c": i } as CSSProperties}
+          >
             <div className={styles.ovMeta}>
               <span>{i + 1}</span>
               <b className={styles.hT}>{t}</b>
@@ -537,11 +563,11 @@ export default function Features() {
           <div className={styles.heroInner}>
             <h1 className={styles.title}>
               <span className={styles.line}>
-                <span>Few features.</span>
+                <span style={{ animationDelay: "0.2s" }}>Few features.</span>
               </span>
 
               <span className={styles.line}>
-                <span style={{ animationDelay: "0.12s" }}>
+                <span style={{ animationDelay: "0.34s" }}>
                   All <em className={styles.hl}>sharp.</em>
                 </span>
               </span>
@@ -553,7 +579,10 @@ export default function Features() {
                 demo below is live, so poke at them.
               </p>
 
-              <a href="#big" className={`${styles.btn} ${styles.btnA}`}>
+              <a
+                href="#big"
+                className={`${styles.btn} ${styles.btnA} ${styles.heroBtn}`}
+              >
                 Try them <ArrowDown size={18} weight="bold" />
               </a>
             </div>
@@ -570,6 +599,8 @@ export default function Features() {
             icon={<MagnifyingGlass size={30} weight="regular" />}
             title="Search every block"
             text="One shortcut opens a scanner across all columns. It matches titles and code, and highlights what it found."
+            type="slide"
+            dir="right"
             delay={0}
           >
             <SearchDemo />
@@ -580,7 +611,9 @@ export default function Features() {
             icon={<Keyboard size={30} weight="regular" />}
             title="Keyboard first"
             text="Arrow through blocks and columns without touching the mouse."
-            delay={1}
+            type="slide"
+            dir="left"
+            delay={0.1}
           >
             <KeyboardDemo />
           </Card>
@@ -590,6 +623,8 @@ export default function Features() {
             icon={<DiamondsFour size={30} weight="regular" />}
             title="Unique filter"
             text="Hide the common stuff and keep only syntax unique to the language."
+            type="wipe"
+            dir="right"
             delay={0}
           >
             <UniqueDemo />
@@ -600,7 +635,9 @@ export default function Features() {
             icon={<Columns size={30} weight="regular" />}
             title="Overview mode"
             text="Collapse every column into a narrow strip to see the whole language at once, then expand the one you need."
-            delay={1}
+            type="wipe"
+            dir="left"
+            delay={0.1}
           >
             <OverviewDemo />
           </Card>
@@ -610,7 +647,10 @@ export default function Features() {
             icon={<Palette size={30} weight="regular" />}
             title="Three themes"
             text="Same layout, different mood. Everything follows the palette."
+            type="fade"
+            dir="right"
             delay={0}
+            distance={24}
           >
             <ThemeDemo />
           </Card>
@@ -620,7 +660,10 @@ export default function Features() {
             icon={<TextAa size={30} weight="regular" />}
             title="Make it yours"
             text="Resize the code, copy a snippet in one click, or hide the chrome and read."
-            delay={1}
+            type="fade"
+            dir="left"
+            delay={0.12}
+            distance={24}
           >
             <YoursDemo />
           </Card>
@@ -634,9 +677,9 @@ export default function Features() {
           {SMALL.map(([t, d], i) => (
             <div
               key={t}
-              className={`${styles.tile} ${styles.reveal}`}
+              className={`${styles.tile} ${styles.reveal} ${styles.wipe} ${styles.right}`}
               data-reveal
-              style={{ "--d": i % 3 } as CSSProperties}
+              style={at(((i % 3) + Math.floor(i / 3)) * 0.08)}
             >
               <span className={styles.fill} />
               <span className={styles.tileNum}>
@@ -653,9 +696,18 @@ export default function Features() {
       </section>
 
       <section className={styles.cta}>
-        <h2 className={styles.ctaTitle}>See them where they live.</h2>
+        <h2 className={styles.ctaTitle} data-reveal>
+          <span className={styles.mask}>
+            <span className={styles.maskIn}>See them where they live.</span>
+          </span>
+        </h2>
 
-        <Link href="/syntax" className={`${styles.btn} ${styles.btnA}`}>
+        <Link
+          href="/syntax"
+          className={`${styles.btn} ${styles.btnA} ${styles.reveal} ${styles.wipe} ${styles.right}`}
+          data-reveal
+          style={at(0.4)}
+        >
           Get Started <ArrowUpRight size={18} weight="bold" />
         </Link>
       </section>

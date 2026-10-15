@@ -150,8 +150,8 @@
 
 .footer[data-in] .letter {
   opacity: 1;
-  animation: footerLetterEnter 1200ms var(--ease)
-    calc(450ms + var(--i) * 45ms) backwards;
+  animation: footerLetterEnter 1200ms var(--ease) calc(450ms + var(--i) * 45ms)
+    backwards;
 }
 
 @keyframes footerMarkPop {

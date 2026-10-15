@@ -22,30 +22,37 @@ export default function Hero() {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    const id = requestAnimationFrame(() => setMounted(true));
-    return () => cancelAnimationFrame(id);
+    const frame = requestAnimationFrame(() => setMounted(true));
+    return () => cancelAnimationFrame(frame);
   }, []);
 
   useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
     const updateDimensions = () => {
-      if (containerRef.current) {
-        const { width, height } = containerRef.current.getBoundingClientRect();
-        setDimensions({ width, height });
-      }
+      const { width, height } = container.getBoundingClientRect();
+      setDimensions({ width, height });
     };
+
     updateDimensions();
-    window.addEventListener("resize", updateDimensions);
-    return () => window.removeEventListener("resize", updateDimensions);
+
+    const observer = new ResizeObserver(updateDimensions);
+    observer.observe(container);
+
+    return () => observer.disconnect();
   }, []);
 
   const cells = useMemo(() => {
-    if (dimensions.width === 0 || dimensions.height === 0) return [];
+    if (!dimensions.width || !dimensions.height) return [];
+
     const cols = Math.ceil(dimensions.width / CELL_SIZE) + 1;
     const rows = Math.ceil(dimensions.height / CELL_SIZE) + 1;
-    const cellList: Cell[] = [];
+    const result: Cell[] = [];
+
     for (let row = 0; row < rows; row++) {
       for (let col = 0; col < cols; col++) {
-        cellList.push({
+        result.push({
           top: row * CELL_SIZE,
           left: col * CELL_SIZE,
           width: CELL_SIZE,
@@ -55,17 +62,19 @@ export default function Hero() {
         });
       }
     }
-    return cellList;
+
+    return result;
   }, [dimensions.width, dimensions.height]);
 
-  const sampleDistinct = <T,>(arr: T[], k: number): T[] => {
-    if (k > arr.length) k = arr.length;
+  const sampleDistinct = <T,>(arr: T[], count: number): T[] => {
     const shuffled = [...arr];
+
     for (let i = shuffled.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
     }
-    return shuffled.slice(0, k);
+
+    return shuffled.slice(0, Math.min(count, shuffled.length));
   };
 
   const generateRandomHighlights = useCallback(
@@ -75,49 +84,47 @@ export default function Hero() {
       totalRows: number,
       totalCols: number,
     ) => {
-      const totalCells = totalRows * totalCols;
-      const opacities = new Array(totalCells).fill(0);
-
-      const hoverIndex = hoverRow * totalCols + hoverCol;
-      opacities[hoverIndex] = 0.95;
+      const opacities = new Array(totalRows * totalCols).fill(0);
+      opacities[hoverRow * totalCols + hoverCol] = 0.95;
 
       const neighbors: { row: number; col: number; index: number }[] = [];
+
       for (let dr = -1; dr <= 1; dr++) {
         for (let dc = -1; dc <= 1; dc++) {
           if (dr === 0 && dc === 0) continue;
-          const nr = hoverRow + dr;
-          const nc = hoverCol + dc;
-          if (nr >= 0 && nr < totalRows && nc >= 0 && nc < totalCols) {
+
+          const row = hoverRow + dr;
+          const col = hoverCol + dc;
+
+          if (row >= 0 && row < totalRows && col >= 0 && col < totalCols) {
             neighbors.push({
-              row: nr,
-              col: nc,
-              index: nr * totalCols + nc,
+              row,
+              col,
+              index: row * totalCols + col,
             });
           }
         }
       }
 
-      if (neighbors.length === 0) return opacities;
+      if (!neighbors.length) return opacities;
 
-      const nextLineNeighbors = neighbors.filter((n) => n.row === hoverRow + 1);
-      const otherNeighbors = neighbors.filter((n) => n.row !== hoverRow + 1);
+      const nextLine = neighbors.filter((n) => n.row === hoverRow + 1);
+      const others = neighbors.filter((n) => n.row !== hoverRow + 1);
 
-      const maxNeighborBoxes = 5;
-      const possibleCount = Math.min(maxNeighborBoxes, neighbors.length);
-      const neighborCount = Math.floor(Math.random() * possibleCount) + 1;
+      const count =
+        Math.floor(Math.random() * Math.min(5, neighbors.length)) + 1;
 
-      const maxNextLine = Math.min(2, nextLineNeighbors.length, neighborCount);
-      const nextLineCount = Math.floor(Math.random() * (maxNextLine + 1));
-      const remainingCount = neighborCount - nextLineCount;
+      const nextLineCount = Math.floor(
+        Math.random() * (Math.min(2, nextLine.length, count) + 1),
+      );
 
-      const selectedNextLine = sampleDistinct(nextLineNeighbors, nextLineCount);
-      const selectedOthers = sampleDistinct(otherNeighbors, remainingCount);
+      const selected = [
+        ...sampleDistinct(nextLine, nextLineCount),
+        ...sampleDistinct(others, count - nextLineCount),
+      ];
 
-      const selectedNeighbors = [...selectedNextLine, ...selectedOthers];
-
-      for (const neighbor of selectedNeighbors) {
-        const opacity = 0.2 + Math.random() * 0.5;
-        opacities[neighbor.index] = opacity;
+      for (const neighbor of selected) {
+        opacities[neighbor.index] = 0.2 + Math.random() * 0.5;
       }
 
       return opacities;
@@ -127,53 +134,37 @@ export default function Hero() {
 
   useEffect(() => {
     const container = containerRef.current;
-    if (!container || cells.length === 0) return;
+    if (!container || !cells.length) return;
 
-    const handleMouseMove = (e: MouseEvent) => {
-      const rect = container.getBoundingClientRect();
-      const mouseX = e.clientX - rect.left;
-      const mouseY = e.clientY - rect.top;
+    const cols = Math.ceil(dimensions.width / CELL_SIZE) + 1;
+    const rows = Math.ceil(dimensions.height / CELL_SIZE) + 1;
 
-      const col = Math.floor(mouseX / CELL_SIZE);
-      const row = Math.floor(mouseY / CELL_SIZE);
-      const cols = Math.ceil(dimensions.width / CELL_SIZE) + 1;
-      const rows = Math.ceil(dimensions.height / CELL_SIZE) + 1;
-
-      let currentHoverIndex: number | null = null;
-      if (row >= 0 && row < rows && col >= 0 && col < cols) {
-        currentHoverIndex = row * cols + col;
-      }
-
-      if (currentHoverIndex !== lastHoverCellRef.current) {
-        lastHoverCellRef.current = currentHoverIndex;
-        if (currentHoverIndex !== null) {
-          const hoverRow = Math.floor(currentHoverIndex / cols);
-          const hoverCol = currentHoverIndex % cols;
-          const newOpacities = generateRandomHighlights(
-            hoverRow,
-            hoverCol,
-            rows,
-            cols,
-          );
-          setHighlightOpacities(newOpacities);
-        } else {
-          setHighlightOpacities(new Array(rows * cols).fill(0));
-        }
-      }
-    };
-
-    const handleMouseLeave = () => {
+    const clearHighlights = () => {
       lastHoverCellRef.current = null;
-      const cols = Math.ceil(dimensions.width / CELL_SIZE) + 1;
-      const rows = Math.ceil(dimensions.height / CELL_SIZE) + 1;
       setHighlightOpacities(new Array(rows * cols).fill(0));
     };
 
+    const handleMouseMove = (event: MouseEvent) => {
+      const rect = container.getBoundingClientRect();
+      const col = Math.floor((event.clientX - rect.left) / CELL_SIZE);
+      const row = Math.floor((event.clientY - rect.top) / CELL_SIZE);
+
+      if (row < 0 || row >= rows || col < 0 || col >= cols) return;
+
+      const index = row * cols + col;
+      if (index === lastHoverCellRef.current) return;
+
+      lastHoverCellRef.current = index;
+
+      setHighlightOpacities(generateRandomHighlights(row, col, rows, cols));
+    };
+
     container.addEventListener("mousemove", handleMouseMove);
-    container.addEventListener("mouseleave", handleMouseLeave);
+    container.addEventListener("mouseleave", clearHighlights);
+
     return () => {
       container.removeEventListener("mousemove", handleMouseMove);
-      container.removeEventListener("mouseleave", handleMouseLeave);
+      container.removeEventListener("mouseleave", clearHighlights);
     };
   }, [
     cells.length,
@@ -183,21 +174,26 @@ export default function Hero() {
   ]);
 
   useEffect(() => {
-    if (cells.length > 0) {
-      const cols = Math.ceil(dimensions.width / CELL_SIZE) + 1;
-      const rows = Math.ceil(dimensions.height / CELL_SIZE) + 1;
+    const cols = Math.ceil(dimensions.width / CELL_SIZE) + 1;
+    const rows = Math.ceil(dimensions.height / CELL_SIZE) + 1;
+
+    if (dimensions.width && dimensions.height) {
       setHighlightOpacities(new Array(rows * cols).fill(0));
       lastHoverCellRef.current = null;
     }
-  }, [dimensions.width, dimensions.height, cells.length]);
+  }, [dimensions.width, dimensions.height]);
 
   return (
-    <div ref={containerRef} className={styles.container}>
-      <div className={`${styles.bgOrb} ${mounted ? styles.orbIn : ""}`} />
+    <section
+      ref={containerRef}
+      className={`${styles.container} ${mounted ? styles.mounted : ""}`}
+    >
+      <div className={styles.bgOrb} aria-hidden="true" />
 
-      <div className={styles.overlayContainer}>
-        {cells.map((cell, idx) => {
-          const opacity = highlightOpacities[idx] || 0;
+      <div className={styles.overlayContainer} aria-hidden="true">
+        {cells.map((cell, index) => {
+          const opacity = highlightOpacities[index] || 0;
+
           const cellStyle: React.CSSProperties = {
             top: cell.top,
             left: cell.left,
@@ -207,49 +203,56 @@ export default function Hero() {
           };
 
           if (opacity > 0) {
-            const blur = 20 * opacity;
-            const spread = 6 * opacity;
-            cellStyle.boxShadow = `0 0 ${blur}px ${spread}px rgba(0, 255, 208, ${opacity * 0.7})`;
+            cellStyle.boxShadow = `0 0 ${20 * opacity}px ${
+              6 * opacity
+            }px rgba(0, 255, 208, ${opacity * 0.7})`;
           }
 
           return (
-            <div key={idx} className={styles.overlayCell} style={cellStyle} />
+            <div
+              key={`${cell.row}-${cell.col}`}
+              className={styles.overlayCell}
+              style={cellStyle}
+            />
           );
         })}
       </div>
 
       <div className={styles.content}>
         <h1 className={styles.title}>
-          <span className={styles.line}>
-            <span>Syntax <span className={styles.highlighted}>cheatsheet</span> for</span>
+          <span className={`${styles.titleLine} ${styles.titleLineFirst}`}>
+            <span className={styles.titleInner}>
+              Syntax <span className={styles.highlighted}>cheatsheet</span> for
+            </span>
           </span>
-          <span className={styles.line}>
-            <span style={{ animationDelay: "0.12s" }}>programming.</span>
+
+          <span className={`${styles.titleLine} ${styles.titleLineSecond}`}>
+            <span className={styles.titleInner}>programming.</span>
           </span>
         </h1>
-        <div
-          className={`${styles.subtitle} ${mounted ? styles.fadeUp : ""}`}
-          style={{ transitionDelay: "0.12s" }}
-        >
+
+        <p className={styles.subtitle}>
           Browse every syntax at a glance, organized into blocks by topic. Click
           any one to see a quick refresher: definition, usage, example, and
           tips.
-        </div>
-        <div
-          className={`${styles.buttonContainer} ${mounted ? styles.fadeUp : ""}`}
-          style={{ transitionDelay: "0.24s" }}
-        >
-          <a href="/syntax" className={` ${styles.button} ${styles.getButton}`}>
+        </p>
+
+        <div className={styles.buttonContainer}>
+          <a href="/syntax" className={`${styles.button} ${styles.getButton}`}>
             Get Started
+            <span className={styles.buttonArrow} aria-hidden="true">
+              ↗
+            </span>
           </a>
+
           <a
             href="/syntax"
-            className={` ${styles.button} ${styles.learnButton}`}
+            className={`${styles.button} ${styles.learnButton}`}
           >
             Learn Syntaxly
           </a>
         </div>
       </div>
-    </div>
+    </section>
   );
 }

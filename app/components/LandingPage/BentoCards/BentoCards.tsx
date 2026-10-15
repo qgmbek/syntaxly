@@ -1,20 +1,16 @@
 "use client";
 
-import { useState, MouseEvent } from "react";
+import { useState, useRef, useEffect, MouseEvent, CSSProperties } from "react";
 import {
   ClockCounterClockwise,
   SquaresFour,
   Lightning,
   BracketsCurly,
   Terminal,
-  Cube,
   Database,
   Pulse,
   GitBranch,
-  FileCode,
-  Sparkle,
   Stack,
-  Command,
   Cpu,
   CubeTransparentIcon,
 } from "@phosphor-icons/react";
@@ -35,13 +31,41 @@ type SyntaxItem = {
   icon: React.ReactNode;
 };
 
+const at = (seconds: number, distance?: number) =>
+  ({
+    "--delay": `${seconds}s`,
+    ...(distance ? { "--dist": `${distance}px` } : {}),
+  }) as CSSProperties;
+
 export default function BentoCards() {
   const sectionRef = useReveal<HTMLElement>(0.15);
+  const snippetRef = useRef<HTMLDivElement>(null);
+  const [snippetIn, setSnippetIn] = useState(false);
   const [activeBlock, setActiveBlock] = useState<SyntaxKey>("useState");
+  const [swapCount, setSwapCount] = useState(0);
+  const [swapDir, setSwapDir] = useState<"up" | "down">("up");
   const [hoveredCard, setHoveredCard] = useState<number | null>(null);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
-  const handleMouseMove = (e: MouseEvent<HTMLDivElement>, cardId: number) => {
+  useEffect(() => {
+    const node = snippetRef.current;
+    if (!node) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setSnippetIn(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.15 },
+    );
+
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
+
+  const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
     const card = e.currentTarget;
     const rect = card.getBoundingClientRect();
 
@@ -91,22 +115,44 @@ export default function BentoCards() {
     },
   };
 
+  const order = Object.keys(syntaxData) as SyntaxKey[];
+  const snippetAttr = snippetIn ? { "data-in": "" } : {};
+
+  const selectBlock = (key: SyntaxKey) => {
+    if (key === activeBlock) return;
+    setSwapDir(order.indexOf(key) > order.indexOf(activeBlock) ? "up" : "down");
+    setActiveBlock(key);
+    setSwapCount((c) => c + 1);
+  };
+
   return (
     <section ref={sectionRef} className={styles.sectionContainer}>
       <div className={styles.bgOrbOne} />
       <div className={styles.bgOrbTwo} />
 
       <div className={styles.headerWrapper}>
-        <span className={styles.badge} data-reveal>
+        <span
+          className={`${styles.badge} ${styles.reveal} ${styles.wipe} ${styles.right}`}
+          style={at(0)}
+          data-reveal
+        >
           <CubeTransparentIcon size={32} />
           WHAT IS IN SYNTAXLY?
         </span>
 
-        <h2 className={styles.mainHeading} data-reveal>
+        <h2
+          className={`${styles.mainHeading} ${styles.reveal} ${styles.wipe} ${styles.up}`}
+          style={at(0.12)}
+          data-reveal
+        >
           Everything you need to recall on the fly.
         </h2>
 
-        <p className={styles.subHeading} data-reveal>
+        <p
+          className={`${styles.subHeading} ${styles.reveal} ${styles.fade} ${styles.up}`}
+          style={at(0.4)}
+          data-reveal
+        >
           Ditch deep documentations when you just need the boilerplate syntax.
           Built for instant recall.
         </p>
@@ -114,16 +160,17 @@ export default function BentoCards() {
 
       <div className={styles.bentoGrid}>
         <div
-          className={`${styles.bentoCard} ${styles.largeCard} ${
+          className={`${styles.bentoCard} ${styles.largeCard} ${styles.reveal} ${styles.slide} ${styles.right} ${
             hoveredCard === 1 ? styles.cardActive : ""
           }`}
+          style={at(0.35)}
           data-reveal
           onMouseEnter={() => setHoveredCard(1)}
           onMouseLeave={() => {
             setHoveredCard(null);
             resetMouseMove();
           }}
-          onMouseMove={(e) => handleMouseMove(e, 1)}
+          onMouseMove={handleMouseMove}
         >
           <div
             className={`${styles.cardGlowEffect} ${
@@ -181,7 +228,11 @@ export default function BentoCards() {
                   Syntaxly Mode
                 </span>
 
-                <div className={styles.syntaxBlockBlob}>
+                <div
+                  className={`${styles.syntaxBlockBlob} ${styles.reveal} ${styles.wipe} ${styles.right}`}
+                  style={at(1)}
+                  data-reveal
+                >
                   <BracketsCurly size={18} weight="bold" />
 
                   <code className={styles.syntaxBlobCode}>
@@ -198,16 +249,17 @@ export default function BentoCards() {
         </div>
 
         <div
-          className={`${styles.bentoCard} ${styles.smallCard} ${
+          className={`${styles.bentoCard} ${styles.smallCard} ${styles.reveal} ${styles.slide} ${styles.left} ${
             hoveredCard === 2 ? styles.cardActive : ""
           }`}
+          style={at(0.5)}
           data-reveal
           onMouseEnter={() => setHoveredCard(2)}
           onMouseLeave={() => {
             setHoveredCard(null);
             resetMouseMove();
           }}
-          onMouseMove={(e) => handleMouseMove(e, 2)}
+          onMouseMove={handleMouseMove}
         >
           <div
             className={`${styles.cardGlowEffect} ${
@@ -259,12 +311,18 @@ export default function BentoCards() {
           </div>
         </div>
 
-        <div className={`${styles.bentoCard} ${styles.fullWidthCard}`} data-reveal>
-          <div className={styles.interactivePlaygroundHeader}>
+        <div
+          ref={snippetRef}
+          className={`${styles.bentoCard} ${styles.fullWidthCard} ${styles.reveal} ${styles.wipe} ${styles.up}`}
+          style={at(0)}
+          {...snippetAttr}
+        >
+          <div className={styles.interactivePlaygroundHeader} {...snippetAttr}>
             <div>
               <h3
-                className={styles.cardTitle}
-                style={{ marginTop: "4px", marginBottom: 0 }}
+                className={`${styles.cardTitle} ${styles.reveal} ${styles.wipe} ${styles.up}`}
+                style={{ marginTop: "4px", marginBottom: 0, ...at(0.35) }}
+                {...snippetAttr}
               >
                 Pure Snippet Extraction
               </h3>
@@ -273,55 +331,79 @@ export default function BentoCards() {
 
           <div className={styles.playgroundSplitBody}>
             <div className={styles.playgroundLeftPanel}>
-              <p className={styles.leftPanelText}>
+              <p
+                className={`${styles.leftPanelText} ${styles.reveal} ${styles.fade} ${styles.right}`}
+                style={at(0.5)}
+                {...snippetAttr}
+              >
                 Click a syntax block to expand contextual parameters instantly:
               </p>
 
-              {Object.keys(syntaxData).map((key) => {
-                const typedKey = key as SyntaxKey;
-                const isSelected = activeBlock === typedKey;
+              {order.map((key, index) => {
+                const isSelected = activeBlock === key;
 
                 return (
                   <div
-                    key={typedKey}
-                    onClick={() => setActiveBlock(typedKey)}
-                    className={`${styles.syntaxSelectBlock} ${
+                    key={key}
+                    onClick={() => selectBlock(key)}
+                    className={`${styles.syntaxSelectBlock} ${styles.reveal} ${styles.slide} ${styles.right} ${
                       isSelected ? styles.syntaxSelectBlockActive : ""
-                    }`}
+                    } ${isSelected && swapCount > 0 ? styles.sheen : ""}`}
+                    style={at(0.6 + index * 0.1, 36)}
+                    {...snippetAttr}
                   >
                     <div className={styles.syntaxTop}>
                       <div className={styles.syntaxNameWrapper}>
                         <div className={styles.syntaxIcon}>
-                          {syntaxData[typedKey].icon}
+                          {syntaxData[key].icon}
                         </div>
 
                         <span className={styles.syntaxName}>
-                          {syntaxData[typedKey].name}
+                          {syntaxData[key].name}
                         </span>
                       </div>
 
                       <span className={styles.syntaxLang}>
-                        {syntaxData[typedKey].lang}
+                        {syntaxData[key].lang}
                       </span>
                     </div>
 
                     <code className={styles.inlineCodePreview}>
-                      {syntaxData[typedKey].shortCode}
+                      {syntaxData[key].shortCode}
                     </code>
                   </div>
                 );
               })}
             </div>
 
-            <div className={styles.playgroundRightPanel}>
+            <div
+              className={`${styles.playgroundRightPanel} ${styles.reveal} ${styles.wipe} ${styles.left}`}
+              style={at(0.7)}
+              {...snippetAttr}
+            >
               <div className={styles.panelBlockHeader}>
                 <span className={styles.breakdownLabel}>
-                  <Lightning size={12} weight="fill" />
+                  <Lightning
+                    key={swapCount}
+                    size={12}
+                    weight="fill"
+                    className={swapCount > 0 ? styles.bolt : undefined}
+                  />
                   Real-time Breakdown
                 </span>
               </div>
 
-              <div className={styles.detailsGrid}>
+              <div
+                key={swapCount}
+                className={`${styles.detailsGrid} ${
+                  snippetIn ? styles.detailsSwap : ""
+                } ${swapDir === "up" ? styles.swapUp : styles.swapDown}`}
+                style={
+                  {
+                    "--base": swapCount === 0 ? "1.05s" : "0s",
+                  } as CSSProperties
+                }
+              >
                 <div className={styles.detailItem}>
                   <div className={styles.detailLabel}>WHAT IT IS</div>
 

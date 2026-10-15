@@ -1,16 +1,108 @@
 "use client";
 
+import { useState, useRef, useEffect, CSSProperties } from "react";
 import Link from "next/link";
 import styles from "./Footer.module.css";
-import useReveal from "../../../hooks/useReveal";
+
+type FooterLink = {
+  label: string;
+  href: string;
+  external?: boolean;
+};
+
+type FooterColumn = {
+  title: string;
+  links: FooterLink[];
+};
+
+const columns: FooterColumn[] = [
+  {
+    title: "Product",
+    links: [
+      { label: "Open Syntaxly", href: "/syntax" },
+      { label: "How it works", href: "/us/how-it-works" },
+      { label: "Features", href: "/us/features" },
+      { label: "FAQ", href: "/us/faq" },
+    ],
+  },
+  {
+    title: "Company",
+    links: [
+      { label: "About", href: "/us/about" },
+      { label: "Roadmap", href: "/us/roadmap" },
+      { label: "Brand", href: "/us/brand" },
+      { label: "Contact", href: "/us/contact" },
+    ],
+  },
+  {
+    title: "Resources",
+    links: [
+      { label: "Download", href: "/us/download" },
+      { label: "Terms of Use", href: "/us/terms" },
+      { label: "Privacy Policy", href: "/us/privacy" },
+      { label: "Resources", href: "/us/resources" },
+    ],
+  },
+  {
+    title: "Connect",
+    links: [
+      { label: "GitHub", href: "https://github.com/", external: true },
+      { label: "TikTok", href: "https://www.tiktok.com/", external: true },
+      { label: "Discord", href: "/us/contact" },
+      { label: "Email", href: "" },
+    ],
+  },
+];
+
+const WORDMARK = "Syntaxly";
 
 export default function Footer() {
-  const footerRef = useReveal<HTMLElement>(0.1);
+  const footerRef = useRef<HTMLElement>(null);
+  const [shown, setShown] = useState(false);
+
+  useEffect(() => {
+    const node = footerRef.current;
+    if (!node) return;
+
+    let frame = 0;
+
+    const update = () => {
+      frame = 0;
+      const remaining =
+        document.documentElement.scrollHeight -
+        (window.scrollY + window.innerHeight);
+      const height = node.offsetHeight;
+
+      setShown((current) => {
+        if (!current && remaining < height * 0.5) return true;
+        if (current && remaining > height * 0.9) return false;
+        return current;
+      });
+    };
+
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(update);
+    };
+
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+
+    return () => {
+      if (frame) cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, []);
 
   return (
-    <footer ref={footerRef} className={styles.footer}>
+    <footer
+      ref={footerRef}
+      className={styles.footer}
+      {...(shown ? { "data-in": "" } : {})}
+    >
       <div className={styles.top}>
-        <div className={styles.brandSection} data-reveal>
+        <div className={styles.brandSection}>
           <div className={styles.logoWrapper}>
             <div className={styles.logo}></div>
             <span className={styles.brand}>Syntaxly</span>
@@ -18,56 +110,54 @@ export default function Footer() {
         </div>
 
         <div className={styles.linksGrid}>
-          <div className={styles.column} data-reveal style={{ transitionDelay: "0.08s" }}>
-            <div className={styles.heading}>Product</div>
-            <Link href="/syntax">Open Syntaxly</Link>
-            <Link href="/us/how-it-works">How it works</Link>
-            <Link href="/us/features">Features</Link>
-            <Link href="/us/faq">FAQ</Link>
-          </div>
-
-          <div className={styles.column} data-reveal style={{ transitionDelay: "0.16s" }}>
-            <div className={styles.heading}>Company</div>
-            <Link href="/us/about">About</Link>
-            <Link href="/us/roadmap">Roadmap</Link>
-            <Link href="/us/brand">Brand</Link>
-            <Link href="/us/contact">Contact</Link>
-          </div>
-
-          <div className={styles.column} data-reveal style={{ transitionDelay: "0.24s" }}>
-            <div className={styles.heading}>Resources</div>
-            <Link href="/us/download">Download</Link>
-            <Link href="/us/terms">Terms of Use</Link>
-            <Link href="/us/privacy">Privacy Policy</Link>
-            <Link href="/us/resources">Resources</Link>
-          </div>
-
-          <div className={styles.column} data-reveal style={{ transitionDelay: "0.32s" }}>
-            <div className={styles.heading}>Connect</div>
-            <a
-              href="https://github.com/"
-              target="_blank"
-              rel="noopener noreferrer"
+          {columns.map((column, col) => (
+            <div
+              key={column.title}
+              className={styles.column}
+              style={{ "--col": col } as CSSProperties}
             >
-              GitHub
-            </a>
-            <a
-              href="https://www.tiktok.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              TikTok
-            </a>
-            <Link href="/us/contact">Discord</Link>
-            <a href="">Email</a>
-          </div>
+              <div className={styles.heading}>{column.title}</div>
+
+              {column.links.map((link, row) => {
+                const style = { "--row": row } as CSSProperties;
+
+                return link.external || link.href === "" ? (
+                  <a
+                    key={link.label}
+                    style={style}
+                    href={link.href}
+                    {...(link.external
+                      ? { target: "_blank", rel: "noopener noreferrer" }
+                      : {})}
+                  >
+                    {link.label}
+                  </a>
+                ) : (
+                  <Link key={link.label} style={style} href={link.href}>
+                    {link.label}
+                  </Link>
+                );
+              })}
+            </div>
+          ))}
         </div>
       </div>
 
       <div className={styles.bottom}>
-        <p className={styles.copyright} data-reveal style={{ transitionDelay: "0.4s" }}>Syntaxly. All rights reserved.</p>
+        <p className={styles.copyright}>Syntaxly. All rights reserved.</p>
 
-        <h1 className={styles.bigText} data-reveal style={{ transitionDelay: "0.48s" }}>Syntaxly</h1>
+        <h1 className={styles.bigText} aria-label={WORDMARK}>
+          {WORDMARK.split("").map((letter, index) => (
+            <span
+              key={index}
+              aria-hidden="true"
+              className={styles.letter}
+              style={{ "--i": index } as CSSProperties}
+            >
+              {letter}
+            </span>
+          ))}
+        </h1>
       </div>
     </footer>
   );

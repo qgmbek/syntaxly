@@ -90,37 +90,53 @@ const LINKS = [
 
 export default function Navbar() {
   const pathname = usePathname();
+
   const [menu, setMenu] = useState<MenuKey | null>(null);
   const [shown, setShown] = useState<MenuKey>("features");
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const open = (key: MenuKey) => {
-    setMenu(key);
     setShown(key);
+    setMenu(key);
+  };
+
+  const closeMenus = () => {
+    setMenu(null);
+    setMobileOpen(false);
   };
 
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        setMenu(null);
-        setMobileOpen(false);
+    closeMenus();
+  }, [pathname]);
+
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        closeMenus();
       }
     };
 
-    window.addEventListener("keydown", onKey);
+    window.addEventListener("keydown", onKeyDown);
 
-    return () => window.removeEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKeyDown);
   }, []);
 
   return (
     <div className={styles.headerWrapper} onMouseLeave={() => setMenu(null)}>
       <header className={styles.navbar}>
-        <Link href="/" className={styles.logo} aria-label="Syntaxly home">
-          <span className={styles.logoMark}>✦</span>
+        <Link
+          href="/"
+          className={styles.logo}
+          aria-label="Syntaxly home"
+          onClick={closeMenus}
+        >
+          <span className={styles.logoMark} aria-hidden="true">
+            ✦
+          </span>
           <span className={styles.logoText}>syntaxly</span>
         </Link>
 
-        <nav className={styles.centerNav} aria-label="Main">
+        <nav className={styles.centerNav} aria-label="Main navigation">
           {(Object.keys(MENUS) as MenuKey[]).map((key) => (
             <div
               key={key}
@@ -128,6 +144,7 @@ export default function Navbar() {
               onMouseEnter={() => open(key)}
             >
               <button
+                type="button"
                 className={`${styles.navButton} ${
                   menu === key ? styles.navActive : ""
                 }`}
@@ -142,6 +159,7 @@ export default function Navbar() {
                   className={`${styles.caret} ${
                     menu === key ? styles.caretRotate : ""
                   }`}
+                  aria-hidden="true"
                 >
                   <CaretDown size={13} weight="bold" />
                 </span>
@@ -149,86 +167,143 @@ export default function Navbar() {
             </div>
           ))}
 
-          {LINKS.map((l) => (
+          {LINKS.map((link) => (
             <div
-              key={l.href}
+              key={link.href}
               className={styles.navItem}
               onMouseEnter={() => setMenu(null)}
             >
               <Link
-                href={l.href}
+                href={link.href}
                 className={`${styles.navButton} ${
-                  pathname === l.href ? styles.current : ""
+                  pathname === link.href ? styles.current : ""
                 }`}
-                aria-current={pathname === l.href ? "page" : undefined}
+                aria-current={pathname === link.href ? "page" : undefined}
               >
-                {l.label}
+                {link.label}
               </Link>
             </div>
           ))}
         </nav>
 
         <div className={styles.right}>
-          <Link href="/syntax" className={styles.ctaButton}>
+          <Link
+            href="/syntax"
+            className={styles.ctaButton}
+            onClick={closeMenus}
+          >
             Get started
+            <span className={styles.ctaArrow} aria-hidden="true">
+              ↗
+            </span>
           </Link>
 
           <button
+            type="button"
             className={styles.menuToggle}
-            onClick={() => setMobileOpen((v) => !v)}
+            onClick={() => {
+              setMobileOpen((current) => !current);
+              setMenu(null);
+            }}
             aria-label={mobileOpen ? "Close menu" : "Open menu"}
             aria-expanded={mobileOpen}
+            aria-controls="syntaxly-mobile-menu"
           >
             {mobileOpen ? <X size={24} /> : <List size={24} />}
           </button>
         </div>
       </header>
 
-      <div className={`${styles.megaMenu} ${menu ? styles.menuOpen : ""}`}>
+      <div
+        className={`${styles.megaMenu} ${menu ? styles.menuOpen : ""}`}
+        aria-hidden={!menu}
+        inert={!menu}
+      >
         <div className={styles.menuContainer} key={shown}>
-          {MENUS[shown].items.map((item) => (
+          {MENUS[shown].items.map((item, index) => (
             <Link
               key={item.title}
               href={item.href}
               className={styles.item}
+              style={
+                {
+                  "--item-index": index,
+                } as React.CSSProperties
+              }
               tabIndex={menu ? 0 : -1}
+              onClick={closeMenus}
             >
-              <span className={styles.itemIcon}>{item.icon}</span>
+              <span className={styles.itemIcon} aria-hidden="true">
+                {item.icon}
+              </span>
 
-              <span>
+              <span className={styles.itemContent}>
                 <span className={styles.itemTitle}>{item.title}</span>
                 <span className={styles.itemText}>{item.text}</span>
+              </span>
+
+              <span className={styles.itemArrow} aria-hidden="true">
+                ↗
               </span>
             </Link>
           ))}
         </div>
       </div>
 
-      {mobileOpen && (
-        <div className={styles.mobilePanel}>
-          {(Object.keys(MENUS) as MenuKey[]).flatMap((key) =>
-            MENUS[key].items.map((item) => (
+      <div
+        id="syntaxly-mobile-menu"
+        className={`${styles.mobilePanel} ${
+          mobileOpen ? styles.mobileOpen : ""
+        }`}
+        aria-hidden={!mobileOpen}
+        inert={!mobileOpen}
+      >
+        {(Object.keys(MENUS) as MenuKey[]).map((key) => (
+          <div key={key} className={styles.mobileGroup}>
+            <span className={styles.mobileGroupLabel}>{MENUS[key].label}</span>
+
+            {MENUS[key].items.map((item, index) => (
               <Link
-                key={item.title}
+                key={`${key}-${item.title}`}
                 href={item.href}
                 className={styles.mobileLink}
+                style={
+                  {
+                    "--item-index": index,
+                  } as React.CSSProperties
+                }
+                onClick={closeMenus}
               >
-                {item.title}
+                <span>{item.title}</span>
+                <span className={styles.mobileArrow} aria-hidden="true">
+                  ↗
+                </span>
               </Link>
-            )),
-          )}
+            ))}
+          </div>
+        ))}
 
-          {LINKS.map((l) => (
-            <Link key={l.href} href={l.href} className={styles.mobileLink}>
-              {l.label}
+        <div className={styles.mobileFooter}>
+          {LINKS.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className={styles.mobileSecondary}
+              onClick={closeMenus}
+            >
+              {link.label}
             </Link>
           ))}
 
-          <Link href="/syntax" className={styles.mobileCta}>
-            Get started
+          <Link
+            href="/syntax"
+            className={styles.mobileCta}
+            onClick={closeMenus}
+          >
+            Get started <span aria-hidden="true">↗</span>
           </Link>
         </div>
-      )}
+      </div>
     </div>
   );
 }

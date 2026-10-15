@@ -1,4 +1,6 @@
 .sectionContainer {
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+
   position: relative;
   background: #ffffff;
   color: #171717;
@@ -10,6 +12,108 @@
   z-index: 11;
 
   margin-bottom: 80vh;
+}
+
+.reveal {
+  opacity: 0;
+}
+
+.reveal[data-in] {
+  opacity: 1;
+  animation-duration: var(--dur, 0.9s);
+  animation-timing-function: var(--ease);
+  animation-delay: var(--delay, 0s);
+  animation-fill-mode: backwards;
+}
+
+.fade {
+  --dist: 12px;
+  --dur: 0.9s;
+}
+
+.wipe {
+  --dist: 20px;
+  --dur: 1.05s;
+}
+
+.slide {
+  --dist: 56px;
+  --dur: 0.95s;
+}
+
+.up {
+  --vx: 0;
+  --vy: 1;
+  --clip: inset(100% -10% -10% -10%);
+}
+
+.down {
+  --vx: 0;
+  --vy: -1;
+  --clip: inset(-10% -10% 100% -10%);
+}
+
+.left {
+  --vx: 1;
+  --vy: 0;
+  --clip: inset(-10% -10% -10% 100%);
+}
+
+.right {
+  --vx: -1;
+  --vy: 0;
+  --clip: inset(-10% 100% -10% -10%);
+}
+
+.reveal[data-in].fade {
+  animation-name: kFade;
+}
+
+.reveal[data-in].wipe {
+  animation-name: kWipe;
+}
+
+.reveal[data-in].slide {
+  animation-name: kSlide;
+}
+
+@keyframes kFade {
+  from {
+    opacity: 0;
+    filter: blur(8px);
+    transform: translate(
+      calc(var(--vx) * var(--dist)),
+      calc(var(--vy) * var(--dist))
+    );
+  }
+}
+
+@keyframes kWipe {
+  from {
+    opacity: 0;
+    clip-path: var(--clip);
+    transform: translate(
+      calc(var(--vx) * var(--dist)),
+      calc(var(--vy) * var(--dist))
+    );
+  }
+  to {
+    opacity: 1;
+    clip-path: inset(-10% -10% -10% -10%);
+  }
+}
+
+@keyframes kSlide {
+  from {
+    opacity: 0;
+    transform: translate(
+      calc(var(--vx) * var(--dist)),
+      calc(var(--vy) * var(--dist))
+    );
+  }
+  35% {
+    opacity: 1;
+  }
 }
 
 .bgOrbOne,
@@ -72,16 +176,6 @@
   border-radius: 2px;
   border: 1px solid var(--primary);
   backdrop-filter: blur(10px);
-  opacity: 0;
-  transform: translateY(20px);
-  transition:
-    opacity 0.7s ease,
-    transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.badge[data-in] {
-  opacity: 1;
-  transform: translateY(0);
 }
 
 .mainHeading {
@@ -91,38 +185,11 @@
   letter-spacing: -0.05em;
   margin-top: 40px;
   margin-bottom: 34px;
-  opacity: 0;
-  transform: translateY(20px);
-  transition:
-    opacity 0.7s ease,
-    transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-  transition-delay: 0.08s;
-}
-
-.mainHeading[data-in] {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.mainHeading[data-in] {
-  opacity: 1;
-  transform: translateY(0);
 }
 
 .subHeading {
   font-size: 20px;
   line-height: 1.2;
-  opacity: 0;
-  transform: translateY(20px);
-  transition:
-    opacity 0.7s ease,
-    transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-  transition-delay: 0.16s;
-}
-
-.subHeading[data-in] {
-  opacity: 1;
-  transform: translateY(0);
 }
 
 .bentoGrid {
@@ -144,18 +211,10 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  opacity: 0;
-  transform: translateY(30px);
   transition:
-    opacity 0.7s ease,
-    transform 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.6s var(--ease),
     border-color 0.3s ease,
     box-shadow 0.4s ease;
-}
-
-.bentoCard[data-in] {
-  opacity: 1;
-  transform: translateY(0);
 }
 
 .bentoCard:hover {
@@ -170,21 +229,18 @@
   grid-column: span 4;
   min-height: 360px;
   padding: 40px;
-  transition-delay: 0.24s;
 }
 
 .smallCard {
   grid-column: span 2;
   min-height: 360px;
   padding: 40px;
-  transition-delay: 0.32s;
 }
 
 .fullWidthCard {
   grid-column: span 6;
   padding: 42px;
   background: rgba(255, 255, 255, 0.92);
-  transition-delay: 0.4s;
 }
 
 .cardGlowEffect {
@@ -340,12 +396,29 @@
 }
 
 .interactivePlaygroundHeader {
+  position: relative;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid rgba(15, 23, 42, 0.06);
   padding-bottom: 22px;
   margin-bottom: 28px;
+}
+
+.interactivePlaygroundHeader::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: rgba(15, 23, 42, 0.1);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 1.2s var(--ease) 0.15s;
+}
+
+.interactivePlaygroundHeader[data-in]::after {
+  transform: scaleX(1);
 }
 
 .breakdownLabel,
@@ -383,13 +456,54 @@
   background: rgba(248, 250, 252, 0.9);
   border: 1px solid rgba(15, 23, 42, 0.05);
   transition:
-    transform 0.25s ease,
-    background 0.25s ease,
-    border-color 0.25s ease;
+    transform 0.4s var(--ease),
+    background 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.4s ease;
+}
+
+.syntaxSelectBlock::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--secondary);
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform 0.5s var(--ease);
+}
+
+.syntaxSelectBlock::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    100deg,
+    transparent 35%,
+    rgba(255, 255, 255, 0.6) 50%,
+    transparent 65%
+  );
+  transform: translateX(-100%);
+  pointer-events: none;
+}
+
+.sheen::after {
+  animation: kSheen 0.9s var(--ease);
+}
+
+@keyframes kSheen {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(100%);
+  }
 }
 
 .syntaxSelectBlock:hover {
-  transform: translateY(-3px);
+  transform: translateX(4px);
 }
 
 .syntaxSelectBlockActive {
@@ -398,6 +512,15 @@
   transform: scale(1.02);
   box-shadow: 0 20px 40px rgba(14, 165, 233, 0.25);
   color: var(--black);
+}
+
+.syntaxSelectBlockActive:hover {
+  transform: scale(1.02);
+}
+
+.syntaxSelectBlockActive::before {
+  transform: scaleY(1);
+  transform-origin: top;
 }
 
 .syntaxTop {
@@ -468,11 +591,37 @@
   font-size: 16px;
 }
 
+.bolt {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: kBolt 0.6s var(--ease);
+}
+
+@keyframes kBolt {
+  0% {
+    transform: scale(1) rotate(0deg);
+  }
+  40% {
+    transform: scale(1.6) rotate(-14deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
+}
+
 .detailsGrid {
   padding: 28px;
   display: flex;
   flex-direction: column;
   gap: 24px;
+}
+
+.swapUp {
+  --sy: 16px;
+}
+
+.swapDown {
+  --sy: -16px;
 }
 
 .detailItem {
@@ -508,6 +657,67 @@
 .codeExample {
   color: #111;
   font-size: 15px;
+}
+
+.detailsSwap .detailItem {
+  animation: kSwapRow 0.7s var(--ease) backwards;
+  animation-delay: var(--base, 0s);
+}
+
+.detailsSwap .detailItem:nth-child(2) {
+  animation-delay: calc(var(--base, 0s) + 0.06s);
+}
+
+.detailsSwap .detailItem:nth-child(3) {
+  animation-delay: calc(var(--base, 0s) + 0.12s);
+}
+
+.detailsSwap .detailItem:nth-child(4) {
+  animation-delay: calc(var(--base, 0s) + 0.18s);
+}
+
+.detailsSwap .codeOutputContainer {
+  animation: kSwapCode 0.75s var(--ease) backwards;
+  animation-delay: calc(var(--base, 0s) + 0.25s);
+}
+
+@keyframes kSwapRow {
+  from {
+    opacity: 0;
+    filter: blur(4px);
+    transform: translateY(var(--sy, 14px));
+  }
+}
+
+@keyframes kSwapCode {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal[data-in] {
+    animation: none;
+  }
+
+  .interactivePlaygroundHeader::after {
+    transform: scaleX(1);
+    transition: none;
+  }
+
+  .detailsSwap .detailItem,
+  .detailsSwap .codeOutputContainer,
+  .bolt,
+  .sheen::after {
+    animation: none;
+  }
+
+  .syntaxSelectBlock::before {
+    transition: none;
+  }
 }
 
 @media (max-width: 900px) {

@@ -16,10 +16,41 @@
   overflow: hidden;
   z-index: 1;
   background-color: #fff;
+}
+
+.container::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
   background-image:
     linear-gradient(to right, #e5e5e5 1px, transparent 1px),
     linear-gradient(to bottom, #e5e5e5 1px, transparent 1px);
   background-size: 80px 80px;
+  -webkit-mask-image: radial-gradient(
+    circle closest-side,
+    #000 65%,
+    transparent 100%
+  );
+  mask-image: radial-gradient(circle closest-side, #000 65%, transparent 100%);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: 0% 0%;
+  mask-size: 0% 0%;
+}
+
+.mounted::before {
+  animation: gridReveal 1600ms var(--hero-ease) 150ms forwards;
+}
+
+@keyframes gridReveal {
+  to {
+    -webkit-mask-size: 320% 320%;
+    mask-size: 320% 320%;
+  }
 }
 
 .bgOrb {
@@ -76,6 +107,28 @@
     box-shadow 380ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
+.mounted .overlayCell {
+  animation: cellPing 1200ms var(--hero-ease)
+    calc(200ms + var(--d, 0) * 55ms) backwards;
+}
+
+@keyframes cellPing {
+  0% {
+    background-color: rgba(0, 255, 208, 0);
+    box-shadow: none;
+  }
+
+  25% {
+    background-color: rgba(0, 255, 208, 0.2);
+    box-shadow: 0 0 18px 4px rgba(0, 255, 208, 0.22);
+  }
+
+  100% {
+    background-color: rgba(0, 255, 208, 0);
+    box-shadow: none;
+  }
+}
+
 .content {
   position: relative;
   z-index: 1;
@@ -107,29 +160,27 @@
   padding: 0.06em 0 0.12em;
 }
 
-.titleInner {
+.word {
   display: inline-block;
   opacity: 0;
-  transform: translate3d(0, 115%, 0);
+  transform: translate3d(0, 115%, 0) rotate(4deg);
+  transform-origin: 0 100%;
 }
 
-.mounted .titleLineFirst .titleInner {
-  animation: titleReveal 950ms var(--hero-ease) 100ms forwards;
+.mounted .word {
+  animation: wordRise 1000ms var(--hero-ease) calc(250ms + var(--w, 0) * 80ms)
+    forwards;
 }
 
-.mounted .titleLineSecond .titleInner {
-  animation: titleReveal 950ms var(--hero-ease) 220ms forwards;
-}
-
-@keyframes titleReveal {
+@keyframes wordRise {
   from {
     opacity: 0;
-    transform: translate3d(0, 115%, 0);
+    transform: translate3d(0, 115%, 0) rotate(4deg);
   }
 
   to {
     opacity: 1;
-    transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0) rotate(0deg);
   }
 }
 
@@ -137,8 +188,19 @@
   display: inline-block;
   padding: 0.015em 0.11em 0.055em;
   border-radius: 3px;
-  background: var(--accent-soft);
+  background: linear-gradient(var(--accent-soft), var(--accent-soft)) no-repeat
+    left center / 0% 100%;
   letter-spacing: -0.07em;
+}
+
+.mounted .highlighted {
+  animation: markDraw 900ms var(--hero-ease) 1000ms forwards;
+}
+
+@keyframes markDraw {
+  to {
+    background-size: 100% 100%;
+  }
 }
 
 .subtitle {
@@ -151,23 +213,22 @@
   text-align: center;
 
   opacity: 0;
-  clip-path: inset(0 0 100% 0);
 }
 
 .mounted .subtitle {
-  animation: subtitleReveal 900ms var(--hero-ease) 380ms forwards;
+  animation: subtitleReveal 1000ms var(--hero-ease) 650ms forwards;
 }
 
 @keyframes subtitleReveal {
   from {
     opacity: 0;
-    clip-path: inset(0 0 100% 0);
-    transform: translate3d(0, 14px, 0);
+    filter: blur(8px);
+    transform: translate3d(0, 10px, 0);
   }
 
   to {
     opacity: 1;
-    clip-path: inset(0 0 0 0);
+    filter: blur(0);
     transform: translate3d(0, 0, 0);
   }
 }
@@ -178,25 +239,6 @@
   justify-content: center;
   flex-wrap: wrap;
   gap: 14px;
-
-  opacity: 0;
-  transform: translate3d(0, 14px, 0);
-}
-
-.mounted .buttonContainer {
-  animation: buttonsReveal 800ms var(--hero-ease) 560ms forwards;
-}
-
-@keyframes buttonsReveal {
-  from {
-    opacity: 0;
-    transform: translate3d(0, 14px, 0);
-  }
-
-  to {
-    opacity: 1;
-    transform: translate3d(0, 0, 0);
-  }
 }
 
 .button {
@@ -217,11 +259,59 @@
   text-decoration: none;
   white-space: nowrap;
 
+  opacity: 0;
+
   transition:
     background-color 220ms ease,
     color 220ms ease,
     border-color 220ms ease,
     transform 260ms var(--hero-ease);
+}
+
+.mounted .button {
+  opacity: 1;
+}
+
+.mounted .getButton {
+  animation: buttonFromLeft 850ms var(--hero-ease) 850ms backwards;
+}
+
+.mounted .learnButton {
+  animation: buttonFromRight 850ms var(--hero-ease) 950ms backwards;
+}
+
+@keyframes buttonFromLeft {
+  0% {
+    opacity: 0;
+    transform: translate3d(-28px, 0, 0) scale(0.96);
+  }
+
+  75% {
+    opacity: 1;
+    transform: translate3d(2px, 0, 0) scale(1.01);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes buttonFromRight {
+  0% {
+    opacity: 0;
+    transform: translate3d(28px, 0, 0) scale(0.96);
+  }
+
+  75% {
+    opacity: 1;
+    transform: translate3d(-2px, 0, 0) scale(1.01);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
 }
 
 .getButton {
@@ -237,6 +327,17 @@
 .buttonArrow {
   display: inline-block;
   transition: transform 220ms var(--hero-ease);
+}
+
+.mounted .buttonArrow {
+  animation: arrowIn 700ms var(--hero-ease) 1400ms backwards;
+}
+
+@keyframes arrowIn {
+  from {
+    opacity: 0;
+    transform: translate3d(-8px, 8px, 0);
+  }
 }
 
 .getButton:hover .buttonArrow {
@@ -271,6 +372,9 @@
   .container {
     min-height: 90svh;
     padding: 100px 22px 70px;
+  }
+
+  .container::before {
     background-size: 64px 64px;
   }
 
@@ -294,6 +398,9 @@
   .container {
     min-height: 85svh;
     padding-inline: 18px;
+  }
+
+  .container::before {
     background-size: 56px 56px;
   }
 
@@ -323,13 +430,22 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .mounted::before,
   .mounted .bgOrb,
-  .mounted .titleLineFirst .titleInner,
-  .mounted .titleLineSecond .titleInner,
+  .mounted .overlayCell,
+  .mounted .word,
+  .mounted .highlighted,
   .mounted .subtitle,
-  .mounted .buttonContainer {
+  .mounted .getButton,
+  .mounted .learnButton,
+  .mounted .buttonArrow {
     animation: none;
     transition: none;
+  }
+
+  .container::before {
+    -webkit-mask-size: 320% 320%;
+    mask-size: 320% 320%;
   }
 
   .bgOrb {
@@ -338,20 +454,22 @@
     translate: none;
   }
 
-  .titleInner {
+  .word {
     opacity: 1;
     transform: none;
+  }
+
+  .highlighted {
+    background-size: 100% 100%;
   }
 
   .subtitle {
     opacity: 1;
-    clip-path: none;
     transform: none;
   }
 
-  .buttonContainer {
+  .button {
     opacity: 1;
-    transform: none;
   }
 
   .button,

@@ -183,6 +183,9 @@ export default function Hero() {
     }
   }, [dimensions.width, dimensions.height]);
 
+  const gridCols = Math.ceil(dimensions.width / CELL_SIZE) + 1;
+  const gridRows = Math.ceil(dimensions.height / CELL_SIZE) + 1;
+
   return (
     <section
       ref={containerRef}
@@ -194,13 +197,17 @@ export default function Hero() {
         {cells.map((cell, index) => {
           const opacity = highlightOpacities[index] || 0;
 
-          const cellStyle: React.CSSProperties = {
+          const cellStyle = {
             top: cell.top,
             left: cell.left,
             width: cell.width,
             height: cell.height,
             backgroundColor: `rgba(0, 255, 208, ${opacity})`,
-          };
+            "--d": Math.hypot(
+              cell.col - gridCols / 2,
+              cell.row - gridRows / 2,
+            ).toFixed(2),
+          } as React.CSSProperties;
 
           if (opacity > 0) {
             cellStyle.boxShadow = `0 0 ${20 * opacity}px ${
@@ -220,14 +227,34 @@ export default function Hero() {
 
       <div className={styles.content}>
         <h1 className={styles.title}>
-          <span className={`${styles.titleLine} ${styles.titleLineFirst}`}>
-            <span className={styles.titleInner}>
-              Syntax <span className={styles.highlighted}>cheatsheet</span> for
+          <span className={styles.titleLine}>
+            <span
+              className={styles.word}
+              style={{ "--w": 0 } as React.CSSProperties}
+            >
+              Syntax
+            </span>{" "}
+            <span
+              className={styles.word}
+              style={{ "--w": 1 } as React.CSSProperties}
+            >
+              <span className={styles.highlighted}>cheatsheet</span>
+            </span>{" "}
+            <span
+              className={styles.word}
+              style={{ "--w": 2 } as React.CSSProperties}
+            >
+              for
             </span>
           </span>
 
-          <span className={`${styles.titleLine} ${styles.titleLineSecond}`}>
-            <span className={styles.titleInner}>programming.</span>
+          <span className={styles.titleLine}>
+            <span
+              className={styles.word}
+              style={{ "--w": 3 } as React.CSSProperties}
+            >
+              programming.
+            </span>
           </span>
         </h1>
 

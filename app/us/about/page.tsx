@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type CSSProperties } from "react";
 import Link from "next/link";
 import {
   ArrowUpRight,
@@ -24,6 +24,8 @@ const FIELDS: Record<Field, string> = {
     "const id = setInterval(tick, 1000); return () => clearInterval(id);",
   Tip: "An empty dependency array runs exactly once, on mount.",
 };
+
+const ORDER = Object.keys(FIELDS) as Field[];
 
 const BLOCK_CODE = "useEffect(() => {\n  return () => {};\n}, [dep]);";
 
@@ -51,11 +53,26 @@ const STATS = [
   { value: "2s", label: "to recall a syntax" },
 ];
 
+const at = (seconds: number, distance?: number) =>
+  ({
+    "--delay": `${seconds}s`,
+    ...(distance ? { "--dist": `${distance}px` } : {}),
+  }) as CSSProperties;
+
 export default function About() {
   const revealRef = useReveal<HTMLElement>(0.15);
   const [field, setField] = useState<Field>("What it is");
+  const [swapDir, setSwapDir] = useState<"fwd" | "back">("fwd");
+  const [touched, setTouched] = useState(false);
   const isCode = field === "Example";
   const [blockCopied, setBlockCopied] = useState(false);
+
+  const selectField = (f: Field) => {
+    if (f === field) return;
+    setSwapDir(ORDER.indexOf(f) > ORDER.indexOf(field) ? "fwd" : "back");
+    setTouched(true);
+    setField(f);
+  };
 
   const copyBlock = async () => {
     try {
@@ -78,15 +95,17 @@ export default function About() {
           <div className={styles.heroInner}>
             <h1 className={styles.title}>
               <span className={styles.line}>
-                <span>Docs are for learning.</span>
+                <span style={{ animationDelay: "0.2s" }}>
+                  Docs are for learning.
+                </span>
               </span>
 
               <span className={styles.line}>
-                <span style={{ animationDelay: "0.12s" }}>Syntaxly is for</span>
+                <span style={{ animationDelay: "0.32s" }}>Syntaxly is for</span>
               </span>
 
               <span className={styles.line}>
-                <span style={{ animationDelay: "0.24s" }}>
+                <span style={{ animationDelay: "0.44s" }}>
                   <em className={styles.highlighted}>remembering.</em>
                 </span>
               </span>
@@ -100,7 +119,7 @@ export default function About() {
 
               <Link
                 href="/syntax"
-                className={`${styles.button} ${styles.primaryButton}`}
+                className={`${styles.button} ${styles.primaryButton} ${styles.heroBtn}`}
               >
                 Get Started
                 <ArrowUpRight size={18} weight="bold" />
@@ -111,17 +130,31 @@ export default function About() {
       </section>
 
       <section className={styles.story}>
-        <h2 className={styles.sectionTitle} data-reveal style={{ transitionDelay: "0s" }}>Why it exists</h2>
+        <h2
+          className={`${styles.sectionTitle} ${styles.reveal} ${styles.wipe} ${styles.up}`}
+          data-reveal
+          style={at(0, 16)}
+        >
+          Why it exists
+        </h2>
 
-        <div className={styles.storyText} data-reveal style={{ transitionDelay: "0.08s" }}>
-          <p>
+        <div className={styles.storyText}>
+          <p
+            className={`${styles.reveal} ${styles.fade} ${styles.right}`}
+            data-reveal
+            style={at(0.1)}
+          >
             Every developer has the same moment. You come back to a framework
             after a few months, your hands know what they want, and your memory
             returns nothing. So you open the docs, scroll past the introduction,
             skim three paragraphs, and find the one line you needed.
           </p>
 
-          <p>
+          <p
+            className={`${styles.reveal} ${styles.fade} ${styles.right}`}
+            data-reveal
+            style={at(0.25)}
+          >
             That fifteen-minute detour is the problem Syntaxly removes. It skips
             the explaining and keeps the boilerplate, so a quick refresher stays
             quick.
@@ -130,11 +163,22 @@ export default function About() {
       </section>
 
       <section className={styles.principles}>
-        <h2 className={styles.sectionTitle} data-reveal style={{ transitionDelay: "0s" }}>How it&apos;s built</h2>
+        <h2
+          className={`${styles.sectionTitle} ${styles.reveal} ${styles.wipe} ${styles.up}`}
+          data-reveal
+          style={at(0, 16)}
+        >
+          How it&apos;s built
+        </h2>
 
-        <div className={styles.rows}>
+        <div className={styles.rows} data-reveal>
           {PRINCIPLES.map((p, index) => (
-            <article key={p.title} className={styles.row} data-reveal style={{ transitionDelay: `${index * 0.08}s` }}>
+            <article
+              key={p.title}
+              className={styles.row}
+              data-reveal
+              style={at(index * 0.12)}
+            >
               <div className={styles.rowIcon}>{p.icon}</div>
               <h3 className={styles.rowTitle}>{p.title}</h3>
               <p className={styles.rowText}>{p.text}</p>
@@ -145,14 +189,28 @@ export default function About() {
 
       <section className={styles.anatomy}>
         <div className={styles.anatomyIntro}>
-          <h2 className={styles.sectionTitle} data-reveal>Anatomy of an entry</h2>
+          <h2
+            className={`${styles.sectionTitle} ${styles.reveal} ${styles.wipe} ${styles.up}`}
+            data-reveal
+            style={at(0, 16)}
+          >
+            Anatomy of an entry
+          </h2>
 
-          <p className={styles.anatomyText} data-reveal style={{ transitionDelay: "0.08s" }}>
+          <p
+            className={`${styles.anatomyText} ${styles.reveal} ${styles.fade} ${styles.right}`}
+            data-reveal
+            style={at(0.1)}
+          >
             Every syntax is broken into the same four fields, so you always know
             where to look. Pick one.
           </p>
 
-          <div className={styles.miniColumn} data-reveal style={{ transitionDelay: "0.16s" }}>
+          <div
+            className={`${styles.miniColumn} ${styles.reveal} ${styles.slide} ${styles.right}`}
+            data-reveal
+            style={at(0.2, 40)}
+          >
             <div className={styles.miniBlock}>
               <div className={styles.miniTitle}>useEffect</div>
 
@@ -184,24 +242,38 @@ export default function About() {
           </div>
         </div>
 
-        <div className={styles.panel} data-reveal style={{ transitionDelay: "0.24s" }}>
+        <div
+          className={`${styles.panel} ${styles.reveal} ${styles.wipe} ${styles.left}`}
+          data-reveal
+          style={at(0.1, 36)}
+        >
           <div className={styles.tabs} role="tablist">
-            {(Object.keys(FIELDS) as Field[]).map((f) => (
+            {ORDER.map((f, i) => (
               <button
                 key={f}
                 role="tab"
                 aria-selected={field === f}
-                onClick={() => setField(f)}
+                onClick={() => selectField(f)}
                 className={`${styles.tab} ${
                   field === f ? styles.tabActive : ""
                 }`}
+                style={{ "--c": i } as CSSProperties}
               >
                 {f}
               </button>
             ))}
           </div>
 
-          <div className={styles.panelBody} key={field}>
+          <div
+            className={`${styles.panelBody} ${
+              touched
+                ? swapDir === "fwd"
+                  ? styles.swapFwd
+                  : styles.swapBack
+                : ""
+            }`}
+            key={field}
+          >
             {isCode ? (
               <code className={styles.code}>{FIELDS[field]}</code>
             ) : (
@@ -215,7 +287,12 @@ export default function About() {
 
       <section className={styles.stats}>
         {STATS.map((s, index) => (
-          <div key={s.label} className={styles.stat} data-reveal style={{ transitionDelay: `${index * 0.1}s` }}>
+          <div
+            key={s.label}
+            className={styles.stat}
+            data-reveal
+            style={at(index * 0.12)}
+          >
             <span className={styles.statValue}>{s.value}</span>
             <span className={styles.statLabel}>{s.label}</span>
           </div>
@@ -223,9 +300,19 @@ export default function About() {
       </section>
 
       <section className={styles.maker}>
-        <h2 className={styles.sectionTitle} data-reveal style={{ transitionDelay: "0s" }}>Who&apos;s behind it</h2>
+        <h2
+          className={`${styles.sectionTitle} ${styles.reveal} ${styles.wipe} ${styles.up}`}
+          data-reveal
+          style={at(0, 16)}
+        >
+          Who&apos;s behind it
+        </h2>
 
-        <p className={styles.makerText} data-reveal style={{ transitionDelay: "0.08s" }}>
+        <p
+          className={`${styles.makerText} ${styles.reveal} ${styles.fade} ${styles.right}`}
+          data-reveal
+          style={at(0.1)}
+        >
           Syntaxly is built by Khogambyek Yersin, a computer science student who
           got tired of re-reading docs for things he already knew. It&apos;s
           made with Next.js and TypeScript, and it grows one language at a time.
@@ -233,18 +320,29 @@ export default function About() {
       </section>
 
       <section className={styles.cta}>
-        <h2 className={styles.ctaTitle} data-reveal style={{ transitionDelay: "0s" }}>Stop scrolling docs.</h2>
+        <h2 className={styles.ctaTitle} data-reveal>
+          <span className={styles.mask}>
+            <span className={styles.maskIn}>Stop scrolling docs.</span>
+          </span>
+        </h2>
 
-        <div className={styles.buttons} data-reveal style={{ transitionDelay: "0.08s" }}>
+        <div className={styles.buttons}>
           <Link
             href="/syntaxs"
-            className={`${styles.button} ${styles.primaryButton}`}
+            className={`${styles.button} ${styles.primaryButton} ${styles.reveal} ${styles.wipe} ${styles.right}`}
+            data-reveal
+            style={at(0.4)}
           >
             Get Started
             <ArrowUpRight size={18} weight="bold" />
           </Link>
 
-          <Link href="/" className={`${styles.button} ${styles.ghostButton}`}>
+          <Link
+            href="/"
+            className={`${styles.button} ${styles.ghostButton} ${styles.reveal} ${styles.wipe} ${styles.right}`}
+            data-reveal
+            style={at(0.52)}
+          >
             Back home
           </Link>
         </div>

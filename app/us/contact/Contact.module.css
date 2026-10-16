@@ -1,4 +1,6 @@
 .page {
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+
   display: flex;
   width: 100vw;
   height: 100vh;
@@ -16,6 +18,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  animation: kRailIn 1s var(--ease) backwards;
 }
 
 .railName {
@@ -23,6 +26,7 @@
   text-orientation: upright;
   font-size: 28px;
   color: var(--black);
+  animation: kTextIn 0.8s var(--ease) 0.5s backwards;
 }
 
 .main {
@@ -35,11 +39,39 @@
   gap: 4vh;
   padding: 6vh 5vw 0;
   background-color: #fff;
+  overflow: hidden;
+}
+
+.main::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
   background-image:
     linear-gradient(to right, #ddd 1px, transparent 1px),
     linear-gradient(to bottom, #ddd 1px, transparent 1px);
   background-size: 80px 80px;
-  overflow: hidden;
+  -webkit-mask-image: radial-gradient(
+    circle closest-side,
+    #000 65%,
+    transparent 100%
+  );
+  mask-image: radial-gradient(circle closest-side, #000 65%, transparent 100%);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: 0% 0%;
+  mask-size: 0% 0%;
+  animation: gridReveal 1.6s var(--ease) 0.15s forwards;
+}
+
+@keyframes gridReveal {
+  to {
+    -webkit-mask-size: 320% 320%;
+    mask-size: 320% 320%;
+  }
 }
 
 .orb {
@@ -52,7 +84,9 @@
   top: -240px;
   right: -200px;
   pointer-events: none;
-  animation: drift 14s ease-in-out infinite;
+  animation:
+    drift 14s ease-in-out infinite,
+    kOrbIn 2.4s ease backwards;
 }
 
 @keyframes drift {
@@ -89,31 +123,33 @@
   padding-bottom: 0.08em;
 }
 
-.line > span {
+.letter {
   display: inline-block;
-  animation: rise 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+  transform-origin: 0 100%;
+  animation: letterRise 0.9s var(--ease) calc(0.25s + var(--i, 0) * 0.04s)
+    backwards;
 }
 
-@keyframes rise {
+@keyframes letterRise {
   from {
-    transform: translateY(110%);
-  }
-  to {
-    transform: translateY(0);
+    transform: translate3d(0, 115%, 0) rotate(3deg);
   }
 }
 
 .highlighted {
   font-style: normal;
   padding: 0 0.12em;
-  background: var(--accent-soft);
+  background: linear-gradient(var(--accent-soft), var(--accent-soft)) no-repeat
+    left center / 0% 100%;
   border-radius: 2px;
+  animation: kMark 0.9s var(--ease) 0.95s forwards;
 }
 
 .lead {
   max-width: 480px;
   font-size: 22px;
   line-height: 1.4;
+  animation: kLeadIn 0.9s var(--ease) 0.9s backwards;
 }
 
 .tiles {
@@ -124,7 +160,19 @@
   height: 30vh;
   min-height: 150px;
   max-height: 280px;
-  border-top: 1px solid #171717;
+}
+
+.tiles::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 3;
+  height: 1px;
+  background: #171717;
+  transform-origin: left;
+  animation: kLine 1.2s var(--ease) 0.45s backwards;
 }
 
 .tile {
@@ -141,6 +189,8 @@
   border-right: 1px solid rgba(15, 23, 42, 0.12);
   cursor: pointer;
   overflow: hidden;
+  animation: tileRise 0.9s var(--ease) calc(0.6s + var(--i, 0) * 0.09s)
+    backwards;
 }
 
 .tile:last-child {
@@ -187,6 +237,7 @@
 .icon {
   display: flex;
   transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: kPop 0.7s var(--ease) calc(0.95s + var(--i, 0) * 0.09s) backwards;
 }
 
 .tile:hover .icon {
@@ -199,12 +250,18 @@
   transition:
     transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
     opacity 0.2s ease;
+  animation: arrowIn 0.6s var(--ease) calc(1.15s + var(--i, 0) * 0.09s)
+    backwards;
 }
 
 .tile:hover .action,
 .tile:focus-visible .action {
   opacity: 1;
   transform: translate(3px, -3px);
+}
+
+.checkPop {
+  animation: kPop 0.5s var(--ease);
 }
 
 .tileBottom {
@@ -215,6 +272,8 @@
 .label {
   font-size: 14px;
   color: #525252;
+  animation: kTextIn 0.7s var(--ease) calc(1.05s + var(--i, 0) * 0.09s)
+    backwards;
 }
 
 .tile:hover .label,
@@ -227,6 +286,8 @@
   letter-spacing: -0.02em;
   line-height: 1.2;
   overflow-wrap: anywhere;
+  animation: kDemoIn 0.9s var(--ease) calc(1.15s + var(--i, 0) * 0.09s)
+    backwards;
 }
 
 .srOnly {
@@ -236,6 +297,98 @@
   overflow: hidden;
   clip: rect(0 0 0 0);
   white-space: nowrap;
+}
+
+@keyframes kRailIn {
+  from {
+    clip-path: inset(0 0 100% 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes kTextIn {
+  from {
+    opacity: 0;
+    transform: translate3d(-10px, 0, 0);
+  }
+}
+
+@keyframes kOrbIn {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes kMark {
+  from {
+    background-size: 0% 100%;
+  }
+  to {
+    background-size: 100% 100%;
+  }
+}
+
+@keyframes kLeadIn {
+  from {
+    opacity: 0;
+    filter: blur(8px);
+    transform: translate3d(-12px, 0, 0);
+  }
+}
+
+@keyframes kLine {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+@keyframes tileRise {
+  0% {
+    transform: translate3d(0, 105%, 0);
+  }
+
+  70% {
+    transform: translate3d(0, -1.5%, 0);
+  }
+
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes kPop {
+  0% {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  65% {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes arrowIn {
+  from {
+    opacity: 0;
+    transform: translate3d(-8px, 8px, 0);
+  }
+}
+
+@keyframes kDemoIn {
+  from {
+    opacity: 0;
+    clip-path: inset(-10% 100% -10% -10%);
+  }
+  to {
+    opacity: 1;
+    clip-path: inset(-10% -10% -10% -10%);
+  }
 }
 
 @media (max-width: 900px) {
@@ -288,8 +441,29 @@
 
 @media (prefers-reduced-motion: reduce) {
   .orb,
-  .line > span {
+  .rail,
+  .railName,
+  .main::before,
+  .letter,
+  .highlighted,
+  .lead,
+  .tiles::before,
+  .tile,
+  .icon,
+  .action,
+  .label,
+  .value,
+  .checkPop {
     animation: none;
+  }
+
+  .main::before {
+    -webkit-mask-size: 320% 320%;
+    mask-size: 320% 320%;
+  }
+
+  .highlighted {
+    background-size: 100% 100%;
   }
 
   .fill,

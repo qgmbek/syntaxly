@@ -1,6 +1,12 @@
 "use client";
 
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+  type ReactNode,
+} from "react";
 
 import {
   GithubLogo,
@@ -51,6 +57,18 @@ const ITEMS: Item[] = [
   },
 ];
 
+const letters = (text: string, start: number) =>
+  text.split("").map((letter, i) => (
+    <span
+      key={i}
+      aria-hidden="true"
+      className={styles.letter}
+      style={{ "--i": start + i } as CSSProperties}
+    >
+      {letter}
+    </span>
+  ));
+
 export default function Contact() {
   const [copied, setCopied] = useState<string | null>(null);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -86,7 +104,7 @@ export default function Contact() {
             {item.href ? (
               <ArrowUpRight size={22} weight="bold" />
             ) : done ? (
-              <Check size={22} weight="bold" />
+              <Check size={22} weight="bold" className={styles.checkPop} />
             ) : (
               <Copy size={22} weight="bold" />
             )}
@@ -112,11 +130,10 @@ export default function Contact() {
         <div className={styles.orb} />
 
         <div className={styles.intro}>
-          <h1 className={styles.title}>
+          <h1 className={styles.title} aria-label="Say hello.">
             <span className={styles.line}>
-              <span>
-                Say <em className={styles.highlighted}>hello.</em>
-              </span>
+              {letters("Say", 0)}{" "}
+              <em className={styles.highlighted}>{letters("hello.", 3)}</em>
             </span>
           </h1>
 
@@ -127,7 +144,7 @@ export default function Contact() {
         </div>
 
         <div className={styles.tiles}>
-          {ITEMS.map((item) =>
+          {ITEMS.map((item, index) =>
             item.href ? (
               <a
                 key={item.id}
@@ -135,6 +152,7 @@ export default function Contact() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className={styles.tile}
+                style={{ "--i": index } as CSSProperties}
                 aria-label={`${item.label}: ${item.value}`}
               >
                 {body(item)}
@@ -145,6 +163,7 @@ export default function Contact() {
                 type="button"
                 onClick={() => copy(item)}
                 className={styles.tile}
+                style={{ "--i": index } as CSSProperties}
                 aria-label={`Copy ${item.label}: ${item.value}`}
               >
                 {body(item)}

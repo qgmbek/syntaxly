@@ -1,18 +1,205 @@
 .page {
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+
   background: #fff;
   color: #171717;
   overflow-x: clip;
 }
 
+.reveal {
+  opacity: 0;
+}
+
+.reveal[data-in] {
+  opacity: 1;
+  animation-duration: var(--dur, 0.9s);
+  animation-timing-function: var(--ease);
+  animation-delay: var(--delay, 0s);
+  animation-fill-mode: backwards;
+}
+
+.wipe {
+  --dist: 20px;
+  --dur: 1.05s;
+}
+
+.right {
+  --vx: -1;
+  --vy: 0;
+  --clip: inset(-10% 100% -10% -10%);
+}
+
+.reveal[data-in].wipe {
+  animation-name: kWipe;
+}
+
+@keyframes kWipe {
+  from {
+    opacity: 0;
+    clip-path: var(--clip);
+    transform: translate(
+      calc(var(--vx) * var(--dist)),
+      calc(var(--vy) * var(--dist))
+    );
+  }
+  to {
+    opacity: 1;
+    clip-path: inset(-10% -10% -10% -10%);
+  }
+}
+
+@keyframes kTextIn {
+  from {
+    opacity: 0;
+    transform: translate3d(-10px, 0, 0);
+  }
+}
+
+@keyframes kOrbIn {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes kMark {
+  from {
+    background-size: 0% 100%;
+  }
+  to {
+    background-size: 100% 100%;
+  }
+}
+
+@keyframes kLeadIn {
+  from {
+    opacity: 0;
+    filter: blur(8px);
+    transform: translate3d(-12px, 0, 0);
+  }
+}
+
+@keyframes kLine {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+@keyframes kDemoIn {
+  from {
+    opacity: 0;
+    clip-path: inset(-10% 100% -10% -10%);
+  }
+  to {
+    opacity: 1;
+    clip-path: inset(-10% -10% -10% -10%);
+  }
+}
+
+@keyframes kHeadIn {
+  from {
+    opacity: 0;
+    clip-path: inset(100% -10% -10% -10%);
+    transform: translate3d(0, 14px, 0);
+  }
+  to {
+    opacity: 1;
+    clip-path: inset(-10% -10% -40% -10%);
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes kPop {
+  0% {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  65% {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes kPlusIn {
+  from {
+    opacity: 0;
+    transform: rotate(-135deg) scale(0.4);
+  }
+}
+
+@keyframes kKey {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, -12px, 0);
+  }
+  60% {
+    opacity: 1;
+    transform: translate3d(0, 2px, 0);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes kEmpty {
+  from {
+    opacity: 0;
+    transform: translate3d(0, -8px, 0);
+  }
+}
+
+@keyframes gridReveal {
+  to {
+    -webkit-mask-size: 320% 320%;
+    mask-size: 320% 320%;
+  }
+}
+
+@keyframes rise {
+  from {
+    transform: translateY(110%);
+  }
+
+  to {
+    transform: translateY(0);
+  }
+}
+
 .hero {
   position: relative;
+  isolation: isolate;
   padding: 170px 5vw 70px;
   overflow: hidden;
   background-color: #fff;
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
   background-image:
     linear-gradient(to right, #ddd 1px, transparent 1px),
     linear-gradient(to bottom, #ddd 1px, transparent 1px);
   background-size: 80px 80px;
+  -webkit-mask-image: radial-gradient(
+    circle closest-side,
+    #000 65%,
+    transparent 100%
+  );
+  mask-image: radial-gradient(circle closest-side, #000 65%, transparent 100%);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: 0% 0%;
+  mask-size: 0% 0%;
+  animation: gridReveal 1.6s var(--ease) 0.15s forwards;
 }
 
 .orb {
@@ -25,7 +212,9 @@
   top: -280px;
   right: -200px;
   pointer-events: none;
-  animation: drift 14s ease-in-out infinite;
+  animation:
+    drift 14s ease-in-out infinite,
+    kOrbIn 2.4s ease backwards;
 }
 
 @keyframes drift {
@@ -68,21 +257,13 @@
   animation: rise 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-@keyframes rise {
-  from {
-    transform: translateY(110%);
-  }
-
-  to {
-    transform: translateY(0);
-  }
-}
-
 .hl {
   font-style: normal;
   padding: 0 0.12em;
-  background: var(--accent-soft);
+  background: linear-gradient(var(--accent-soft), var(--accent-soft)) no-repeat
+    left center / 0% 100%;
   border-radius: 2px;
+  animation: kMark 0.9s var(--ease) 0.95s forwards;
 }
 
 .lead {
@@ -90,12 +271,14 @@
   margin: 0;
   font-size: 22px;
   line-height: 1.4;
+  animation: kLeadIn 0.9s var(--ease) 0.85s backwards;
 }
 
 .searchBar {
   background: var(--primary);
   border-top: 1px solid rgba(0, 0, 0, 0.11);
   border-bottom: 1px solid rgba(0, 0, 0, 0.11);
+  animation: kDemoIn 1.1s var(--ease) 0.85s backwards;
 }
 
 .searchInner {
@@ -106,6 +289,10 @@
   align-items: center;
   gap: 14px;
   color: var(--black);
+}
+
+.searchInner > svg {
+  animation: kPop 0.6s var(--ease) 1.15s backwards;
 }
 
 .input {
@@ -139,6 +326,7 @@
   padding: 3px 8px 2px;
   text-align: center;
   font-size: 13px;
+  animation: kPop 0.35s var(--ease);
 }
 
 .clear {
@@ -152,6 +340,7 @@
   border: 1px solid rgba(0, 0, 0, 0.4);
   border-radius: 8px;
   cursor: pointer;
+  animation: kPop 0.35s var(--ease);
 }
 
 .clear:hover {
@@ -164,10 +353,23 @@
   font-size: 13px;
   letter-spacing: 0.04em;
   opacity: 0.7;
+  animation: kTextIn 0.8s var(--ease) 1.2s backwards;
 }
 
 .chips {
-  border-bottom: 1px solid rgba(15, 23, 42, 0.12);
+  position: relative;
+}
+
+.chips::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: rgba(15, 23, 42, 0.12);
+  transform-origin: left;
+  animation: kLine 1.2s var(--ease) 1s backwards;
 }
 
 .chipsInner {
@@ -195,6 +397,7 @@
     background 0.25s ease,
     color 0.25s ease,
     transform 0.2s ease;
+  animation: kDemoIn 0.7s var(--ease) calc(1.1s + var(--c, 0) * 0.06s) backwards;
 }
 
 .chip span {
@@ -234,25 +437,29 @@
 
 .item {
   position: relative;
-  border-top: 1px solid rgba(15, 23, 42, 0.14);
-  animation: itemIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
-  animation-delay: calc(var(--i, 0) * 45ms);
+  border-bottom: 1px solid transparent;
 }
 
-.item:last-child {
-  border-bottom: 1px solid rgba(15, 23, 42, 0.14);
+.item:last-child[data-in] {
+  border-bottom-color: rgba(15, 23, 42, 0.14);
+  transition: border-bottom-color 0.6s ease 0.5s;
 }
 
-@keyframes itemIn {
-  from {
-    opacity: 0;
-    transform: translateY(14px);
-  }
+.item::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: rgba(15, 23, 42, 0.14);
+  transform: scaleX(0);
+  transform-origin: left;
+}
 
-  to {
-    opacity: 1;
-    transform: none;
-  }
+.item[data-in]::after {
+  transform: none;
+  animation: kLine 0.9s var(--ease) calc(var(--i, 0) * 45ms) backwards;
 }
 
 .item::before {
@@ -272,6 +479,27 @@
 .item:hover::before,
 .itemOpen::before {
   opacity: 1;
+}
+
+.num,
+.qText,
+.plus {
+  opacity: 0;
+}
+
+.item[data-in] .num {
+  opacity: 1;
+  animation: kPop 0.7s var(--ease) calc(0.15s + var(--i, 0) * 45ms) backwards;
+}
+
+.item[data-in] .qText {
+  opacity: 1;
+  animation: kHeadIn 0.9s var(--ease) calc(0.1s + var(--i, 0) * 45ms) backwards;
+}
+
+.item[data-in] .plus {
+  opacity: 1;
+  animation: kPlusIn 0.8s var(--ease) calc(0.25s + var(--i, 0) * 45ms) backwards;
 }
 
 .h3 {
@@ -361,16 +589,35 @@
   outline: 2px solid var(--primary);
   box-shadow: 0 0 0 4px var(--glow-color);
   opacity: 0;
-  transform: translateY(8px);
+  clip-path: inset(-10% -10% 100% -10%);
+  transform: translate3d(0, -8px, 0);
   transition:
     opacity 0.35s ease,
-    transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    clip-path 0.6s var(--ease),
+    transform 0.6s var(--ease);
 }
 
 .itemOpen .ans {
   opacity: 1;
+  clip-path: inset(-10% -10% -10% -10%);
   transform: none;
-  transition-delay: 0.12s;
+  transition-delay: 0.1s;
+}
+
+.itemOpen .tab {
+  animation: kTextIn 0.6s var(--ease) 0.2s backwards;
+}
+
+.itemOpen .a {
+  animation: kTextIn 0.7s var(--ease) 0.28s backwards;
+}
+
+.itemOpen .kbd {
+  animation: kKey 0.6s var(--ease) calc(0.4s + var(--k, 0) * 0.05s) backwards;
+}
+
+.itemOpen .link {
+  animation: kDemoIn 0.8s var(--ease) 0.5s backwards;
 }
 
 .tab {
@@ -440,8 +687,10 @@
 .mark {
   padding: 0 2px;
   color: #000;
-  background: var(--primary);
+  background: linear-gradient(var(--primary), var(--primary)) no-repeat left
+    center / 100% 100%;
   border-radius: 2px;
+  animation: kMark 0.35s var(--ease) backwards;
 }
 
 .empty {
@@ -452,6 +701,7 @@
   gap: 10px;
   text-align: center;
   border-top: 1px solid rgba(15, 23, 42, 0.14);
+  animation: kEmpty 0.5s var(--ease) backwards;
 }
 
 .emptyCode {
@@ -500,6 +750,22 @@
   font-weight: 500;
   letter-spacing: -0.055em;
   line-height: 1.05;
+}
+
+.mask {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.08em;
+}
+
+.maskIn {
+  display: inline-block;
+  transform: translateY(110%);
+}
+
+.ctaTitle[data-in] .maskIn {
+  transform: none;
+  animation: rise 1s var(--ease) backwards;
 }
 
 .ctaBtns {
@@ -603,8 +869,38 @@
 @media (prefers-reduced-motion: reduce) {
   .orb,
   .line > span,
-  .item {
+  .hero::before,
+  .hl,
+  .lead,
+  .searchBar,
+  .searchInner > svg,
+  .slash,
+  .clear,
+  .count,
+  .chips::after,
+  .chip,
+  .mark,
+  .empty,
+  .reveal[data-in],
+  .item[data-in]::after,
+  .item[data-in] .num,
+  .item[data-in] .qText,
+  .item[data-in] .plus,
+  .itemOpen .tab,
+  .itemOpen .a,
+  .itemOpen .kbd,
+  .itemOpen .link,
+  .ctaTitle[data-in] .maskIn {
     animation: none;
+  }
+
+  .hero::before {
+    -webkit-mask-size: 320% 320%;
+    mask-size: 320% 320%;
+  }
+
+  .hl {
+    background-size: 100% 100%;
   }
 
   .panel,
@@ -613,6 +909,7 @@
   .q,
   .chip,
   .item::before,
+  .item:last-child,
   .btn {
     transition: none;
   }

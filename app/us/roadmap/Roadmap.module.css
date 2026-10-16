@@ -1,7 +1,148 @@
 .page {
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+
   background: #fff;
   color: #171717;
   overflow-x: clip;
+}
+
+.reveal {
+  opacity: 0;
+}
+
+.reveal[data-in] {
+  opacity: 1;
+  animation-duration: var(--dur, 0.9s);
+  animation-timing-function: var(--ease);
+  animation-delay: var(--delay, 0s);
+  animation-fill-mode: backwards;
+}
+
+.wipe {
+  --dist: 20px;
+  --dur: 1.05s;
+}
+
+.right {
+  --vx: -1;
+  --vy: 0;
+  --clip: inset(-10% 100% -10% -10%);
+}
+
+.reveal[data-in].wipe {
+  animation-name: kWipe;
+}
+
+@keyframes kWipe {
+  from {
+    opacity: 0;
+    clip-path: var(--clip);
+    transform: translate(
+      calc(var(--vx) * var(--dist)),
+      calc(var(--vy) * var(--dist))
+    );
+  }
+  to {
+    opacity: 1;
+    clip-path: inset(-10% -10% -10% -10%);
+  }
+}
+
+@keyframes kRailIn {
+  from {
+    clip-path: inset(0 0 100% 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes kTextIn {
+  from {
+    opacity: 0;
+    transform: translate3d(-10px, 0, 0);
+  }
+}
+
+@keyframes kOrbIn {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes kMark {
+  from {
+    background-size: 0% 100%;
+  }
+  to {
+    background-size: 100% 100%;
+  }
+}
+
+@keyframes kLeadIn {
+  from {
+    opacity: 0;
+    filter: blur(8px);
+    transform: translate3d(-12px, 0, 0);
+  }
+}
+
+@keyframes kLine {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+@keyframes kBtnIn {
+  0% {
+    opacity: 0;
+    transform: translate3d(24px, 0, 0) scale(0.96);
+  }
+  75% {
+    opacity: 1;
+    transform: translate3d(-2px, 0, 0) scale(1.01);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes kDemoIn {
+  from {
+    opacity: 0;
+    clip-path: inset(-10% 100% -10% -10%);
+  }
+  to {
+    opacity: 1;
+    clip-path: inset(-10% -10% -10% -10%);
+  }
+}
+
+@keyframes kTitleIn {
+  from {
+    opacity: 0;
+    clip-path: inset(100% -10% -10% -10%);
+    transform: translate3d(0, 14px, 0);
+  }
+  to {
+    opacity: 1;
+    clip-path: inset(-10% -10% -10% -10%);
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes kBlockIn {
+  from {
+    opacity: 0;
+    clip-path: inset(-10% 100% -10% -10%);
+    transform: translate3d(-16px, 0, 0);
+  }
+  to {
+    opacity: 1;
+    clip-path: inset(-10% -10% -10% -10%);
+    transform: translate3d(0, 0, 0);
+  }
 }
 
 .hero {
@@ -17,6 +158,7 @@
   justify-content: center;
   background: var(--primary);
   border-right: 1px solid rgba(0, 0, 0, 0.11);
+  animation: kRailIn 1s var(--ease) backwards;
 }
 
 .railName {
@@ -24,6 +166,7 @@
   text-orientation: upright;
   font-size: 22px;
   color: var(--black);
+  animation: kTextIn 0.8s var(--ease) 0.5s backwards;
 }
 
 .heroMain {
@@ -51,7 +194,9 @@
   top: -220px;
   right: -200px;
   pointer-events: none;
-  animation: drift 14s ease-in-out infinite;
+  animation:
+    drift 14s ease-in-out infinite,
+    kOrbIn 2.4s ease backwards;
 }
 
 @keyframes drift {
@@ -106,17 +251,31 @@
 .hl {
   font-style: normal;
   padding: 0 0.12em;
-  background: var(--accent-soft);
+  background: linear-gradient(var(--accent-soft), var(--accent-soft)) no-repeat
+    left center / 0% 100%;
   border-radius: 2px;
+  animation: kMark 0.9s var(--ease) 0.95s forwards;
 }
 
 .heroFoot {
+  position: relative;
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
   gap: 24px;
   padding-top: 28px;
-  border-top: 1px solid #171717;
+}
+
+.heroFoot::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: #171717;
+  transform-origin: left;
+  animation: kLine 1.2s var(--ease) 0.7s backwards;
 }
 
 .lead {
@@ -124,6 +283,7 @@
   margin: 0;
   font-size: 22px;
   line-height: 1.4;
+  animation: kLeadIn 0.9s var(--ease) 0.9s backwards;
 }
 
 .updated {
@@ -133,6 +293,7 @@
   white-space: nowrap;
   border: 1px solid #171717;
   border-radius: 2px;
+  animation: kDemoIn 0.8s var(--ease) 1s backwards;
 }
 
 .btn {
@@ -169,6 +330,10 @@
 .btnB:hover {
   color: #fff;
   background: #000;
+}
+
+.heroBtn {
+  animation: kBtnIn 0.7s var(--ease) 1.15s backwards;
 }
 
 .head:focus-visible {
@@ -241,6 +406,24 @@
   background: var(--primary);
   border-right: 1px solid rgba(0, 0, 0, 0.11);
   font-family: var(--font-sansation), sans-serif;
+  opacity: 0;
+}
+
+.col[data-in] .meta {
+  opacity: 1;
+  animation: kDemoIn 1s var(--ease) var(--delay, 0s) backwards;
+}
+
+.col[data-in] .metaNum {
+  animation: kTextIn 0.7s var(--ease) calc(var(--delay, 0s) + 0.25s) backwards;
+}
+
+.col[data-in] .metaTitle {
+  animation: kTitleIn 0.9s var(--ease) calc(var(--delay, 0s) + 0.2s) backwards;
+}
+
+.col[data-in] .metaCount {
+  animation: kTextIn 0.8s var(--ease) calc(var(--delay, 0s) + 0.45s) backwards;
 }
 
 .metaNum {
@@ -279,25 +462,27 @@
   color: var(--black);
   background: var(--column-block-bg);
   outline: 2px solid transparent;
+  opacity: 0;
   transition:
     transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
     outline-color 0.2s ease,
-    box-shadow 0.3s ease,
-    opacity 0.4s ease;
-  animation: blockIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
-  animation-delay: calc(var(--i, 0) * 60ms);
+    box-shadow 0.3s ease;
 }
 
-@keyframes blockIn {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
+.col[data-in] .block {
+  opacity: 1;
+  animation: kBlockIn 0.9s var(--ease)
+    calc(var(--delay, 0s) + 0.3s + var(--i, 0) * 0.07s) backwards;
+}
 
-  to {
-    opacity: 1;
-    transform: none;
-  }
+.col[data-in] .stat {
+  animation: kTextIn 0.8s var(--ease)
+    calc(var(--delay, 0s) + 0.45s + var(--i, 0) * 0.07s) backwards;
+}
+
+.col[data-in] .text {
+  animation: kTextIn 0.8s var(--ease)
+    calc(var(--delay, 0s) + 0.5s + var(--i, 0) * 0.07s) backwards;
 }
 
 .block:hover {
@@ -365,19 +550,26 @@
 }
 
 .detail {
+  position: relative;
   margin: 0 16px;
   padding: 14px 0 16px;
-  border-top: 1px solid rgba(0, 0, 0, 0.18);
-  opacity: 0;
-  transform: translateY(6px);
-  transition:
-    opacity 0.3s ease,
-    transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.blockOpen .detail {
-  opacity: 1;
-  transform: none;
+.detail::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: rgba(0, 0, 0, 0.18);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.6s var(--ease);
+}
+
+.blockOpen .detail::before {
+  transform: scaleX(1);
   transition-delay: 0.1s;
 }
 
@@ -386,6 +578,17 @@
   font-size: 15px;
   line-height: 1.5;
   color: #2b2b2b;
+  opacity: 0;
+  transform: translate3d(-10px, 0, 0);
+  transition:
+    opacity 0.35s ease,
+    transform 0.5s var(--ease);
+}
+
+.blockOpen .detail p {
+  opacity: 1;
+  transform: none;
+  transition-delay: 0.16s;
 }
 
 .link {
@@ -396,9 +599,19 @@
   font-size: 14px;
   color: var(--black);
   border-bottom: 1px solid var(--black);
+  opacity: 0;
+  clip-path: inset(-10% 100% -10% -10%);
   transition:
     color 0.2s ease,
-    border-color 0.2s ease;
+    border-color 0.2s ease,
+    opacity 0.3s ease,
+    clip-path 0.6s var(--ease);
+}
+
+.blockOpen .link {
+  opacity: 1;
+  clip-path: inset(-10% -10% -10% -10%);
+  transition-delay: 0s, 0s, 0.28s, 0.28s;
 }
 
 .link:hover {
@@ -422,6 +635,22 @@
   font-weight: 500;
   letter-spacing: -0.055em;
   line-height: 1.05;
+}
+
+.mask {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.08em;
+}
+
+.maskIn {
+  display: inline-block;
+  transform: translateY(110%);
+}
+
+.ctaTitle[data-in] .maskIn {
+  transform: none;
+  animation: rise 1s var(--ease) backwards;
 }
 
 .ctaBtns {
@@ -484,14 +713,35 @@
   .orb,
   .line > span,
   .making,
-  .block {
+  .rail,
+  .railName,
+  .lead,
+  .updated,
+  .heroBtn,
+  .heroFoot::before,
+  .hl,
+  .reveal[data-in],
+  .col[data-in] .meta,
+  .col[data-in] .metaNum,
+  .col[data-in] .metaTitle,
+  .col[data-in] .metaCount,
+  .col[data-in] .block,
+  .col[data-in] .stat,
+  .col[data-in] .text,
+  .ctaTitle[data-in] .maskIn {
     animation: none;
   }
 
   .block,
   .panel,
-  .detail,
+  .detail::before,
+  .detail p,
+  .link,
   .btn {
     transition: none;
+  }
+
+  .hl {
+    background-size: 100% 100%;
   }
 }

@@ -1,6 +1,12 @@
 "use client";
 
-import { Fragment, useEffect, useRef, useState } from "react";
+import {
+  Fragment,
+  useEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+} from "react";
 import Link from "next/link";
 import { ArrowUpRight } from "@phosphor-icons/react";
 import styles from "./Terms.module.css";
@@ -109,6 +115,12 @@ const SECTIONS: Section[] = [
   },
 ];
 
+const at = (seconds: number, distance?: number) =>
+  ({
+    "--delay": `${seconds}s`,
+    ...(distance ? { "--dist": `${distance}px` } : {}),
+  }) as CSSProperties;
+
 const fill = (text: string) =>
   text.split(/(\{[A-Z]+\})/g).map((part, i) => {
     const key = part.slice(1, -1);
@@ -124,7 +136,9 @@ const fill = (text: string) =>
 
 export default function Terms() {
   const [active, setActive] = useState(0);
+  const [tocIn, setTocIn] = useState(false);
   const bar = useRef<HTMLDivElement>(null);
+  const rootRef = useRef<HTMLElement>(null);
   const layoutRef = useRef<HTMLDivElement>(null);
   const tocRef = useRef<HTMLElement>(null);
 
@@ -186,6 +200,55 @@ export default function Terms() {
     return () => io.disconnect();
   }, []);
 
+  useEffect(() => {
+    const root = rootRef.current;
+    const layout = layoutRef.current;
+
+    if (!root) return;
+
+    const reveal = new IntersectionObserver(
+      (entries) =>
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            e.target.setAttribute("data-in", "");
+            reveal.unobserve(e.target);
+          }
+        }),
+      { threshold: 0.15 },
+    );
+
+    root.querySelectorAll("[data-reveal]").forEach((el) => reveal.observe(el));
+
+    const started = performance.now();
+
+    let tocWatch: IntersectionObserver | undefined;
+    let tocTimer: ReturnType<typeof setTimeout> | undefined;
+
+    if (layout) {
+      tocWatch = new IntersectionObserver(
+        ([e]) => {
+          if (e.isIntersecting) {
+            tocWatch?.disconnect();
+
+            tocTimer = setTimeout(
+              () => setTocIn(true),
+              Math.max(0, 1500 - (performance.now() - started)),
+            );
+          }
+        },
+        { rootMargin: "0px 0px -35% 0px" },
+      );
+
+      tocWatch.observe(layout);
+    }
+
+    return () => {
+      reveal.disconnect();
+      tocWatch?.disconnect();
+      if (tocTimer) clearTimeout(tocTimer);
+    };
+  }, []);
+
   const go = (i: number) => (e: React.MouseEvent) => {
     e.preventDefault();
 
@@ -198,7 +261,7 @@ export default function Terms() {
   };
 
   return (
-    <main className={styles.page}>
+    <main className={styles.page} ref={rootRef}>
       <div className={styles.progress}>
         <div ref={bar} className={styles.progressBar} />
       </div>
@@ -209,11 +272,11 @@ export default function Terms() {
         <div className={styles.heroInner}>
           <h1 className={styles.title}>
             <span className={styles.line}>
-              <span>Terms of</span>
+              <span style={{ animationDelay: "0.2s" }}>Terms of</span>
             </span>
 
             <span className={styles.line}>
-              <span style={{ animationDelay: "0.12s" }}>
+              <span style={{ animationDelay: "0.32s" }}>
                 <em className={styles.hl}>Use.</em>
               </span>
             </span>
@@ -232,7 +295,12 @@ export default function Terms() {
 
       <div className={styles.layout} ref={layoutRef}>
         <div className={styles.tocCol}>
-          <nav className={styles.toc} aria-label="Sections" ref={tocRef}>
+          <nav
+            className={styles.toc}
+            aria-label="Sections"
+            ref={tocRef}
+            {...(tocIn ? { "data-in": "" } : {})}
+          >
             <span
               className={styles.tocMarker}
               style={{ transform: `translateY(${active * 40}px)` }}
@@ -247,6 +315,7 @@ export default function Terms() {
                 className={`${styles.tocLink} ${
                   active === i ? styles.tocActive : ""
                 }`}
+                style={{ "--c": i } as CSSProperties}
                 aria-current={active === i ? "location" : undefined}
               >
                 <span className={styles.tocNum}>
@@ -266,27 +335,43 @@ export default function Terms() {
               data-i={i}
               className={styles.section}
             >
-              <div className={styles.head}>
+              <div className={styles.head} data-reveal>
                 <span className={styles.num}>
                   {String(i + 1).padStart(2, "0")}
                 </span>
                 <h2 className={styles.h2}>{s.title}</h2>
               </div>
 
-              <div className={styles.short}>
+              <div
+                className={`${styles.short} ${styles.reveal} ${styles.wipe} ${styles.right}`}
+                data-reveal
+                style={at(0.1)}
+              >
                 <span className={styles.shortTab}>In short</span>
                 <p>{s.short}</p>
               </div>
 
               {s.body.map((b, j) =>
                 Array.isArray(b) ? (
-                  <ul key={j} className={styles.list}>
-                    {b.map((li) => (
-                      <li key={li}>{fill(li)}</li>
+                  <ul
+                    key={j}
+                    className={`${styles.list} ${styles.reveal} ${styles.fade} ${styles.right}`}
+                    data-reveal
+                    style={at(0, 8)}
+                  >
+                    {b.map((li, k) => (
+                      <li key={li} style={{ "--c": k } as CSSProperties}>
+                        {fill(li)}
+                      </li>
                     ))}
                   </ul>
                 ) : (
-                  <p key={j} className={styles.p}>
+                  <p
+                    key={j}
+                    className={`${styles.p} ${styles.reveal} ${styles.fade} ${styles.right}`}
+                    data-reveal
+                    style={at(0, 8)}
+                  >
                     {fill(b)}
                   </p>
                 ),
@@ -295,11 +380,21 @@ export default function Terms() {
           ))}
 
           <div className={styles.end}>
-            <Link href="/contact" className={`${styles.btn} ${styles.btnA}`}>
+            <Link
+              href="/contact"
+              className={`${styles.btn} ${styles.btnA} ${styles.reveal} ${styles.wipe} ${styles.right}`}
+              data-reveal
+              style={at(0)}
+            >
               Contact <ArrowUpRight size={18} weight="bold" />
             </Link>
 
-            <Link href="/" className={`${styles.btn} ${styles.btnB}`}>
+            <Link
+              href="/"
+              className={`${styles.btn} ${styles.btnB} ${styles.reveal} ${styles.wipe} ${styles.right}`}
+              data-reveal
+              style={at(0.12)}
+            >
               Back home
             </Link>
           </div>

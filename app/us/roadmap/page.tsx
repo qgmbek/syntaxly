@@ -1,12 +1,14 @@
 "use client";
 
-import { useState, type CSSProperties } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 
 import { ArrowUpRight, ArrowDown } from "@phosphor-icons/react";
 
 import styles from "./Roadmap.module.css";
 
 const UPDATED = "October 6, 2026";
+
+const FIRST_OPEN = "Search every block";
 
 type Status = "live" | "making" | "planned" | "exploring";
 
@@ -134,11 +136,51 @@ const COLS: { n: number; title: string; items: Item[] }[] = [
   },
 ];
 
+const at = (seconds: number, distance?: number) =>
+  ({
+    "--delay": `${seconds}s`,
+    ...(distance ? { "--dist": `${distance}px` } : {}),
+  }) as CSSProperties;
+
 export default function Roadmap() {
-  const [open, setOpen] = useState<string | null>("Search every block");
+  const [open, setOpen] = useState<string | null>(null);
+  const root = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const els = root.current?.querySelectorAll("[data-reveal]");
+
+    if (!els) return;
+
+    let timer: ReturnType<typeof setTimeout> | undefined;
+
+    const io = new IntersectionObserver(
+      (entries) =>
+        entries.forEach((e) => {
+          if (!e.isIntersecting) return;
+
+          e.target.setAttribute("data-in", "");
+          io.unobserve(e.target);
+
+          if (e.target.hasAttribute("data-first")) {
+            timer = setTimeout(
+              () => setOpen((current) => current ?? FIRST_OPEN),
+              1300,
+            );
+          }
+        }),
+      { threshold: 0.15 },
+    );
+
+    els.forEach((el) => io.observe(el));
+
+    return () => {
+      io.disconnect();
+      if (timer) clearTimeout(timer);
+    };
+  }, []);
 
   return (
-    <main className={styles.page}>
+    <main className={styles.page} ref={root}>
       <section className={styles.hero}>
         <aside className={styles.rail}>
           <span className={styles.railName}>ROADMAP</span>
@@ -150,10 +192,10 @@ export default function Roadmap() {
           <div className={styles.heroInner}>
             <h1 className={styles.title}>
               <span className={styles.line}>
-                <span>Where it&apos;s</span>
+                <span style={{ animationDelay: "0.2s" }}>Where it&apos;s</span>
               </span>
               <span className={styles.line}>
-                <span style={{ animationDelay: "0.12s" }}>
+                <span style={{ animationDelay: "0.32s" }}>
                   <em className={styles.hl}>going.</em>
                 </span>
               </span>
@@ -167,7 +209,10 @@ export default function Roadmap() {
 
               <span className={styles.updated}>Updated {UPDATED}</span>
 
-              <a href="#board" className={`${styles.btn} ${styles.btnA}`}>
+              <a
+                href="#board"
+                className={`${styles.btn} ${styles.btnA} ${styles.heroBtn}`}
+              >
                 See the board
                 <ArrowDown size={18} weight="bold" />
               </a>
@@ -179,8 +224,14 @@ export default function Roadmap() {
       <section id="board">
         <div className={styles.band}>
           <div className={styles.cols}>
-            {COLS.map((c) => (
-              <div key={c.n} className={styles.col}>
+            {COLS.map((c, ci) => (
+              <div
+                key={c.n}
+                className={styles.col}
+                data-reveal
+                {...(c.n === 1 ? { "data-first": "" } : {})}
+                style={at(ci * 0.12)}
+              >
                 <div className={styles.meta}>
                   <span className={styles.metaNum}>{c.n}</span>
                   <h2 className={styles.metaTitle}>{c.title}</h2>
@@ -245,15 +296,29 @@ export default function Roadmap() {
       </section>
 
       <section className={styles.cta}>
-        <h2 className={styles.ctaTitle}>Missing something?</h2>
+        <h2 className={styles.ctaTitle} data-reveal>
+          <span className={styles.mask}>
+            <span className={styles.maskIn}>Missing something?</span>
+          </span>
+        </h2>
 
         <div className={styles.ctaBtns}>
-          <a href="/us/contact" className={`${styles.btn} ${styles.btnA}`}>
+          <a
+            href="/us/contact"
+            className={`${styles.btn} ${styles.btnA} ${styles.reveal} ${styles.wipe} ${styles.right}`}
+            data-reveal
+            style={at(0.4)}
+          >
             Tell us
             <ArrowUpRight size={18} weight="bold" />
           </a>
 
-          <a href="/syntax" className={`${styles.btn} ${styles.btnB}`}>
+          <a
+            href="/syntax"
+            className={`${styles.btn} ${styles.btnB} ${styles.reveal} ${styles.wipe} ${styles.right}`}
+            data-reveal
+            style={at(0.52)}
+          >
             Open Syntaxly
           </a>
         </div>

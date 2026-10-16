@@ -121,6 +121,8 @@ const ITEMS: Item[] = [
   },
 ];
 
+const at = (seconds: number) => ({ "--delay": `${seconds}s` }) as CSSProperties;
+
 function Hl({ text, q }: { text: string; q: string }) {
   const i = q ? text.toLowerCase().indexOf(q) : -1;
 
@@ -154,8 +156,10 @@ function Rich({ text }: { text: string }) {
 export default function Faq() {
   const [query, setQuery] = useState("");
   const [cat, setCat] = useState("All");
-  const [open, setOpen] = useState<number | null>(0);
+  const [open, setOpen] = useState<number | null>(null);
   const input = useRef<HTMLInputElement>(null);
+  const rootRef = useRef<HTMLElement>(null);
+  const ioRef = useRef<IntersectionObserver | null>(null);
 
   const q = query.trim().toLowerCase();
 
@@ -198,19 +202,59 @@ export default function Faq() {
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
+  useEffect(() => {
+    const root = rootRef.current;
+
+    if (!root) return;
+
+    const io = new IntersectionObserver(
+      (entries) =>
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            e.target.setAttribute("data-in", "");
+            io.unobserve(e.target);
+          }
+        }),
+      { threshold: 0.15 },
+    );
+
+    const arm = setTimeout(() => {
+      ioRef.current = io;
+      root.querySelectorAll("[data-reveal]").forEach((el) => io.observe(el));
+    }, 1000);
+
+    const openFirst = setTimeout(
+      () => setOpen((current) => current ?? 0),
+      1900,
+    );
+
+    return () => {
+      clearTimeout(arm);
+      clearTimeout(openFirst);
+      io.disconnect();
+      ioRef.current = null;
+    };
+  }, []);
+
+  const watch = (el: HTMLElement | null) => {
+    if (el && ioRef.current && !el.hasAttribute("data-in")) {
+      ioRef.current.observe(el);
+    }
+  };
+
   return (
-    <main className={styles.page}>
+    <main className={styles.page} ref={rootRef}>
       <header className={styles.hero}>
         <div className={styles.orb} />
 
         <div className={styles.heroInner}>
           <h1 className={styles.title}>
             <span className={styles.line}>
-              <span>Questions,</span>
+              <span style={{ animationDelay: "0.2s" }}>Questions,</span>
             </span>
 
             <span className={styles.line}>
-              <span style={{ animationDelay: "0.12s" }}>
+              <span style={{ animationDelay: "0.32s" }}>
                 <em className={styles.hl}>answered.</em>
               </span>
             </span>
@@ -263,10 +307,11 @@ export default function Faq() {
 
       <div className={styles.chips} role="group" aria-label="Filter by topic">
         <div className={styles.chipsInner}>
-          {CATS.map((c) => (
+          {CATS.map((c, ci) => (
             <button
               key={c}
               className={`${styles.chip} ${cat === c ? styles.chipOn : ""}`}
+              style={{ "--c": ci } as CSSProperties}
               onClick={() => setCat(c)}
               aria-pressed={cat === c}
             >
@@ -296,6 +341,8 @@ export default function Faq() {
           return (
             <div
               key={it.id}
+              ref={watch}
+              data-reveal
               className={`${styles.item} ${isOpen ? styles.itemOpen : ""}`}
               style={{ "--i": Math.min(n, 8) } as CSSProperties}
             >
@@ -339,10 +386,14 @@ export default function Faq() {
 
                     {it.keys && (
                       <div className={styles.keys}>
-                        {it.keys.map((g) => (
+                        {it.keys.map((g, gi) => (
                           <span key={g.join("")} className={styles.group}>
-                            {g.map((k) => (
-                              <kbd key={k} className={styles.kbd}>
+                            {g.map((k, ki) => (
+                              <kbd
+                                key={k}
+                                className={styles.kbd}
+                                style={{ "--k": gi * 3 + ki } as CSSProperties}
+                              >
                                 {k}
                               </kbd>
                             ))}
@@ -366,15 +417,29 @@ export default function Faq() {
       </section>
 
       <section className={styles.cta}>
-        <h2 className={styles.ctaTitle}>Still stuck?</h2>
+        <h2 className={styles.ctaTitle} data-reveal>
+          <span className={styles.mask}>
+            <span className={styles.maskIn}>Still stuck?</span>
+          </span>
+        </h2>
 
         <div className={styles.ctaBtns}>
-          <a href="/contact" className={`${styles.btn} ${styles.btnA}`}>
+          <a
+            href="/contact"
+            className={`${styles.btn} ${styles.btnA} ${styles.reveal} ${styles.wipe} ${styles.right}`}
+            data-reveal
+            style={at(0.4)}
+          >
             Ask us
             <ArrowUpRight size={18} weight="bold" />
           </a>
 
-          <a href="/syntax" className={`${styles.btn} ${styles.btnB}`}>
+          <a
+            href="/syntax"
+            className={`${styles.btn} ${styles.btnB} ${styles.reveal} ${styles.wipe} ${styles.right}`}
+            data-reveal
+            style={at(0.52)}
+          >
             Open Syntaxly
           </a>
         </div>

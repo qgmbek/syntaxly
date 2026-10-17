@@ -1,4 +1,6 @@
 .column {
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+
   height: 100vh;
   width: 24vw;
   flex-shrink: 0;
@@ -18,16 +20,20 @@
   background-color: var(--primary);
   border-right: 1px solid rgba(0, 0, 0, 0.11);
   font-family: var(--font-sansation), sans-serif;
+  animation: kMetaIn 0.9s var(--ease) calc(var(--c, 0) * 70ms) backwards;
 }
 
 .number {
   font-size: 20px;
+  animation: kTextIn 0.6s var(--ease) calc(var(--c, 0) * 70ms + 200ms) backwards;
 }
 
 .title {
   margin-top: 5px;
   font-size: 26px;
   text-transform: uppercase;
+  animation: kTitleIn 0.8s var(--ease) calc(var(--c, 0) * 70ms + 150ms)
+    backwards;
 }
 
 .blockCount {
@@ -39,6 +45,7 @@
   opacity: 0.7;
   letter-spacing: 0.04em;
   user-select: none;
+  animation: kTextIn 0.7s var(--ease) calc(var(--c, 0) * 70ms + 350ms) backwards;
 }
 
 .main {
@@ -73,6 +80,8 @@
     box-shadow 160ms ease,
     scale 120ms ease,
     outline 120ms ease;
+  animation: kBlockIn 0.8s var(--ease)
+    calc(0.18s + var(--c, 0) * 70ms + var(--i, 0) * 55ms) backwards;
 }
 
 .block:hover {
@@ -88,6 +97,15 @@
 .block.blockActive {
   outline: 2px solid var(--primary);
   box-shadow: 0 0 0 4px rgba(0, 255, 208, 0.18);
+}
+
+.blockActive::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  pointer-events: none;
+  animation: kFlash 0.7s var(--ease);
 }
 
 .blockTitle {
@@ -173,4 +191,68 @@
 .main::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.2);
   border-radius: 1px;
+}
+
+@keyframes kMetaIn {
+  from {
+    opacity: 0;
+    clip-path: inset(-10% 100% -10% -10%);
+  }
+  to {
+    opacity: 1;
+    clip-path: inset(-10% -10% -10% -10%);
+  }
+}
+
+@keyframes kTextIn {
+  from {
+    opacity: 0;
+    transform: translate3d(-10px, 0, 0);
+  }
+}
+
+@keyframes kTitleIn {
+  from {
+    opacity: 0;
+    clip-path: inset(100% -10% -10% -10%);
+    transform: translate3d(0, 12px, 0);
+  }
+  to {
+    opacity: 1;
+    clip-path: inset(-10% -10% -10% -10%);
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes kBlockIn {
+  from {
+    opacity: 0;
+    clip-path: inset(-10% 100% -10% -10%);
+    transform: translate3d(-14px, 0, 0);
+  }
+  to {
+    opacity: 1;
+    clip-path: inset(-10% -10% -10% -10%);
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes kFlash {
+  from {
+    box-shadow: inset 0 0 28px 6px rgba(0, 255, 208, 0.45);
+  }
+  to {
+    box-shadow: inset 0 0 0 0 rgba(0, 255, 208, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .meta,
+  .number,
+  .title,
+  .blockCount,
+  .block,
+  .blockActive::after {
+    animation: none;
+  }
 }

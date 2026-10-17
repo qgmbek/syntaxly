@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 import styles from "./ExplanationColumn.module.css";
 
 export interface ExplanationData {
@@ -53,18 +53,24 @@ function difficultyColor(level: string): string {
   }
 }
 
+const at = (n: number) => ({ "--s": n }) as CSSProperties;
+
 export default function ExplanationColumn({
   data,
   onClose,
 }: ExplanationColumnProps) {
   const [visible, setVisible] = useState(false);
   const [rendered, setRendered] = useState<ExplanationData | null>(null);
+  const [session, setSession] = useState(0);
 
   useEffect(() => {
     if (data) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setVisible(true);
-      const t = setTimeout(() => setRendered(data), 80);
+      const t = setTimeout(() => {
+        setRendered(data);
+        setSession((s) => s + 1);
+      }, 80);
       return () => clearTimeout(t);
     } else {
       setVisible(false);
@@ -78,7 +84,9 @@ export default function ExplanationColumn({
     >
       <div className={styles.column}>
         <div className={styles.meta}>
-          <div className={styles.title}>{rendered?.blockTitle ?? ""}</div>
+          <div className={styles.title} key={session}>
+            {rendered?.blockTitle ?? ""}
+          </div>
           <button
             className={styles.close}
             onClick={onClose}
@@ -92,31 +100,34 @@ export default function ExplanationColumn({
           className={`${styles.main} ${rendered ? styles.contentVisible : ""}`}
         >
           {rendered && (
-            <>
-              <section className={styles.section}>
+            <div key={session}>
+              <section className={styles.section} style={at(0)}>
                 <div className={styles.sectionLabel}>what it is</div>
                 <p className={styles.sectionText}>{rendered.what}</p>
               </section>
 
-              <section className={styles.section}>
+              <section className={styles.section} style={at(1)}>
                 <div className={styles.sectionLabel}>how it works</div>
                 <p className={styles.sectionText}>{rendered.how}</p>
               </section>
 
-              <section className={styles.section}>
+              <section className={styles.section} style={at(2)}>
                 <div className={styles.sectionLabel}>example</div>
                 <pre className={styles.codeBlock}>{rendered.example}</pre>
               </section>
 
               {rendered.tip && (
-                <section className={`${styles.section} ${styles.tipSection}`}>
+                <section
+                  className={`${styles.section} ${styles.tipSection}`}
+                  style={at(3)}
+                >
                   <div className={styles.sectionLabel}>tip</div>
                   <p className={styles.sectionText}>{rendered.tip}</p>
                 </section>
               )}
 
               {(rendered.version || rendered.difficulty || rendered.memoryUsage != null) && (
-                <div className={styles.metaGroup}>
+                <div className={styles.metaGroup} style={at(4)}>
                   {rendered.version && (
                     <div className={styles.metaRow}>
                       <span className={styles.metaLabel}>Version</span>
@@ -160,7 +171,7 @@ export default function ExplanationColumn({
                   )}
                 </div>
               )}
-            </>
+            </div>
           )}
         </div>
       </div>

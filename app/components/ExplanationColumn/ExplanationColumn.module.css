@@ -1,4 +1,6 @@
 .wrapper {
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+
   width: 0;
   overflow: hidden;
   flex-shrink: 0;
@@ -39,6 +41,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   padding-right: 36px;
+  animation: kTitleIn 0.6s var(--ease) backwards;
 }
 
 .close {
@@ -67,6 +70,7 @@
 
 .section {
   margin-bottom: 22px;
+  animation: kTextIn 0.6s var(--ease) calc(var(--s, 0) * 60ms + 120ms) backwards;
 }
 
 .sectionLabel {
@@ -97,6 +101,7 @@
   margin: 0;
   white-space: pre-wrap;
   word-break: break-word;
+  animation: kDemoIn 0.8s var(--ease) calc(var(--s, 0) * 60ms + 250ms) backwards;
 }
 
 .tipSection {
@@ -113,6 +118,10 @@
 
 .tipSection .sectionText {
   color: rgba(255, 255, 255, 0.9);
+}
+
+.metaGroup {
+  animation: kTextIn 0.6s var(--ease) calc(var(--s, 0) * 60ms + 120ms) backwards;
 }
 
 .metaRow {
@@ -143,6 +152,7 @@
   font-weight: 600;
   color: #111;
   text-transform: capitalize;
+  animation: kPop 0.6s var(--ease) 0.55s backwards;
 }
 
 .memorySection {
@@ -162,7 +172,9 @@
   height: 100%;
   background: var(--memory-gradient);
   border-radius: 4px;
+  transform-origin: left;
   transition: width 0.6s ease;
+  animation: kBar 0.9s var(--ease) 0.6s backwards;
 }
 
 .memoryQualifier {
@@ -181,4 +193,61 @@
 .main::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.15);
   border-radius: 2px;
+}
+
+@keyframes kTextIn {
+  from {
+    opacity: 0;
+    transform: translate3d(-10px, 0, 0);
+  }
+}
+
+@keyframes kTitleIn {
+  from {
+    opacity: 0;
+    transform: translate3d(-10px, 0, 0);
+  }
+}
+
+@keyframes kDemoIn {
+  from {
+    opacity: 0;
+    clip-path: inset(-10% 100% -10% -10%);
+  }
+  to {
+    opacity: 1;
+    clip-path: inset(-10% -10% -10% -10%);
+  }
+}
+
+@keyframes kPop {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  65% {
+    opacity: 1;
+    transform: scale(1.12);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes kBar {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .title,
+  .section,
+  .codeBlock,
+  .metaGroup,
+  .difficultyBadge,
+  .memoryBarFill {
+    animation: none;
+  }
 }

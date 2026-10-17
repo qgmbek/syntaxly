@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 import styles from "./LanguageInfoColumn.module.css";
 
 export interface LanguageInfoData {
@@ -28,18 +28,25 @@ interface LanguageInfoColumnProps {
   onClose: () => void;
 }
 
+const group = (s: number) => ({ "--s": s }) as CSSProperties;
+const item = (k: number) => ({ "--k": k }) as CSSProperties;
+
 export default function LanguageInfoColumn({
   data,
   onClose,
 }: LanguageInfoColumnProps) {
   const [visible, setVisible] = useState(false);
   const [rendered, setRendered] = useState<LanguageInfoData | null>(null);
+  const [session, setSession] = useState(0);
 
   useEffect(() => {
     if (data) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setVisible(true);
-      const t = setTimeout(() => setRendered(data), 80);
+      const t = setTimeout(() => {
+        setRendered(data);
+        setSession((s) => s + 1);
+      }, 80);
       return () => clearTimeout(t);
     } else {
       setVisible(false);
@@ -53,7 +60,7 @@ export default function LanguageInfoColumn({
     >
       <div className={styles.column}>
         <div className={styles.header}>
-          <div className={styles.headerContent}>
+          <div className={styles.headerContent} key={session}>
             <div className={styles.categoryBadge}>
               {rendered?.category ?? ""}
             </div>
@@ -73,37 +80,37 @@ export default function LanguageInfoColumn({
           className={`${styles.main} ${rendered ? styles.contentVisible : ""}`}
         >
           {rendered && (
-            <>
-              <section className={styles.section}>
+            <div key={session}>
+              <section className={styles.section} style={group(0)}>
                 <div className={styles.sectionLabel}>what it is</div>
                 <p className={styles.sectionText}>{rendered.description}</p>
               </section>
 
-              <section className={styles.section}>
+              <section className={styles.section} style={group(1)}>
                 <div className={styles.sectionLabel}>history</div>
                 <p className={styles.sectionText}>{rendered.history}</p>
               </section>
 
-              <div className={styles.statsGrid}>
-                <div className={styles.statCard}>
+              <div className={styles.statsGrid} style={group(2)}>
+                <div className={styles.statCard} style={item(0)}>
                   <div className={styles.statValue}>
                     {rendered.githubStars}
                   </div>
                   <div className={styles.statLabel}>GitHub Stars</div>
                 </div>
-                <div className={styles.statCard}>
+                <div className={styles.statCard} style={item(1)}>
                   <div className={styles.statValue}>
                     {rendered.weeklyDownloads}
                   </div>
                   <div className={styles.statLabel}>Weekly Downloads</div>
                 </div>
-                <div className={styles.statCard}>
+                <div className={styles.statCard} style={item(2)}>
                   <div className={styles.statValue}>
                     {rendered.popularityRank}
                   </div>
                   <div className={styles.statLabel}>Popularity</div>
                 </div>
-                <div className={styles.statCard}>
+                <div className={styles.statCard} style={item(3)}>
                   <div className={styles.statValue}>
                     {rendered.yearCreated}
                   </div>
@@ -111,65 +118,65 @@ export default function LanguageInfoColumn({
                 </div>
               </div>
 
-              <div className={styles.infoGrid}>
-                <div className={styles.infoRow}>
+              <div className={styles.infoGrid} style={group(3)}>
+                <div className={styles.infoRow} style={item(0)}>
                   <span className={styles.infoLabel}>Created by</span>
                   <span className={styles.infoValue}>{rendered.createdBy}</span>
                 </div>
-                <div className={styles.infoRow}>
+                <div className={styles.infoRow} style={item(1)}>
                   <span className={styles.infoLabel}>Latest Version</span>
                   <span className={styles.infoValue}>
                     {rendered.latestVersion}
                   </span>
                 </div>
-                <div className={styles.infoRow}>
+                <div className={styles.infoRow} style={item(2)}>
                   <span className={styles.infoLabel}>License</span>
                   <span className={styles.infoValue}>{rendered.license}</span>
                 </div>
-                <div className={styles.infoRow}>
+                <div className={styles.infoRow} style={item(3)}>
                   <span className={styles.infoLabel}>Website</span>
                   <span className={styles.infoValue}>{rendered.website}</span>
                 </div>
               </div>
 
-              <section className={styles.section}>
+              <section className={styles.section} style={group(4)}>
                 <div className={styles.sectionLabel}>when to use it</div>
                 <ul className={styles.list}>
                   {rendered.useCases.map((useCase, i) => (
-                    <li key={i} className={styles.listItem}>
+                    <li key={i} className={styles.listItem} style={item(i)}>
                       {useCase}
                     </li>
                   ))}
                 </ul>
               </section>
 
-              <section className={styles.section}>
+              <section className={styles.section} style={group(5)}>
                 <div className={styles.sectionLabel}>key features</div>
                 <div className={styles.tagList}>
                   {rendered.keyFeatures.map((feature, i) => (
-                    <span key={i} className={styles.featureTag}>
+                    <span key={i} className={styles.featureTag} style={item(i)}>
                       {feature}
                     </span>
                   ))}
                 </div>
               </section>
 
-              <section className={styles.section}>
+              <section className={styles.section} style={group(6)}>
                 <div className={styles.sectionLabel}>used by</div>
                 <div className={styles.tagList}>
                   {rendered.usedBy.map((company, i) => (
-                    <span key={i} className={styles.companyTag}>
+                    <span key={i} className={styles.companyTag} style={item(i)}>
                       {company}
                     </span>
                   ))}
                 </div>
               </section>
 
-              <section className={styles.section}>
+              <section className={styles.section} style={group(7)}>
                 <div className={styles.sectionLabel}>ecosystem</div>
                 <p className={styles.sectionText}>{rendered.ecosystem}</p>
               </section>
-            </>
+            </div>
           )}
         </div>
       </div>

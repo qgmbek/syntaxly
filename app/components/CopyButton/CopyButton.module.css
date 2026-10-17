@@ -14,10 +14,31 @@
   transition: opacity 0.15s ease;
 }
 
-/* .icon {
-  color: var(--secondary);
-} */
-
 .icon:hover {
   scale: 1.1;
+}
+
+.pop {
+  animation: kPop 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes kPop {
+  0% {
+    opacity: 0;
+    transform: scale(0.4) rotate(-20deg);
+  }
+  65% {
+    opacity: 1;
+    transform: scale(1.2) rotate(4deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pop {
+    animation: none;
+  }
 }

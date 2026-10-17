@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import styles from "./Column.module.css";
 import CodeBlock from "../CodeBlock/CodeBlock";
 import CopyButton from "../CopyButton/CopyButton";
@@ -36,7 +37,12 @@ export default function Column({
   return (
     <div
       className={`${styles.column} ${compact ? styles.compact : ""}`}
-      style={{ transitionDelay: delay }}
+      style={
+        {
+          transitionDelay: delay,
+          "--c": Math.min(columnIndex, 5),
+        } as CSSProperties
+      }
     >
       <div className={styles.meta}>
         <div className={styles.number}>{data.number}</div>
@@ -50,6 +56,7 @@ export default function Column({
           <div
             key={block.title}
             className={`${styles.block} ${activeBlockIndex === i ? styles.blockActive : ""}`}
+            style={{ "--i": Math.min(i, 7) } as CSSProperties}
             onClick={() => onBlockClick?.(block, i)}
             role="button"
             tabIndex={0}

@@ -33,7 +33,11 @@ export default function CopyButton({ text }: CopyButtonProps) {
       aria-label={copied ? "Copied" : "Copy code to clipboard"}
     >
       {copied ? (
-        <Check size={18} weight="regular" className={styles.icon} />
+        <Check
+          size={18}
+          weight="regular"
+          className={`${styles.icon} ${styles.pop}`}
+        />
       ) : (
         <Copy size={18} weight="regular" className={styles.icon} />
       )}

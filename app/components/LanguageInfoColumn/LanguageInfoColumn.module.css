@@ -1,4 +1,6 @@
 .wrapper {
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+
   width: 0;
   overflow: hidden;
   flex-shrink: 0;
@@ -49,6 +51,7 @@
   padding: 3px 10px;
   border-radius: 20px;
   width: fit-content;
+  animation: kPop 0.6s var(--ease) backwards;
 }
 
 .headerName {
@@ -56,6 +59,7 @@
   font-weight: 700;
   letter-spacing: -0.02em;
   line-height: 1.1;
+  animation: kTitleIn 0.8s var(--ease) 0.08s backwards;
 }
 
 .tagline {
@@ -64,6 +68,7 @@
   font-weight: 400;
   line-height: 1.4;
   max-width: 280px;
+  animation: kTextIn 0.7s var(--ease) 0.18s backwards;
 }
 
 .close {
@@ -106,6 +111,7 @@
 
 .section {
   margin-bottom: 24px;
+  animation: kTextIn 0.6s var(--ease) calc(var(--s, 0) * 60ms + 120ms) backwards;
 }
 
 .sectionLabel {
@@ -125,7 +131,6 @@
   margin: 0;
 }
 
-/* Stats Grid */
 .statsGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -140,6 +145,8 @@
   padding: 14px 12px;
   text-align: center;
   transition: background 200ms ease;
+  animation: kPop 0.6s var(--ease)
+    calc(var(--s, 0) * 60ms + 180ms + var(--k, 0) * 60ms) backwards;
 }
 
 .statCard:hover {
@@ -162,13 +169,13 @@
   font-weight: 600;
 }
 
-/* Info Grid */
 .infoGrid {
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 12px;
   overflow: hidden;
   margin-bottom: 24px;
+  animation: kTextIn 0.6s var(--ease) calc(var(--s, 0) * 60ms + 120ms) backwards;
 }
 
 .infoRow {
@@ -177,6 +184,8 @@
   align-items: center;
   padding: 12px 16px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  animation: kTextIn 0.6s var(--ease)
+    calc(var(--s, 0) * 60ms + 180ms + var(--k, 0) * 50ms) backwards;
 }
 
 .infoRow:last-child {
@@ -198,7 +207,6 @@
   text-align: right;
 }
 
-/* Lists */
 .list {
   list-style: none;
   padding: 0;
@@ -214,6 +222,8 @@
   color: rgba(255, 255, 255, 0.85);
   padding-left: 16px;
   position: relative;
+  animation: kTextIn 0.6s var(--ease)
+    calc(var(--s, 0) * 60ms + 180ms + var(--k, 0) * 45ms) backwards;
 }
 
 .listItem::before {
@@ -228,7 +238,6 @@
   opacity: 0.7;
 }
 
-/* Tags */
 .tagList {
   display: flex;
   flex-wrap: wrap;
@@ -244,6 +253,8 @@
   font-weight: 600;
   letter-spacing: 0.02em;
   border: 1px solid rgba(0, 255, 208, 0.15);
+  animation: kPop 0.5s var(--ease)
+    calc(var(--s, 0) * 60ms + 180ms + var(--k, 0) * 35ms) backwards;
 }
 
 .companyTag {
@@ -254,9 +265,10 @@
   color: rgba(255, 255, 255, 0.85);
   font-weight: 500;
   border: 1px solid rgba(153, 0, 255, 0.2);
+  animation: kPop 0.5s var(--ease)
+    calc(var(--s, 0) * 60ms + 180ms + var(--k, 0) * 35ms) backwards;
 }
 
-/* Scrollbar */
 .main::-webkit-scrollbar {
   width: 4px;
 }
@@ -268,4 +280,54 @@
 .main::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.15);
   border-radius: 2px;
+}
+
+@keyframes kTextIn {
+  from {
+    opacity: 0;
+    transform: translate3d(-10px, 0, 0);
+  }
+}
+
+@keyframes kTitleIn {
+  from {
+    opacity: 0;
+    clip-path: inset(100% -10% -10% -10%);
+    transform: translate3d(0, 12px, 0);
+  }
+  to {
+    opacity: 1;
+    clip-path: inset(-10% -10% -10% -10%);
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes kPop {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  65% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .categoryBadge,
+  .headerName,
+  .tagline,
+  .section,
+  .statCard,
+  .infoGrid,
+  .infoRow,
+  .listItem,
+  .featureTag,
+  .companyTag {
+    animation: none;
+  }
 }

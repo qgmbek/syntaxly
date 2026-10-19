@@ -289,6 +289,7 @@
     rgba(0, 255, 208, 0.12),
     transparent 72%
   );
+  
   opacity: 0;
   content: "";
   pointer-events: none;
@@ -297,8 +298,7 @@
 
 .item:hover {
   transform: translateY(-2px);
-  border-color: rgba(0, 0, 0, 0.08);
-  background-color: rgba(0, 0, 0, 0.015);
+  /* background-color: rgba(0, 0, 0, 0.015); */
   color: #111;
 }
 
@@ -316,11 +316,11 @@
     color 240ms ease,
     transform 320ms var(--nav-ease);
 }
-
+/* 
 .item:hover .itemIcon {
   transform: translateY(-2px);
   color: #008f76;
-}
+} */
 
 .itemContent {
   position: relative;

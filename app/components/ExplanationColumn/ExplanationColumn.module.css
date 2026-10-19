@@ -5,6 +5,7 @@
   overflow: hidden;
   flex-shrink: 0;
   transition: width 520ms cubic-bezier(0.34, 1.18, 0.64, 1);
+  background-color: var(--explanation-bg);
 }
 
 .wrapper.open {
@@ -13,7 +14,8 @@
 
 .column {
   height: 100vh;
-  width: 24vw;
+  width: 100%;
+  min-width: 24vw;
   display: flex;
   flex-direction: column;
   overflow: hidden;

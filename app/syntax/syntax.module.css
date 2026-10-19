@@ -3,6 +3,7 @@
 
   position: relative;
   display: flex;
+  background-color: var(--column-bg);
 }
 
 .sidebar {
@@ -143,6 +144,7 @@
   overflow-y: hidden;
   height: 100vh;
   padding-right: 30px;
+  background-color: var(--column-bg);
 }
 
 .columnGroup {

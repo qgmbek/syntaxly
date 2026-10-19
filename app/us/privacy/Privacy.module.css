@@ -1,7 +1,160 @@
 .page {
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+
   background: #fff;
   color: #171717;
   overflow-x: clip;
+}
+
+.reveal {
+  opacity: 0;
+}
+
+.reveal[data-in] {
+  opacity: 1;
+  animation-duration: var(--dur, 0.9s);
+  animation-timing-function: var(--ease);
+  animation-delay: var(--delay, 0s);
+  animation-fill-mode: backwards;
+}
+
+.fade {
+  --dist: 12px;
+  --dur: 0.9s;
+}
+
+.wipe {
+  --dist: 20px;
+  --dur: 1.05s;
+}
+
+.right {
+  --vx: -1;
+  --vy: 0;
+  --clip: inset(-10% 100% -10% -10%);
+}
+
+.reveal[data-in].fade {
+  animation-name: kFade;
+}
+
+.reveal[data-in].wipe {
+  animation-name: kWipe;
+}
+
+@keyframes kFade {
+  from {
+    opacity: 0;
+    filter: blur(8px);
+    transform: translate(
+      calc(var(--vx) * var(--dist)),
+      calc(var(--vy) * var(--dist))
+    );
+  }
+}
+
+@keyframes kWipe {
+  from {
+    opacity: 0;
+    clip-path: var(--clip);
+    transform: translate(
+      calc(var(--vx) * var(--dist)),
+      calc(var(--vy) * var(--dist))
+    );
+  }
+  to {
+    opacity: 1;
+    clip-path: inset(-10% -10% -10% -10%);
+  }
+}
+
+@keyframes kTextIn {
+  from {
+    opacity: 0;
+    transform: translate3d(-10px, 0, 0);
+  }
+}
+
+@keyframes kOrbIn {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes kMark {
+  from {
+    background-size: 0% 100%;
+  }
+  to {
+    background-size: 100% 100%;
+  }
+}
+
+@keyframes kPh {
+  from {
+    background-size:
+      0% 2px,
+      0% 100%;
+  }
+  to {
+    background-size:
+      100% 2px,
+      100% 100%;
+  }
+}
+
+@keyframes kLeadIn {
+  from {
+    opacity: 0;
+    filter: blur(8px);
+    transform: translate3d(-12px, 0, 0);
+  }
+}
+
+@keyframes kDemoIn {
+  from {
+    opacity: 0;
+    clip-path: inset(-10% 100% -10% -10%);
+  }
+  to {
+    opacity: 1;
+    clip-path: inset(-10% -10% -10% -10%);
+  }
+}
+
+@keyframes kHeadIn {
+  from {
+    opacity: 0;
+    clip-path: inset(100% -10% -10% -10%);
+    transform: translate3d(0, 14px, 0);
+  }
+  to {
+    opacity: 1;
+    clip-path: inset(-10% -10% -40% -10%);
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes kPop {
+  0% {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  65% {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes gridReveal {
+  to {
+    -webkit-mask-size: 320% 320%;
+    mask-size: 320% 320%;
+  }
 }
 
 .progress {
@@ -24,14 +177,36 @@
 
 .hero {
   position: relative;
+  isolation: isolate;
   padding: 170px 5vw 70px;
   overflow: hidden;
   background-color: #fff;
+  border-bottom: 1px solid #171717;
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
   background-image:
     linear-gradient(to right, #ddd 1px, transparent 1px),
     linear-gradient(to bottom, #ddd 1px, transparent 1px);
   background-size: 80px 80px;
-  border-bottom: 1px solid #171717;
+  -webkit-mask-image: radial-gradient(
+    circle closest-side,
+    #000 65%,
+    transparent 100%
+  );
+  mask-image: radial-gradient(circle closest-side, #000 65%, transparent 100%);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: 0% 0%;
+  mask-size: 0% 0%;
+  animation: gridReveal 1.6s var(--ease) 0.15s forwards;
 }
 
 .orb {
@@ -44,7 +219,9 @@
   top: -260px;
   right: -160px;
   pointer-events: none;
-  animation: drift 14s ease-in-out infinite;
+  animation:
+    drift 14s ease-in-out infinite,
+    kOrbIn 2.4s ease backwards;
 }
 
 @keyframes drift {
@@ -100,8 +277,10 @@
 .hl {
   font-style: normal;
   padding: 0 0.12em;
-  background: var(--accent-soft);
+  background: linear-gradient(var(--accent-soft), var(--accent-soft)) no-repeat
+    left center / 0% 100%;
   border-radius: 2px;
+  animation: kMark 0.9s var(--ease) 0.95s forwards;
 }
 
 .heroFoot {
@@ -116,6 +295,7 @@
   margin: 0;
   font-size: 22px;
   line-height: 1.4;
+  animation: kLeadIn 0.9s var(--ease) 0.85s backwards;
 }
 
 .updated {
@@ -124,6 +304,92 @@
   white-space: nowrap;
   border: 1px solid #171717;
   border-radius: 2px;
+  animation: kDemoIn 0.8s var(--ease) 1s backwards;
+}
+
+.glance {
+  background: var(--column-bg);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.11);
+}
+
+.glanceInner {
+  max-width: 1150px;
+  margin: 0 auto;
+  padding: 36px 24px 44px;
+}
+
+.glanceLabel {
+  display: block;
+  margin-bottom: 20px;
+  font-family: var(--font-sansation), sans-serif;
+  font-size: 14px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--primary);
+}
+
+.glanceGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.gBlock {
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  color: var(--black);
+  background: var(--column-block-bg);
+  outline: 2px solid transparent;
+  transition:
+    transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+    outline-color 0.2s ease,
+    box-shadow 0.3s ease;
+}
+
+.gBlock[data-in] .gTab {
+  animation: kTextIn 0.7s var(--ease) calc(var(--delay, 0s) + 0.3s) backwards;
+}
+
+.gBlock[data-in] .gCode {
+  animation: kDemoIn 0.9s var(--ease) calc(var(--delay, 0s) + 0.4s) backwards;
+}
+
+.gBlock[data-in] .gText {
+  animation: kTextIn 0.8s var(--ease) calc(var(--delay, 0s) + 0.55s) backwards;
+}
+
+.gBlock:hover {
+  transform: translateY(-4px);
+  outline-color: var(--primary);
+  box-shadow: 0 0 0 4px var(--glow-color);
+}
+
+.gTab {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 5px 10px;
+  font-size: 16px;
+  background: var(--primary);
+  border-top-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+}
+
+.gCode {
+  margin: 0;
+  padding: 52px 18px 8px;
+  font-family: "JetBrains Mono", "Fira Code", monospace;
+  font-size: 18px;
+  overflow-x: auto;
+}
+
+.gText {
+  margin: 0;
+  padding: 0 18px 18px;
+  font-size: 14px;
+  line-height: 1.4;
+  color: #3b3b3b;
 }
 
 .layout {
@@ -151,10 +417,25 @@
   flex-direction: column;
   overflow-y: auto;
   scrollbar-width: none;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.toc[data-in] {
+  opacity: 1;
+  visibility: visible;
 }
 
 .toc::-webkit-scrollbar {
   display: none;
+}
+
+.toc[data-in] .tocLink {
+  animation: kTextIn 0.6s var(--ease) calc(var(--c, 0) * 35ms) backwards;
+}
+
+.toc[data-in] .tocMarker {
+  animation: kDemoIn 0.8s var(--ease) 0.1s backwards;
 }
 
 .tocMarker {
@@ -234,6 +515,21 @@
   margin-bottom: 22px;
 }
 
+.num,
+.h2 {
+  opacity: 0;
+}
+
+.head[data-in] .num {
+  opacity: 1;
+  animation: kPop 0.7s var(--ease) backwards;
+}
+
+.head[data-in] .h2 {
+  opacity: 1;
+  animation: kHeadIn 0.9s var(--ease) 0.1s backwards;
+}
+
 .num {
   padding: 5px 10px;
   font-size: 16px;
@@ -261,6 +557,14 @@
   color: var(--black);
   border-radius: 12px;
   overflow: hidden;
+}
+
+.short[data-in] .shortTab {
+  animation: kTextIn 0.7s var(--ease) calc(var(--delay, 0s) + 0.3s) backwards;
+}
+
+.short[data-in] p {
+  animation: kTextIn 0.8s var(--ease) calc(var(--delay, 0s) + 0.4s) backwards;
 }
 
 .short p {
@@ -298,6 +602,11 @@
   padding-left: 4px;
 }
 
+.list[data-in] li {
+  animation: kTextIn 0.7s var(--ease)
+    calc(var(--delay, 0s) + 0.2s + var(--c, 0) * 0.08s) backwards;
+}
+
 .list li::marker {
   color: var(--secondary);
 }
@@ -305,9 +614,17 @@
 .ph {
   padding: 0 4px;
   color: inherit;
-  background: var(--accent-soft);
   border-radius: 2px;
-  box-shadow: inset 0 -2px var(--primary);
+  background:
+    linear-gradient(var(--primary), var(--primary)) left bottom / 100% 2px
+      no-repeat,
+    linear-gradient(var(--accent-soft), var(--accent-soft)) left center / 100%
+      100% no-repeat;
+}
+
+.p[data-in] .ph,
+.list[data-in] .ph {
+  animation: kPh 0.8s var(--ease) calc(var(--delay, 0s) + 0.5s) backwards;
 }
 
 .end {
@@ -371,6 +688,11 @@
   .lead {
     font-size: 18px;
   }
+
+  .glanceGrid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
 }
 
 @media (max-width: 640px) {
@@ -394,99 +716,40 @@
 
 @media (prefers-reduced-motion: reduce) {
   .orb,
-  .line > span {
+  .line > span,
+  .hero::before,
+  .hl,
+  .lead,
+  .updated,
+  .reveal[data-in],
+  .gBlock[data-in] .gTab,
+  .gBlock[data-in] .gCode,
+  .gBlock[data-in] .gText,
+  .toc[data-in] .tocLink,
+  .toc[data-in] .tocMarker,
+  .head[data-in] .num,
+  .head[data-in] .h2,
+  .short[data-in] .shortTab,
+  .short[data-in] p,
+  .list[data-in] li,
+  .p[data-in] .ph,
+  .list[data-in] .ph {
     animation: none;
+  }
+
+  .hero::before {
+    -webkit-mask-size: 320% 320%;
+    mask-size: 320% 320%;
+  }
+
+  .hl {
+    background-size: 100% 100%;
   }
 
   .tocLink,
   .tocNum,
   .tocMarker,
-  .btn {
-    transition: none;
-  }
-}
-
-.glance {
-  background: var(--column-bg);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.11);
-}
-
-.glanceInner {
-  max-width: 1150px;
-  margin: 0 auto;
-  padding: 36px 24px 44px;
-}
-
-.glanceLabel {
-  display: block;
-  margin-bottom: 20px;
-  font-family: var(--font-sansation), sans-serif;
-  font-size: 14px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--primary);
-}
-
-.glanceGrid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
-}
-
-.gBlock {
-  position: relative;
-  overflow: hidden;
-  border-radius: 12px;
-  color: var(--black);
-  background: var(--column-block-bg);
-  outline: 2px solid transparent;
-  transition:
-    transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-    outline-color 0.2s ease,
-    box-shadow 0.3s ease;
-}
-
-.gBlock:hover {
-  transform: translateY(-4px);
-  outline-color: var(--primary);
-  box-shadow: 0 0 0 4px var(--glow-color);
-}
-
-.gTab {
-  position: absolute;
-  top: 0;
-  left: 0;
-  padding: 5px 10px;
-  font-size: 16px;
-  background: var(--primary);
-  border-top-left-radius: 12px;
-  border-bottom-right-radius: 12px;
-}
-
-.gCode {
-  margin: 0;
-  padding: 52px 18px 8px;
-  font-family: "JetBrains Mono", "Fira Code", monospace;
-  font-size: 18px;
-  overflow-x: auto;
-}
-
-.gText {
-  margin: 0;
-  padding: 0 18px 18px;
-  font-size: 14px;
-  line-height: 1.4;
-  color: #3b3b3b;
-}
-
-@media (max-width: 900px) {
-  .glanceGrid {
-    grid-template-columns: 1fr;
-    gap: 16px;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
+  .btn,
   .gBlock {
     transition: none;
   }

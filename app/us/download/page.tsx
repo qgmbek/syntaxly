@@ -1,5 +1,6 @@
 "use client";
 
+import type { CSSProperties } from "react";
 import { ArrowUpRight } from "@phosphor-icons/react";
 import styles from "./Download.module.css";
 
@@ -23,11 +24,11 @@ export default function Download() {
         <div className={styles.intro}>
           <h1 className={styles.title}>
             <span className={styles.line}>
-              <span>The apps are</span>
+              <span style={{ animationDelay: "0.2s" }}>The apps are</span>
             </span>
 
             <span className={styles.line}>
-              <span style={{ animationDelay: "0.12s" }}>
+              <span style={{ animationDelay: "0.32s" }}>
                 <em className={styles.hl}>in the making.</em>
               </span>
             </span>
@@ -56,7 +57,11 @@ export default function Download() {
 
           <div className={styles.tiles}>
             {WEB.map(([label, desc], i) => (
-              <div key={label} className={styles.tile}>
+              <div
+                key={label}
+                className={styles.tile}
+                style={{ "--i": i } as CSSProperties}
+              >
                 <span className={styles.fill} />
 
                 <span className={styles.num}>

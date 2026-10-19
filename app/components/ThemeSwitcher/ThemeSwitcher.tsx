@@ -10,11 +10,19 @@ import styles from "./ThemeSwitcher.module.css";
 interface ThemeSwitcherProps {
   buttonClassName: string;
   activeButtonClassName: string;
+  onMouseEnter?: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  onMouseLeave?: () => void;
+  onFocus?: (e: React.FocusEvent<HTMLButtonElement>) => void;
+  onBlur?: () => void;
 }
 
 export default function ThemeSwitcher({
   buttonClassName,
   activeButtonClassName,
+  onMouseEnter,
+  onMouseLeave,
+  onFocus,
+  onBlur,
 }: ThemeSwitcherProps) {
   const { theme, setTheme } = useTheme();
   const [open, setOpen] = useState(false);
@@ -115,11 +123,14 @@ export default function ThemeSwitcher({
       <button
         type="button"
         onClick={() => setOpen((current) => !current)}
-        title="Theme"
         aria-label="Theme"
         aria-expanded={open}
         aria-haspopup="listbox"
         className={`${buttonClassName} ${open ? activeButtonClassName : ""}`}
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}
+        onFocus={onFocus}
+        onBlur={onBlur}
       >
         <Palette size={18} weight={open ? "fill" : "regular"} aria-hidden="true" />
       </button>

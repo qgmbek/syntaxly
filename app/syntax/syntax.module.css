@@ -207,6 +207,47 @@
   right: 50px;
 }
 
+.sidebarTip {
+  position: fixed;
+  left: 45px;
+  transform: translateY(-50%);
+  padding: 7px 12px;
+  white-space: nowrap;
+  pointer-events: none;
+  background: var(--column-bg);
+  border: 1px solid var(--primary);
+  border-radius: 2px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+  font-size: 14px;
+  color: var(--column-block-bg);
+  animation: sidebarTipIn 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 200;
+}
+
+.sidebarTip::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: -5px;
+  width: 8px;
+  height: 8px;
+  background: var(--column-bg);
+  border-top: 1px solid var(--primary);
+  border-left: 1px solid var(--primary);
+  transform: translateY(-50%) rotate(45deg);
+}
+
+@keyframes sidebarTipIn {
+  from {
+    opacity: 0;
+    transform: translate(-6px, -50%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(0, -50%);
+  }
+}
+
 @keyframes kRailIn {
   from {
     clip-path: inset(0 0 100% 0);
@@ -250,7 +291,12 @@
   .sidebar > *,
   .sidebar > .name,
   .emptyFilter,
-  .scrollButton {
+  .scrollButton,
+  .sidebarTip {
     animation: none;
+  }
+
+  .sidebarButton {
+    transition: none;
   }
 }

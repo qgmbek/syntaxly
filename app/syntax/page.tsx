@@ -91,6 +91,11 @@ interface Selected {
   explanation: ExplanationData;
 }
 
+interface SidebarTip {
+  text: string;
+  y: number;
+}
+
 export default function Syntax() {
   const [selected, setSelected] = useState<Selected | null>(null);
   const [compact, setCompact] = useState(false);
@@ -101,6 +106,7 @@ export default function Syntax() {
   const [shortcutsOpen, setShortcutsOpen] = useState(false);
   const [focusMode, setFocusMode] = useState(false);
   const [languageInfoOpen, setLanguageInfoOpen] = useState(false);
+  const [sidebarTip, setSidebarTip] = useState<SidebarTip | null>(null);
 
   const columnGroupRefs = useRef<(HTMLDivElement | null)[]>([]);
   const mainbarRef = useRef<HTMLDivElement>(null);
@@ -328,6 +334,17 @@ export default function Syntax() {
     });
   }
 
+  const showSidebarTip = (
+    e: MouseEvent<HTMLButtonElement> | FocusEvent<HTMLButtonElement>,
+    text: string,
+  ) => {
+    const r = e.currentTarget.getBoundingClientRect();
+    setSidebarTip({
+      text,
+      y: r.top + r.height / 2,
+    });
+  };
+
   return (
     <div className={styles.container}>
       {!focusMode && (
@@ -349,7 +366,10 @@ export default function Syntax() {
             <button
               className={styles.fontBtn}
               onClick={() => setFontSize((s) => Math.min(s + 1, 24))}
-              title="Increase font size (+)"
+              onMouseEnter={(e) => showSidebarTip(e, "Increase (+)")}
+              onMouseLeave={() => setSidebarTip(null)}
+              onFocus={(e) => showSidebarTip(e, "Increase (+)")}
+              onBlur={() => setSidebarTip(null)}
             >
               +
             </button>
@@ -357,7 +377,10 @@ export default function Syntax() {
             <button
               className={styles.fontBtn}
               onClick={() => setFontSize((s) => Math.max(s - 1, 10))}
-              title="Decrease font size (-)"
+              onMouseEnter={(e) => showSidebarTip(e, "Decrease (-)")}
+              onMouseLeave={() => setSidebarTip(null)}
+              onFocus={(e) => showSidebarTip(e, "Decrease (-)")}
+              onBlur={() => setSidebarTip(null)}
             >
               −
             </button>
@@ -365,39 +388,51 @@ export default function Syntax() {
 
           <button
             onClick={openSearch}
-            title="Search blocks (Ctrl+K)"
             className={`${styles.sidebarButton} ${searchOpen ? styles.sidebarButtonCompact : ""}`}
             aria-label="Search blocks"
+            onMouseEnter={(e) => showSidebarTip(e, "Search (Ctrl+K)")}
+            onMouseLeave={() => setSidebarTip(null)}
+            onFocus={(e) => showSidebarTip(e, "Search (Ctrl+K)")}
+            onBlur={() => setSidebarTip(null)}
           >
             <MagnifyingGlass size={22} weight="light" aria-hidden="true" />
           </button>
 
           <button
             onClick={toggleUniqueOnly}
-            title={
-              uniqueOnly
-                ? "Show all blocks"
-                : "Show unique blocks only (Ctrl+U)"
-            }
             aria-pressed={uniqueOnly}
             className={`${styles.sidebarButton} ${uniqueOnly ? styles.sidebarButtonCompact : ""}`}
+            onMouseEnter={(e) =>
+              showSidebarTip(e, uniqueOnly ? "Show All" : "Unique Only (Ctrl+U)")
+            }
+            onMouseLeave={() => setSidebarTip(null)}
+            onFocus={(e) =>
+              showSidebarTip(e, uniqueOnly ? "Show All" : "Unique Only (Ctrl+U)")
+            }
+            onBlur={() => setSidebarTip(null)}
           >
             <DiamondsFour size={22} weight={uniqueOnly ? "fill" : "light"} />
           </button>
 
           <button
             onClick={() => setCompact((c) => !c)}
-            title={compact ? "Expand columns" : "Overview"}
             className={`${styles.sidebarButton} ${compact ? styles.sidebarButtonCompact : ""}`}
+            onMouseEnter={(e) => showSidebarTip(e, compact ? "Expand" : "Overview")}
+            onMouseLeave={() => setSidebarTip(null)}
+            onFocus={(e) => showSidebarTip(e, compact ? "Expand" : "Overview")}
+            onBlur={() => setSidebarTip(null)}
           >
             <Columns size={22} weight={compact ? "fill" : "light"} />
           </button>
 
           <button
             onClick={() => setShortcutsOpen(true)}
-            title="Keyboard Shortcuts"
             className={styles.sidebarButton}
             aria-label="View Keyboard Shortcuts"
+            onMouseEnter={(e) => showSidebarTip(e, "Shortcuts")}
+            onMouseLeave={() => setSidebarTip(null)}
+            onFocus={(e) => showSidebarTip(e, "Shortcuts")}
+            onBlur={() => setSidebarTip(null)}
           >
             <Keyboard size={18} weight="light" />
           </button>
@@ -405,7 +440,17 @@ export default function Syntax() {
           <ThemeSwitcher
             buttonClassName={styles.sidebarButton}
             activeButtonClassName={styles.sidebarButtonCompact}
+            onMouseEnter={(e) => showSidebarTip(e, "Theme")}
+            onMouseLeave={() => setSidebarTip(null)}
+            onFocus={(e) => showSidebarTip(e, "Theme")}
+            onBlur={() => setSidebarTip(null)}
           />
+        </div>
+      )}
+
+      {sidebarTip && (
+        <div className={styles.sidebarTip} style={{ top: sidebarTip.y }} role="presentation">
+          {sidebarTip.text}
         </div>
       )}
 

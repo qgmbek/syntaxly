@@ -3,7 +3,13 @@
 import { MagnifyingGlass, ArrowRight, X } from "@phosphor-icons/react";
 
 import styles from "./Searchoverlay.module.css";
-import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+} from "react";
 
 interface Block {
   title: string;
@@ -192,6 +198,7 @@ export default function SearchOverlay({
               className={`${styles.resultItem} ${
                 i === activeIndex ? styles.resultItemActive : ""
               }`}
+              style={{ "--i": Math.min(i, 8) } as CSSProperties}
               onClick={() => onSelect(m.colIndex, m.blockIndex)}
               onMouseEnter={() => setActiveIndex(i)}
               role="option"
@@ -229,7 +236,10 @@ export default function SearchOverlay({
         </div>
 
         <div className={styles.footer}>
-          <span>
+          <span
+            className={styles.footCount}
+            key={query.trim() ? `m-${matches.length}` : "idle"}
+          >
             {query.trim()
               ? `${matches.length} MATCH${
                   matches.length !== 1 ? "ES" : ""

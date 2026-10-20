@@ -1,21 +1,24 @@
 .backdrop {
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.45);
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
   display: flex;
   align-items: flex-start;
   justify-content: center;
   padding-top: 80px;
   z-index: 1000;
-  animation: fadeIn 0.15s ease;
+  animation: kBackdropIn 0.25s ease;
 }
 
-@keyframes fadeIn {
+@keyframes kBackdropIn {
   from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
+    background: rgba(0, 0, 0, 0);
+    -webkit-backdrop-filter: blur(0);
+    backdrop-filter: blur(0);
   }
 }
 
@@ -26,6 +29,20 @@
   border: 1px solid rgba(0, 0, 0, 0.2);
   border-radius: 12px;
   overflow: hidden;
+  animation: kPanelIn 0.45s var(--ease) 0.02s backwards;
+}
+
+@keyframes kPanelIn {
+  from {
+    opacity: 0;
+    clip-path: inset(0 0 100% 0 round 12px);
+    transform: translate3d(0, -12px, 0);
+  }
+  to {
+    opacity: 1;
+    clip-path: inset(0 0 0 0 round 12px);
+    transform: translate3d(0, 0, 0);
+  }
 }
 
 .inputRow {
@@ -41,6 +58,7 @@
 .searchIcon {
   color: var(--black);
   flex-shrink: 0;
+  animation: kPop 0.5s var(--ease) 0.15s backwards;
 }
 
 .input {
@@ -52,6 +70,7 @@
   letter-spacing: 0.04em;
   color: var(--black);
   caret-color: var(--black);
+  animation: kTextIn 0.5s var(--ease) 0.18s backwards;
 }
 
 .input::placeholder {
@@ -69,6 +88,7 @@
   display: flex;
   align-items: center;
   transition: color 0.1s;
+  animation: kPop 0.3s var(--ease);
 }
 
 .clearBtn:hover {
@@ -127,12 +147,14 @@
 
 .idleIcon {
   margin-bottom: 4px;
+  animation: kPop 0.6s var(--ease) 0.2s backwards;
 }
 
 .idleText {
   font-size: 14px;
   letter-spacing: 0.02em;
   margin-bottom: 2px;
+  animation: kTextIn 0.5s var(--ease) 0.3s backwards;
 }
 
 .idleHint {
@@ -140,6 +162,7 @@
   color: #2e2e2e;
   margin-top: 4px;
   letter-spacing: 0.06em;
+  animation: kTextIn 0.5s var(--ease) 0.4s backwards;
 }
 
 .empty {
@@ -148,6 +171,7 @@
   align-items: center;
   gap: 4px;
   padding: 28px 16px;
+  animation: kEmpty 0.4s var(--ease) backwards;
 }
 
 .emptyCode {
@@ -164,6 +188,7 @@
 }
 
 .resultItem {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 12px;
@@ -171,6 +196,23 @@
   border-bottom: 0.5px solid rgba(0, 0, 0, 0.07);
   cursor: pointer;
   transition: background 0.1s;
+  animation: kItemIn 0.45s var(--ease) calc(var(--i, 0) * 35ms) backwards;
+}
+
+.resultItem::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--secondary);
+  transform: scaleY(0);
+  transition: transform 0.25s var(--ease);
+}
+
+.resultItemActive::before {
+  transform: scaleY(1);
 }
 
 .resultItem:last-child {
@@ -189,6 +231,8 @@
   min-width: 20px;
   flex-shrink: 0;
   line-height: 1.4;
+  animation: kTextIn 0.45s var(--ease) calc(var(--i, 0) * 35ms + 80ms)
+    backwards;
 }
 
 .resultBody {
@@ -223,6 +267,8 @@
   transition:
     color 0.1s,
     transform 0.1s;
+  animation: kArrowIn 0.45s var(--ease) calc(var(--i, 0) * 35ms + 140ms)
+    backwards;
 }
 
 .resultItem:hover .arrow,
@@ -232,10 +278,12 @@
 }
 
 .mark {
-  background: rgba(0, 255, 208, 0.18);
+  background: linear-gradient(rgba(0, 255, 208, 0.18), rgba(0, 255, 208, 0.18))
+    no-repeat left center / 100% 100%;
   color: var(--secondary);
   border-radius: 2px;
   padding: 0 1px;
+  animation: kMark 0.3s var(--ease) backwards;
 }
 
 .footer {
@@ -247,4 +295,99 @@
   font-size: 11px;
   letter-spacing: 0.06em;
   color: var(--black);
+}
+
+.footCount {
+  animation: kCount 0.3s var(--ease);
+}
+
+@keyframes kTextIn {
+  from {
+    opacity: 0;
+    transform: translate3d(-8px, 0, 0);
+  }
+}
+
+@keyframes kPop {
+  0% {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  65% {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes kEmpty {
+  from {
+    opacity: 0;
+    transform: translate3d(0, -6px, 0);
+  }
+}
+
+@keyframes kItemIn {
+  from {
+    opacity: 0;
+    clip-path: inset(0 100% 0 0);
+    transform: translate3d(-10px, 0, 0);
+  }
+  to {
+    opacity: 1;
+    clip-path: inset(0 0 0 0);
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes kArrowIn {
+  from {
+    opacity: 0;
+    transform: translate3d(-6px, 0, 0);
+  }
+}
+
+@keyframes kMark {
+  from {
+    background-size: 0% 100%;
+  }
+  to {
+    background-size: 100% 100%;
+  }
+}
+
+@keyframes kCount {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 4px, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .backdrop,
+  .panel,
+  .searchIcon,
+  .input,
+  .clearBtn,
+  .scanLine,
+  .idleIcon,
+  .idleText,
+  .idleHint,
+  .empty,
+  .resultItem,
+  .colLabel,
+  .arrow,
+  .mark,
+  .footCount {
+    animation: none;
+  }
+
+  .resultItem::before,
+  .resultItem,
+  .arrow {
+    transition: none;
+  }
 }

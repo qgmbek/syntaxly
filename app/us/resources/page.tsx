@@ -149,6 +149,8 @@ const GROUPS: { title: string; items: Res[] }[] = [
   },
 ];
 
+const at = (seconds: number) => ({ "--delay": `${seconds}s` }) as CSSProperties;
+
 function Meta({
   n,
   title,
@@ -159,7 +161,12 @@ function Meta({
   count: number;
 }) {
   return (
-    <div className={styles.meta}>
+    <div
+      className={`${styles.meta} ${styles.reveal} ${styles.wipe} ${
+        n % 2 ? styles.right : styles.left
+      }`}
+      data-reveal
+    >
       <div className={styles.metaInner}>
         <div>
           <div className={styles.metaNum}>{n}</div>
@@ -190,9 +197,14 @@ export default function Resources() {
       { threshold: 0.2 },
     );
 
-    els.forEach((el) => io.observe(el));
+    const arm = setTimeout(() => {
+      els.forEach((el) => io.observe(el));
+    }, 1000);
 
-    return () => io.disconnect();
+    return () => {
+      clearTimeout(arm);
+      io.disconnect();
+    };
   }, []);
 
   return (
@@ -208,11 +220,11 @@ export default function Resources() {
           <div className={styles.heroInner}>
             <h1 className={styles.title}>
               <span className={styles.line}>
-                <span>Read the</span>
+                <span style={{ animationDelay: "0.2s" }}>Read the</span>
               </span>
 
               <span className={styles.line}>
-                <span style={{ animationDelay: "0.12s" }}>
+                <span style={{ animationDelay: "0.32s" }}>
                   <em className={styles.hl}>source.</em>
                 </span>
               </span>
@@ -224,7 +236,10 @@ export default function Resources() {
                 here when a snippet isn&apos;t enough.
               </p>
 
-              <a href="#list" className={`${styles.btn} ${styles.btnA}`}>
+              <a
+                href="#list"
+                className={`${styles.btn} ${styles.btnA} ${styles.heroBtn}`}
+              >
                 Browse
                 <ArrowDown size={18} weight="bold" />
               </a>
@@ -246,7 +261,7 @@ export default function Resources() {
                   <a
                     key={r.name}
                     href={r.href}
-                    className={`${styles.row} ${styles.reveal}`}
+                    className={styles.row}
                     data-reveal
                     style={{ "--d": i } as CSSProperties}
                     {...(external
@@ -281,21 +296,39 @@ export default function Resources() {
         ))}
       </div>
 
-      <p className={styles.note}>
+      <p
+        className={`${styles.note} ${styles.reveal} ${styles.fade} ${styles.right}`}
+        data-reveal
+        style={at(0)}
+      >
         Links marked with a domain open other websites. Syntaxly is independent
         and is not affiliated with or endorsed by any of them.
       </p>
 
       <section className={styles.cta}>
-        <h2 className={styles.ctaTitle}>Found a better source?</h2>
+        <h2 className={styles.ctaTitle} data-reveal>
+          <span className={styles.mask}>
+            <span className={styles.maskIn}>Found a better source?</span>
+          </span>
+        </h2>
 
         <div className={styles.ctaBtns}>
-          <a href="/us/contact" className={`${styles.btn} ${styles.btnA}`}>
+          <a
+            href="/us/contact"
+            className={`${styles.btn} ${styles.btnA} ${styles.reveal} ${styles.wipe} ${styles.right}`}
+            data-reveal
+            style={at(0.4)}
+          >
             Tell us
             <ArrowUpRight size={18} weight="bold" />
           </a>
 
-          <a href="/syntax" className={`${styles.btn} ${styles.btnB}`}>
+          <a
+            href="/syntax"
+            className={`${styles.btn} ${styles.btnB} ${styles.reveal} ${styles.wipe} ${styles.right}`}
+            data-reveal
+            style={at(0.52)}
+          >
             Open Syntaxly
           </a>
         </div>

@@ -1,4 +1,6 @@
 .minimap {
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+
   position: fixed;
   right: 0;
   top: 0;
@@ -12,6 +14,7 @@
   z-index: 100;
   box-sizing: border-box;
   font-family: var(--font-sansation), sans-serif;
+  animation: kMiniIn 0.9s var(--ease) 0.2s backwards;
 }
 
 .scroll {
@@ -64,6 +67,8 @@
     background 0.2s ease,
     color 0.2s ease,
     opacity 0.2s ease;
+  animation: kLabelIn 0.5s var(--ease) calc(0.35s + var(--l, 0) * 80ms)
+    backwards;
 }
 
 .laneLabelActive {
@@ -83,6 +88,7 @@
 }
 
 .pill {
+  position: relative;
   display: block;
   width: 100%;
   height: 6px;
@@ -95,6 +101,7 @@
     background 0.15s ease,
     transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
     box-shadow 0.2s ease;
+  animation: kPillIn 0.5s var(--ease) calc(0.45s + var(--p, 0) * 22ms) backwards;
 }
 
 .pill:hover {
@@ -116,6 +123,15 @@
     0 0 0 3.5px var(--black);
 }
 
+.pillActive::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 2px;
+  pointer-events: none;
+  animation: kRing 0.6s var(--ease);
+}
+
 .verticalLabel {
   flex-shrink: 0;
   align-self: center;
@@ -128,6 +144,7 @@
   text-orientation: mixed;
   transform: rotate(180deg);
   user-select: none;
+  animation: kFadeIn 0.8s ease 1s backwards;
 }
 
 .tip {
@@ -144,6 +161,7 @@
   border: 1px solid var(--primary);
   border-radius: 2px;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+  transition: top 0.18s var(--ease);
   animation: tipIn 0.18s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -163,6 +181,7 @@
 .tipBlock {
   font-size: 14px;
   color: var(--column-block-bg);
+  animation: kTipText 0.25s var(--ease);
 }
 
 .tipColumn {
@@ -170,6 +189,7 @@
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--primary);
+  animation: kTipText 0.25s var(--ease) 0.04s backwards;
 }
 
 @keyframes tipIn {
@@ -183,13 +203,75 @@
   }
 }
 
+@keyframes kMiniIn {
+  from {
+    clip-path: inset(100% 0 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes kLabelIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  65% {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes kPillIn {
+  from {
+    opacity: 0;
+    transform: scaleX(0);
+  }
+}
+
+@keyframes kRing {
+  from {
+    box-shadow: 0 0 0 0 var(--secondary);
+    opacity: 1;
+  }
+  to {
+    box-shadow: 0 0 0 9px var(--secondary);
+    opacity: 0;
+  }
+}
+
+@keyframes kFadeIn {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes kTipText {
+  from {
+    opacity: 0;
+    transform: translate3d(5px, 0, 0);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .tip {
+  .minimap,
+  .laneLabel,
+  .pill,
+  .pillActive::after,
+  .verticalLabel,
+  .tip,
+  .tipBlock,
+  .tipColumn {
     animation: none;
   }
 
   .pill,
-  .laneLabel {
+  .laneLabel,
+  .tip {
     transition: none;
   }
 }

@@ -4,6 +4,7 @@ import {
   useEffect,
   useRef,
   useState,
+  type CSSProperties,
   type MouseEvent,
   type FocusEvent,
 } from "react";
@@ -41,6 +42,11 @@ export default function Minimap({
 }: MinimapProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [tip, setTip] = useState<Tip | null>(null);
+
+  const offsets = columns.reduce<number[]>((acc, col, i) => {
+    acc.push(i === 0 ? 0 : acc[i - 1] + columns[i - 1].blocks.length);
+    return acc;
+  }, []);
 
   useEffect(() => {
     const box = scrollRef.current;
@@ -91,6 +97,7 @@ export default function Minimap({
                 className={`${styles.laneLabel} ${
                   laneActive ? styles.laneLabelActive : ""
                 }`}
+                style={{ "--l": Math.min(ci, 8) } as CSSProperties}
                 title={col.title}
               >
                 {String(col.number).padStart(2, "0")}
@@ -106,6 +113,9 @@ export default function Minimap({
                       className={`${styles.pill} ${
                         isActive ? styles.pillActive : ""
                       }`}
+                      style={
+                        { "--p": Math.min(offsets[ci] + bi, 40) } as CSSProperties
+                      }
                       data-active={isActive}
                       onClick={() => onSelect(ci, bi)}
                       onMouseEnter={(e) => showTip(e, block.title, col.title)}
@@ -129,8 +139,12 @@ export default function Minimap({
 
       {tip && (
         <div className={styles.tip} style={{ top: tip.y }} role="presentation">
-          <span className={styles.tipBlock}>{tip.block}</span>
-          <span className={styles.tipColumn}>{tip.column}</span>
+          <span className={styles.tipBlock} key={tip.block}>
+            {tip.block}
+          </span>
+          <span className={styles.tipColumn} key={tip.column}>
+            {tip.column}
+          </span>
         </div>
       )}
     </div>

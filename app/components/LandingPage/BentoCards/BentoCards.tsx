@@ -88,7 +88,7 @@ export default function BentoCards() {
       how: "Call at the top level of your component to declare reactive state variables.",
       example: "const increment = () => setNum(prev => prev + 1);",
       tips: "State updates are asynchronous. Use functional updates if relying on previous state values.",
-      icon: <Lightning size={18} weight="fill" />,
+      icon: <Lightning size={18} weight="regular" />,
     },
 
     useRef: {
@@ -99,7 +99,7 @@ export default function BentoCards() {
       how: "Pass to an element's ref attribute or use to store mutable instance variables.",
       example: "inputRef.current?.focus();",
       tips: "Never read or write .current directly during your component's rendering cycle.",
-      icon: <Pulse size={18} weight="duotone" />,
+      icon: <Pulse size={18} weight="regular" />,
     },
 
     useEffect: {
@@ -111,7 +111,7 @@ export default function BentoCards() {
       example:
         "const id = setInterval(tick, 1000); return () => clearInterval(id);",
       tips: "Omit dependencies to run every render. Empty array runs exactly once on mount.",
-      icon: <GitBranch size={18} weight="duotone" />,
+      icon: <GitBranch size={18} weight="regular" />,
     },
   };
 
@@ -183,7 +183,7 @@ export default function BentoCards() {
               <div className={styles.iconContainer}>
                 <ClockCounterClockwise
                   size={30}
-                  weight="duotone"
+                  weight="regular"
                   className={styles.icon}
                   style={{
                     transform:
@@ -233,7 +233,7 @@ export default function BentoCards() {
                   style={at(1)}
                   data-reveal
                 >
-                  <BracketsCurly size={18} weight="bold" />
+                  <BracketsCurly size={18} weight="regular" />
 
                   <code className={styles.syntaxBlobCode}>
                     const [val, set] = useState(0);
@@ -273,7 +273,7 @@ export default function BentoCards() {
               <div className={styles.iconContainer}>
                 <SquaresFour
                   size={30}
-                  weight="duotone"
+                  weight="regular"
                   className={styles.icon}
                   style={{
                     transform:

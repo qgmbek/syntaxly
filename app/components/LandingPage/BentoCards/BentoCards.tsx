@@ -12,6 +12,7 @@ import {
   GitBranch,
   Stack,
   Cpu,
+  ArrowLeft,
   CubeTransparentIcon,
 } from "@phosphor-icons/react";
 
@@ -31,6 +32,8 @@ type SyntaxItem = {
   icon: React.ReactNode;
 };
 
+const HEADING = "Everything you need to recall on the fly.";
+
 const at = (seconds: number, distance?: number) =>
   ({
     "--delay": `${seconds}s`,
@@ -44,8 +47,6 @@ export default function BentoCards() {
   const [activeBlock, setActiveBlock] = useState<SyntaxKey>("useState");
   const [swapCount, setSwapCount] = useState(0);
   const [swapDir, setSwapDir] = useState<"up" | "down">("up");
-  const [hoveredCard, setHoveredCard] = useState<number | null>(null);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
     const node = snippetRef.current;
@@ -65,18 +66,50 @@ export default function BentoCards() {
     return () => observer.disconnect();
   }, []);
 
-  const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+
+    let frame = 0;
+
+    const update = () => {
+      frame = 0;
+      const r = el.getBoundingClientRect();
+      const vh = window.innerHeight;
+      const p = Math.min(1, Math.max(0, (vh - r.top) / (vh + r.height)));
+      el.style.setProperty("--p", p.toFixed(4));
+    };
+
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(update);
+    };
+
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      if (frame) cancelAnimationFrame(frame);
+    };
+  }, [sectionRef]);
+
+  const trackPointer = (e: MouseEvent<HTMLDivElement>) => {
     const card = e.currentTarget;
     const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
 
-    const x = (e.clientX - rect.left) / rect.width - 0.5;
-    const y = (e.clientY - rect.top) / rect.height - 0.5;
-
-    setMousePosition({ x, y });
+    card.style.setProperty("--mx", `${x}px`);
+    card.style.setProperty("--my", `${y}px`);
+    card.style.setProperty("--rx", (x / rect.width - 0.5).toFixed(3));
+    card.style.setProperty("--ry", (y / rect.height - 0.5).toFixed(3));
   };
 
-  const resetMouseMove = () => {
-    setMousePosition({ x: 0, y: 0 });
+  const resetPointer = (e: MouseEvent<HTMLDivElement>) => {
+    e.currentTarget.style.setProperty("--rx", "0");
+    e.currentTarget.style.setProperty("--ry", "0");
   };
 
   const syntaxData: Record<SyntaxKey, SyntaxItem> = {
@@ -130,6 +163,10 @@ export default function BentoCards() {
       <div className={styles.bgOrbOne} />
       <div className={styles.bgOrbTwo} />
 
+      <span className={`${styles.decor} ${styles.d1}`} aria-hidden="true" />
+      <span className={`${styles.decor} ${styles.d2}`} aria-hidden="true" />
+      <span className={`${styles.decor} ${styles.d3}`} aria-hidden="true" />
+
       <div className={styles.headerWrapper}>
         <span
           className={`${styles.badge} ${styles.reveal} ${styles.wipe} ${styles.right}`}
@@ -140,17 +177,24 @@ export default function BentoCards() {
           WHAT IS IN SYNTAXLY?
         </span>
 
-        <h2
-          className={`${styles.mainHeading} ${styles.reveal} ${styles.wipe} ${styles.up}`}
-          style={at(0.12)}
-          data-reveal
-        >
-          Everything you need to recall on the fly.
+        <h2 className={styles.mainHeading} data-reveal>
+          {HEADING.split(" ").map((word, i) => (
+            <span key={i}>
+              <span className={styles.mask}>
+                <span
+                  className={styles.maskIn}
+                  style={{ "--w": i } as CSSProperties}
+                >
+                  {word}
+                </span>
+              </span>{" "}
+            </span>
+          ))}
         </h2>
 
         <p
           className={`${styles.subHeading} ${styles.reveal} ${styles.fade} ${styles.up}`}
-          style={at(0.4)}
+          style={at(0.7)}
           data-reveal
         >
           Ditch deep documentations when you just need the boilerplate syntax.
@@ -160,23 +204,13 @@ export default function BentoCards() {
 
       <div className={styles.bentoGrid}>
         <div
-          className={`${styles.bentoCard} ${styles.largeCard} ${styles.reveal} ${styles.slide} ${styles.right} ${
-            hoveredCard === 1 ? styles.cardActive : ""
-          }`}
+          className={`${styles.bentoCard} ${styles.largeCard} ${styles.reveal} ${styles.slide} ${styles.right}`}
           style={at(0.35)}
           data-reveal
-          onMouseEnter={() => setHoveredCard(1)}
-          onMouseLeave={() => {
-            setHoveredCard(null);
-            resetMouseMove();
-          }}
-          onMouseMove={handleMouseMove}
+          onMouseMove={trackPointer}
+          onMouseLeave={resetPointer}
         >
-          <div
-            className={`${styles.cardGlowEffect} ${
-              hoveredCard === 1 ? styles.cardGlowVisible : ""
-            }`}
-          />
+          <div className={styles.cardGlowEffect} />
 
           <div className={styles.cardContent}>
             <h3 className={styles.cardTitle}>
@@ -185,14 +219,7 @@ export default function BentoCards() {
                   size={30}
                   weight="regular"
                   className={styles.icon}
-                  style={{
-                    transform:
-                      hoveredCard === 1
-                        ? `translate(${mousePosition.x * 12}px, ${
-                            mousePosition.y * 12
-                          }px)`
-                        : "none",
-                  }}
+                  style={{ "--k": 12 } as CSSProperties}
                 />
               </div>
               Built for Instant Recall
@@ -213,6 +240,10 @@ export default function BentoCards() {
                   <div className={styles.blobLine} style={{ width: "95%" }} />
                   <div className={styles.blobLine} style={{ width: "40%" }} />
                   <div className={styles.blobLine} style={{ width: "75%" }} />
+                </div>
+
+                <div className={styles.timer}>
+                  <span className={`${styles.timerFill} ${styles.fillSlow}`} />
                 </div>
 
                 <span className={styles.bottomText}>
@@ -240,6 +271,10 @@ export default function BentoCards() {
                   </code>
                 </div>
 
+                <div className={styles.timer}>
+                  <span className={`${styles.timerFill} ${styles.fillFast}`} />
+                </div>
+
                 <span className={styles.syntaxModeText}>
                   2 seconds reference
                 </span>
@@ -249,23 +284,13 @@ export default function BentoCards() {
         </div>
 
         <div
-          className={`${styles.bentoCard} ${styles.smallCard} ${styles.reveal} ${styles.slide} ${styles.left} ${
-            hoveredCard === 2 ? styles.cardActive : ""
-          }`}
+          className={`${styles.bentoCard} ${styles.smallCard} ${styles.reveal} ${styles.slide} ${styles.left}`}
           style={at(0.5)}
           data-reveal
-          onMouseEnter={() => setHoveredCard(2)}
-          onMouseLeave={() => {
-            setHoveredCard(null);
-            resetMouseMove();
-          }}
-          onMouseMove={handleMouseMove}
+          onMouseMove={trackPointer}
+          onMouseLeave={resetPointer}
         >
-          <div
-            className={`${styles.cardGlowEffect} ${
-              hoveredCard === 2 ? styles.cardGlowVisible : ""
-            }`}
-          />
+          <div className={styles.cardGlowEffect} />
 
           <div className={styles.cardContent}>
             <h3 className={styles.cardTitle}>
@@ -275,14 +300,7 @@ export default function BentoCards() {
                   size={30}
                   weight="regular"
                   className={styles.icon}
-                  style={{
-                    transform:
-                      hoveredCard === 2
-                        ? `translate(${mousePosition.x * -10}px, ${
-                            mousePosition.y * -10
-                          }px)`
-                        : "none",
-                  }}
+                  style={{ "--k": -10 } as CSSProperties}
                 />
               </div>
             </h3>
@@ -293,17 +311,26 @@ export default function BentoCards() {
             </p>
 
             <div className={styles.miniCanvasView}>
-              <div className={styles.miniBlockItem}>
+              <div
+                className={styles.miniBlockItem}
+                style={{ "--i": 0 } as CSSProperties}
+              >
                 <Database size={14} />
                 Variables
               </div>
 
-              <div className={styles.miniBlockItem} style={{ opacity: 0.7 }}>
+              <div
+                className={styles.miniBlockItem}
+                style={{ "--i": 1 } as CSSProperties}
+              >
                 <Stack size={14} />
                 Hooks
               </div>
 
-              <div className={styles.miniBlockItem} style={{ opacity: 0.5 }}>
+              <div
+                className={styles.miniBlockItem}
+                style={{ "--i": 2 } as CSSProperties}
+              >
                 <Cpu size={14} />
                 Async Architecture
               </div>
@@ -315,8 +342,12 @@ export default function BentoCards() {
           ref={snippetRef}
           className={`${styles.bentoCard} ${styles.fullWidthCard} ${styles.reveal} ${styles.wipe} ${styles.up}`}
           style={at(0)}
+          onMouseMove={trackPointer}
+          onMouseLeave={resetPointer}
           {...snippetAttr}
         >
+          <div className={styles.cardGlowEffect} />
+
           <div className={styles.interactivePlaygroundHeader} {...snippetAttr}>
             <div>
               <h3
@@ -390,6 +421,20 @@ export default function BentoCards() {
                     className={swapCount > 0 ? styles.bolt : undefined}
                   />
                   Real-time Breakdown
+                </span>
+
+                <span
+                  className={`${styles.hint} ${
+                    snippetIn && swapCount === 0 ? styles.hintOn : ""
+                  }`}
+                  aria-hidden="true"
+                >
+                  <ArrowLeft
+                    size={12}
+                    weight="bold"
+                    className={styles.hintArrow}
+                  />
+                  click a block
                 </span>
               </div>
 

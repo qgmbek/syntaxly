@@ -4,6 +4,110 @@ import { useEffect, useRef, useState, useMemo, useCallback } from "react";
 import styles from "./Hero.module.css";
 
 const CELL_SIZE = 80;
+const MAGNET_REACH = 90;
+
+const WORDS = ["programming.", "JavaScript.", "TypeScript.", "React."];
+
+type Kind = "kw" | "fn" | "pa" | "nm" | "pl";
+type Token = [string, Kind];
+
+const SNIPPETS: {
+  name: string;
+  column: { n: number; title: string; blocks: number };
+  tokens: Token[];
+}[] = [
+  {
+    name: "Arrow function",
+    column: { n: 3, title: "Functions", blocks: 8 },
+    tokens: [
+      ["const", "kw"],
+      [" ", "pl"],
+      ["add", "fn"],
+      [" ", "pl"],
+      ["=", "kw"],
+      [" (", "pl"],
+      ["a", "pa"],
+      [", ", "pl"],
+      ["b", "pa"],
+      [") ", "pl"],
+      ["=>", "kw"],
+      [" a ", "pl"],
+      ["+", "kw"],
+      [" b;\n", "pl"],
+      ["add", "fn"],
+      ["(", "pl"],
+      ["2", "nm"],
+      [", ", "pl"],
+      ["3", "nm"],
+      [");", "pl"],
+    ],
+  },
+  {
+    name: "Generics",
+    column: { n: 7, title: "Types", blocks: 11 },
+    tokens: [
+      ["function", "kw"],
+      [" ", "pl"],
+      ["first", "fn"],
+      ["<", "pl"],
+      ["T", "pa"],
+      [">(", "pl"],
+      ["items", "pa"],
+      [":", "kw"],
+      [" ", "pl"],
+      ["T", "pa"],
+      ["[])", "pl"],
+      [":", "kw"],
+      [" ", "pl"],
+      ["T", "pa"],
+      [" {\n  ", "pl"],
+      ["return", "kw"],
+      [" items[", "pl"],
+      ["0", "nm"],
+      ["];\n}", "pl"],
+    ],
+  },
+  {
+    name: "useState",
+    column: { n: 12, title: "Hooks", blocks: 6 },
+    tokens: [
+      ["const", "kw"],
+      [" [", "pl"],
+      ["n", "nm"],
+      [", ", "pl"],
+      ["setN", "nm"],
+      ["] ", "pl"],
+      ["=", "kw"],
+      ["\n  ", "pl"],
+      ["useState", "fn"],
+      ["(", "pl"],
+      ["0", "nm"],
+      [");", "pl"],
+    ],
+  },
+  {
+    name: "Destructuring",
+    column: { n: 2, title: "Variables", blocks: 9 },
+    tokens: [
+      ["const", "kw"],
+      [" { ", "pl"],
+      ["id", "nm"],
+      [", ", "pl"],
+      ["name", "nm"],
+      [" } ", "pl"],
+      ["=", "kw"],
+      [" user;\n", "pl"],
+      ["const", "kw"],
+      [" [", "pl"],
+      ["a", "nm"],
+      [", ", "pl"],
+      ["b", "nm"],
+      ["] ", "pl"],
+      ["=", "kw"],
+      [" pair;", "pl"],
+    ],
+  },
+];
 
 interface Cell {
   top: number;
@@ -14,8 +118,149 @@ interface Cell {
   col: number;
 }
 
+const sampleDistinct = <T,>(arr: T[], count: number): T[] => {
+  const shuffled = [...arr];
+
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+
+  return shuffled.slice(0, Math.min(count, shuffled.length));
+};
+
+function WordRotator() {
+  const [state, setState] = useState({ index: 0, prev: -1 });
+
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    let timer = 0;
+
+    const tick = () => {
+      setState((s) => ({
+        index: (s.index + 1) % WORDS.length,
+        prev: s.index,
+      }));
+      timer = window.setTimeout(tick, 2600);
+    };
+
+    timer = window.setTimeout(tick, 3400);
+
+    return () => window.clearTimeout(timer);
+  }, []);
+
+  return (
+    <span className={styles.rotator}>
+      {WORDS.map((word, i) => (
+        <span
+          key={word}
+          className={styles.rotWord}
+          data-state={
+            i === state.index
+              ? "active"
+              : i === state.prev
+                ? "leaving"
+                : "waiting"
+          }
+          aria-hidden={i !== state.index}
+        >
+          {word}
+        </span>
+      ))}
+    </span>
+  );
+}
+
+function SyntaxCard() {
+  const [index, setIndex] = useState(0);
+  const [typed, setTyped] = useState(0);
+
+  const snippet = SNIPPETS[index];
+
+  const total = useMemo(
+    () => snippet.tokens.reduce((n, [text]) => n + text.length, 0),
+    [snippet],
+  );
+
+  useEffect(() => {
+    const reduce = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+
+    let timer = 0;
+    let count = 0;
+
+    if (reduce) {
+      setTyped(total);
+      timer = window.setTimeout(
+        () => setIndex((i) => (i + 1) % SNIPPETS.length),
+        5000,
+      );
+      return () => window.clearTimeout(timer);
+    }
+
+    const type = () => {
+      count += 1;
+      setTyped(count);
+
+      if (count < total) {
+        timer = window.setTimeout(type, 32 + Math.random() * 42);
+      } else {
+        timer = window.setTimeout(() => {
+          setTyped(0);
+          setIndex((i) => (i + 1) % SNIPPETS.length);
+        }, 3200);
+      }
+    };
+
+    setTyped(0);
+    timer = window.setTimeout(type, index === 0 ? 2000 : 500);
+
+    return () => window.clearTimeout(timer);
+  }, [index, total]);
+
+  let left = typed;
+
+  const parts = snippet.tokens.map(([text, kind], i) => {
+    if (left <= 0) return null;
+
+    const slice = text.slice(0, left);
+    left -= text.length;
+
+    return (
+      <span key={i} className={styles[kind]}>
+        {slice}
+      </span>
+    );
+  });
+
+  return (
+    <aside className={styles.card} aria-hidden="true">
+      <div className={styles.cardMeta}>
+        <div className={styles.cardNumber}>{snippet.column.n}</div>
+        <div className={styles.cardTitle}>{snippet.column.title}</div>
+        <div className={styles.cardCount}>Blocks: {snippet.column.blocks}</div>
+      </div>
+
+      <div className={styles.cardMain}>
+        <div
+          className={`${styles.cardBlock} ${typed >= total ? styles.cardBlockOn : ""}`}
+        >
+          <div className={styles.cardBlockTitle}>{snippet.name}</div>
+          <pre className={styles.code}>
+            <code>{parts}</code>
+            <span className={styles.caret} />
+          </pre>
+        </div>
+      </div>
+    </aside>
+  );
+}
+
 export default function Hero() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLAnchorElement>(null);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
   const [highlightOpacities, setHighlightOpacities] = useState<number[]>([]);
   const lastHoverCellRef = useRef<number | null>(null);
@@ -43,6 +288,35 @@ export default function Hero() {
     return () => observer.disconnect();
   }, []);
 
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    let frame = 0;
+
+    const update = () => {
+      frame = 0;
+      const p = Math.min(
+        1,
+        Math.max(0, window.scrollY / Math.max(container.offsetHeight, 1)),
+      );
+      container.style.setProperty("--sp", p.toFixed(4));
+      container.style.setProperty("--e", Math.min(1, p * 1.8).toFixed(4));
+    };
+
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(update);
+    };
+
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (frame) cancelAnimationFrame(frame);
+    };
+  }, []);
+
   const cells = useMemo(() => {
     if (!dimensions.width || !dimensions.height) return [];
 
@@ -65,17 +339,6 @@ export default function Hero() {
 
     return result;
   }, [dimensions.width, dimensions.height]);
-
-  const sampleDistinct = <T,>(arr: T[], count: number): T[] => {
-    const shuffled = [...arr];
-
-    for (let i = shuffled.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-    }
-
-    return shuffled.slice(0, Math.min(count, shuffled.length));
-  };
 
   const generateRandomHighlights = useCallback(
     (
@@ -142,10 +405,41 @@ export default function Hero() {
     const clearHighlights = () => {
       lastHoverCellRef.current = null;
       setHighlightOpacities(new Array(rows * cols).fill(0));
+      container.style.setProperty("--px", "0");
+      container.style.setProperty("--py", "0");
+      if (buttonRef.current) buttonRef.current.style.translate = "";
     };
 
     const handleMouseMove = (event: MouseEvent) => {
       const rect = container.getBoundingClientRect();
+
+      container.style.setProperty(
+        "--px",
+        (((event.clientX - rect.left) / rect.width - 0.5) * 2).toFixed(3),
+      );
+      container.style.setProperty(
+        "--py",
+        (((event.clientY - rect.top) / rect.height - 0.5) * 2).toFixed(3),
+      );
+
+      const button = buttonRef.current;
+
+      if (button) {
+        const b = button.getBoundingClientRect();
+        const ex = Math.max(b.left - event.clientX, 0, event.clientX - b.right);
+        const ey = Math.max(b.top - event.clientY, 0, event.clientY - b.bottom);
+
+        if (Math.hypot(ex, ey) < MAGNET_REACH) {
+          const dx = event.clientX - (b.left + b.width / 2);
+          const dy = event.clientY - (b.top + b.height / 2);
+          const x = Math.max(-12, Math.min(12, dx * 0.22));
+          const y = Math.max(-8, Math.min(8, dy * 0.3));
+          button.style.translate = `${x}px ${y}px`;
+        } else {
+          button.style.translate = "";
+        }
+      }
+
       const col = Math.floor((event.clientX - rect.left) / CELL_SIZE);
       const row = Math.floor((event.clientY - rect.top) / CELL_SIZE);
 
@@ -225,6 +519,8 @@ export default function Hero() {
         })}
       </div>
 
+      <SyntaxCard />
+
       <div className={styles.content}>
         <h1 className={styles.title}>
           <span className={styles.titleLine}>
@@ -253,7 +549,7 @@ export default function Hero() {
               className={styles.word}
               style={{ "--w": 3 } as React.CSSProperties}
             >
-              programming.
+              <WordRotator />
             </span>
           </span>
         </h1>
@@ -265,7 +561,11 @@ export default function Hero() {
         </p>
 
         <div className={styles.buttonContainer}>
-          <a href="/syntax" className={`${styles.button} ${styles.getButton}`}>
+          <a
+            ref={buttonRef}
+            href="/syntax"
+            className={`${styles.button} ${styles.getButton}`}
+          >
             Get Started
             <span className={styles.buttonArrow} aria-hidden="true">
               ↗

@@ -8,6 +8,30 @@ const MAGNET_REACH = 90;
 
 const WORDS = ["programming.", "JavaScript.", "TypeScript.", "React."];
 
+const TONES = [
+  "#ffd84d",
+  "#ff7ab8",
+  "#8ab6ff",
+  "#ff9a5c",
+  "#b5f23d",
+  "#ffffff",
+  "#ffd84d",
+  "#ff7ab8",
+  "#8ab6ff",
+];
+
+const letters = (text: string) =>
+  text.split("").map((letter, i) => (
+    <span
+      key={i}
+      aria-hidden="true"
+      className={styles.letter}
+      style={{ "--tone": TONES[i % TONES.length] } as React.CSSProperties}
+    >
+      {letter}
+    </span>
+  ));
+
 const SUBTITLE =
   "Browse every syntax at a glance, organized into blocks by topic. Click any one to see a quick refresher: definition, usage, example, and tips.";
 
@@ -168,7 +192,7 @@ function WordRotator() {
           }
           aria-hidden={i !== state.index}
         >
-          {word}
+          {letters(word)}
         </span>
       ))}
     </span>
@@ -525,25 +549,28 @@ export default function Hero() {
       <SyntaxCard />
 
       <div className={styles.content}>
-        <h1 className={styles.title}>
+        <h1
+          className={styles.title}
+          aria-label="Syntax cheatsheet for programming."
+        >
           <span className={styles.titleLine}>
             <span
               className={styles.word}
               style={{ "--w": 0 } as React.CSSProperties}
             >
-              Syntax
+              {letters("Syntax")}
             </span>{" "}
             <span
               className={styles.word}
               style={{ "--w": 1 } as React.CSSProperties}
             >
-              <span className={styles.highlighted}>cheatsheet</span>
+              <span className={styles.highlighted}>{letters("cheatsheet")}</span>
             </span>{" "}
             <span
               className={styles.word}
               style={{ "--w": 2 } as React.CSSProperties}
             >
-              for
+              {letters("for")}
             </span>
           </span>
 

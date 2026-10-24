@@ -204,6 +204,22 @@
   }
 }
 
+.letter {
+  display: inline-block;
+  -webkit-text-stroke: 0 #000;
+  transition:
+    color 0.25s ease,
+    -webkit-text-stroke-width 0.25s ease;
+}
+
+@media (hover: hover) {
+  .letter:hover {
+    color: var(--tone, #fff);
+    -webkit-text-stroke-width: 0.04em;
+    paint-order: stroke fill;
+  }
+}
+
 .rotator {
   display: inline-grid;
   justify-items: center;
@@ -771,7 +787,8 @@
   }
 
   .rotWord,
-  .rotWord[data-state] {
+  .rotWord[data-state],
+  .letter {
     transition: none;
   }
 

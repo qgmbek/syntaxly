@@ -1,6 +1,12 @@
 "use client";
 
-import { useEffect, useRef, useState, type CSSProperties } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+  type MouseEvent,
+} from "react";
 import Link from "next/link";
 import {
   ArrowDown,
@@ -18,6 +24,23 @@ const STEPS = ["Scan", "Search", "Open", "Copy"];
 const TARGETS = [0.38, 1.1, 1.52, 1.84];
 
 const QUERY = "usest";
+
+const LEAD =
+  "Scan, search, open, copy. That is the whole product. Scroll down and watch it run against a stopwatch.";
+
+const TITLE_TONES = [
+  "#ffd84d",
+  "#ff7ab8",
+  "#8ab6ff",
+  "#ff9a5c",
+  "#b5f23d",
+  "#ffffff",
+  "#ffd84d",
+  "#ff7ab8",
+  "#8ab6ff",
+];
+
+const KEY_TONES = ["var(--primary)", "#ffd84d", "#ff7ab8", "#8ab6ff", "#ff9a5c", "#b5f23d"];
 
 const COLS = [
   {
@@ -201,6 +224,38 @@ function Meta({
   );
 }
 
+const letters = (text: string, line: number) => {
+  let n = 0;
+
+  return text.split(" ").map((word, w, all) => (
+    <span key={w}>
+      <span className={styles.word}>
+        {word.split("").map((letter) => {
+          const i = n++;
+
+          return (
+            <span
+              key={i}
+              aria-hidden="true"
+              className={styles.letter}
+              style={
+                {
+                  "--i": i,
+                  "--l": line,
+                  "--tone": TITLE_TONES[i % TITLE_TONES.length],
+                } as CSSProperties
+              }
+            >
+              {letter}
+            </span>
+          );
+        })}
+      </span>
+      {w < all.length - 1 ? " " : ""}
+    </span>
+  ));
+};
+
 export default function HowItWorks() {
   const revealRef = useReveal<HTMLElement>(0.15);
   const [run, setRun] = useState(0);
@@ -213,6 +268,37 @@ export default function HowItWorks() {
 
   const tRef = useRef(0);
   const stageRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = revealRef.current;
+    if (!el) return;
+
+    let frame = 0;
+
+    const update = () => {
+      frame = 0;
+      const y = window.scrollY;
+      const vh = window.innerHeight;
+      const max = Math.max(1, el.offsetHeight - vh);
+
+      el.style.setProperty("--hp", Math.min(1, y / vh).toFixed(4));
+      el.style.setProperty("--pp", Math.min(1, y / max).toFixed(4));
+    };
+
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(update);
+    };
+
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      if (frame) cancelAnimationFrame(frame);
+    };
+  }, [revealRef]);
 
   useEffect(() => {
     const el = stageRef.current;
@@ -304,33 +390,53 @@ export default function HowItWorks() {
     return () => cancelAnimationFrame(raf);
   }, [step, run, started]);
 
+  const trackPointer = (e: MouseEvent<HTMLElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    e.currentTarget.style.setProperty("--mx", `${e.clientX - rect.left}px`);
+    e.currentTarget.style.setProperty("--my", `${e.clientY - rect.top}px`);
+  };
+
   return (
     <main ref={revealRef} className={styles.page}>
+      <span className={`${styles.decor} ${styles.d1}`} aria-hidden="true" />
+      <span className={`${styles.decor} ${styles.d2}`} aria-hidden="true" />
+      <span className={`${styles.decor} ${styles.d3}`} aria-hidden="true" />
+
       <section className={styles.hero}>
         <aside className={styles.rail}>
           <span className={styles.railName}>HOW IT WORKS</span>
         </aside>
 
-        <div className={styles.heroMain}>
+        <div className={styles.heroMain} onMouseMove={trackPointer}>
           <div className={styles.orb} />
 
           <div className={styles.heroInner}>
-            <h1 className={styles.title}>
-              <span className={styles.line}>
-                <span style={{ animationDelay: "0.2s" }}>Four moves.</span>
-              </span>
+            <h1
+              className={styles.title}
+              aria-label="Four moves. Two seconds."
+            >
+              <span className={styles.line}>{letters("Four moves.", 0)}</span>
 
               <span className={styles.line}>
-                <span style={{ animationDelay: "0.34s" }}>
-                  <em className={styles.hl}>Two seconds.</em>
+                <em className={styles.hl}>{letters("Two seconds.", 1)}</em>
+                <span className={styles.sticker} aria-hidden="true">
+                  timed, not guessed
                 </span>
               </span>
             </h1>
 
             <div className={styles.heroFoot}>
               <p className={styles.lead}>
-                Scan, search, open, copy. That is the whole product. Scroll down
-                and watch it run against a stopwatch.
+                {LEAD.split(" ").map((word, i) => (
+                  <span key={i}>
+                    <span
+                      className={styles.leadWord}
+                      style={{ "--i": i } as CSSProperties}
+                    >
+                      {word}
+                    </span>{" "}
+                  </span>
+                ))}
               </p>
 
               <a
@@ -354,9 +460,18 @@ export default function HowItWorks() {
           {...(started ? { "data-in": "" } : {})}
         >
           <div className={styles.bar}>
-            <div className={styles.clock} aria-live="off">
-              {t.toFixed(2).padStart(5, "0")}
-              <span>s</span>
+            <div className={styles.clockWrap}>
+              <div className={styles.clock} aria-live="off">
+                {t.toFixed(2).padStart(5, "0")}
+                <span>s</span>
+              </div>
+
+              <span
+                className={`${styles.stamp} ${done ? styles.stampOn : ""}`}
+                aria-hidden="true"
+              >
+                done
+              </span>
             </div>
 
             <ol
@@ -614,7 +729,12 @@ export default function HowItWorks() {
                 key={k.text}
                 className={`${styles.keyTile} ${styles.reveal} ${styles.slide} ${styles.up}`}
                 data-reveal
-                style={at(((index % 3) + Math.floor(index / 3)) * 0.08, 28)}
+                style={
+                  {
+                    ...at(((index % 3) + Math.floor(index / 3)) * 0.08, 28),
+                    "--tone": KEY_TONES[index % KEY_TONES.length],
+                  } as CSSProperties
+                }
               >
                 <span className={styles.fill} />
 
@@ -675,6 +795,21 @@ export default function HowItWorks() {
       </section>
 
       <section className={styles.cta}>
+        <svg
+          className={`${styles.spark} ${styles.s1}`}
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <path d="M12 0C13 8 16 11 24 12C16 13 13 16 12 24C11 16 8 13 0 12C8 11 11 8 12 0Z" />
+        </svg>
+        <svg
+          className={`${styles.spark} ${styles.s2}`}
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <path d="M12 0C13 8 16 11 24 12C16 13 13 16 12 24C11 16 8 13 0 12C8 11 11 8 12 0Z" />
+        </svg>
+
         <h2 className={styles.ctaTitle} data-reveal>
           <span className={styles.mask}>
             <span className={styles.maskIn}>Your turn. Beat 1.84s.</span>

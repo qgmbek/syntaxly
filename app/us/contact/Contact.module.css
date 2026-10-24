@@ -30,6 +30,9 @@
 }
 
 .main {
+  --px: 0;
+  --py: 0;
+
   position: relative;
   flex: 1;
   min-width: 0;
@@ -67,6 +70,25 @@
   animation: gridReveal 1.6s var(--ease) 0.15s forwards;
 }
 
+.main::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: radial-gradient(
+    circle 460px at var(--mx, 70%) var(--my, 30%),
+    rgba(0, 255, 208, 0.16),
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.main:hover::after {
+  opacity: 1;
+}
+
 @keyframes gridReveal {
   to {
     -webkit-mask-size: 320% 320%;
@@ -84,6 +106,8 @@
   top: -240px;
   right: -200px;
   pointer-events: none;
+  translate: calc(var(--px) * -40px) calc(var(--py) * -30px);
+  transition: translate 900ms var(--ease);
   animation:
     drift 14s ease-in-out infinite,
     kOrbIn 2.4s ease backwards;
@@ -97,6 +121,49 @@
   50% {
     transform: translate(5%, 5%);
   }
+}
+
+.decor {
+  position: absolute;
+  z-index: 0;
+  display: block;
+  pointer-events: none;
+  transition: translate 900ms var(--ease);
+}
+
+.d1 {
+  top: 12vh;
+  right: 12vw;
+  width: 52px;
+  height: 52px;
+  border-radius: 999px;
+  background: #ff7ab8;
+  translate: calc(var(--px) * -26px) calc(var(--py) * -20px);
+  animation: kPop 0.8s var(--ease) 1.3s backwards;
+}
+
+.d2 {
+  top: 26vh;
+  right: -70px;
+  width: 170px;
+  height: 85px;
+  border-radius: 170px 170px 0 0;
+  background: #8ab6ff;
+  transform: rotate(-90deg);
+  translate: calc(var(--px) * -18px) calc(var(--py) * -34px);
+  animation: kPopFlat 0.8s var(--ease) 1.4s backwards;
+}
+
+.d3 {
+  top: 50vh;
+  right: 7vw;
+  width: 120px;
+  height: 34px;
+  border-radius: 999px;
+  background: #b5f23d;
+  transform: rotate(-14deg);
+  translate: calc(var(--px) * -40px) calc(var(--py) * -14px);
+  animation: kPopFlat 0.8s var(--ease) 1.5s backwards;
 }
 
 .intro {
@@ -115,19 +182,34 @@
   line-height: 1;
   font-weight: 600;
   letter-spacing: -0.06em;
+  translate: calc(var(--px) * 8px) calc(var(--py) * 6px);
+  transition: translate 700ms var(--ease);
 }
 
 .line {
   display: block;
   overflow: hidden;
-  padding-bottom: 0.08em;
+  padding: 0.04em 0 0.08em;
+  margin-top: -0.04em;
 }
 
 .letter {
   display: inline-block;
   transform-origin: 0 100%;
+  -webkit-text-stroke: 0 #000;
+  transition:
+    color 0.25s ease,
+    -webkit-text-stroke-width 0.25s ease;
   animation: letterRise 0.9s var(--ease) calc(0.25s + var(--i, 0) * 0.04s)
     backwards;
+}
+
+@media (hover: hover) {
+  .letter:hover {
+    color: var(--tone, #fff);
+    -webkit-text-stroke-width: 0.04em;
+    paint-order: stroke fill;
+  }
 }
 
 @keyframes letterRise {
@@ -145,11 +227,37 @@
   animation: kMark 0.9s var(--ease) 0.95s forwards;
 }
 
+.sticker {
+  display: inline-block;
+  margin-left: 28px;
+  padding: 9px 18px;
+  border: 2px solid #171717;
+  border-radius: 999px;
+  background: var(--primary);
+  box-shadow: 3px 3px 0 #171717;
+  color: #171717;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1;
+  white-space: nowrap;
+  vertical-align: middle;
+  rotate: -6deg;
+  animation:
+    kSticker 0.9s var(--ease) 1.6s backwards,
+    kBob 2.6s ease-in-out 2.7s infinite;
+}
+
 .lead {
   max-width: 480px;
   font-size: 22px;
   line-height: 1.4;
-  animation: kLeadIn 0.9s var(--ease) 0.9s backwards;
+}
+
+.leadWord {
+  display: inline-block;
+  animation: kStack 1100ms var(--ease) calc(900ms + var(--i, 0) * 28ms)
+    backwards;
 }
 
 .tiles {
@@ -210,16 +318,19 @@
 .fill {
   position: absolute;
   inset: 0;
-  background: var(--primary);
-  transform: scaleY(0);
-  transform-origin: bottom;
-  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
   z-index: 0;
+  background: var(--tone, var(--primary));
+  border-radius: 50% 50% 0 0 / 30% 30% 0 0;
+  transform: translateY(101%);
+  transition:
+    transform 0.55s var(--ease),
+    border-radius 0.55s var(--ease);
 }
 
 .tile:hover .fill,
 .tile:focus-visible .fill {
-  transform: scaleY(1);
+  border-radius: 0;
+  transform: translateY(0);
 }
 
 .tileTop,
@@ -236,7 +347,7 @@
 
 .icon {
   display: flex;
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.4s var(--ease);
   animation: kPop 0.7s var(--ease) calc(0.95s + var(--i, 0) * 0.09s) backwards;
 }
 
@@ -248,7 +359,7 @@
   display: flex;
   opacity: 0.5;
   transition:
-    transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.35s var(--ease),
     opacity 0.2s ease;
   animation: arrowIn 0.6s var(--ease) calc(1.15s + var(--i, 0) * 0.09s)
     backwards;
@@ -262,6 +373,37 @@
 
 .checkPop {
   animation: kPop 0.5s var(--ease);
+}
+
+.tag {
+  position: absolute;
+  top: 26px;
+  right: 68px;
+  z-index: 2;
+  padding: 6px 12px;
+  border: 2px solid #171717;
+  border-radius: 999px;
+  background: #fff;
+  box-shadow: 3px 3px 0 #171717;
+  color: #171717;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+  rotate: -5deg;
+  scale: 0.5;
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 0.25s ease,
+    scale 0.5s var(--ease);
+}
+
+.tile:hover .tag,
+.tile:focus-visible .tag,
+.tagOn {
+  opacity: 1;
+  scale: 1;
 }
 
 .tileBottom {
@@ -330,11 +472,23 @@
   }
 }
 
-@keyframes kLeadIn {
-  from {
+@keyframes kStack {
+  0% {
     opacity: 0;
-    filter: blur(8px);
-    transform: translate3d(-12px, 0, 0);
+    transform: translate3d(0, 80px, 0);
+  }
+
+  15% {
+    opacity: 1;
+  }
+
+  72% {
+    transform: translate3d(0, -4px, 0);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
   }
 }
 
@@ -373,6 +527,31 @@
   }
 }
 
+@keyframes kPopFlat {
+  from {
+    opacity: 0;
+    scale: 0.4;
+  }
+}
+
+@keyframes kSticker {
+  from {
+    opacity: 0;
+    transform: rotate(-40deg) scale(0.2);
+  }
+}
+
+@keyframes kBob {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+
+  50% {
+    translate: 0 -5px;
+  }
+}
+
 @keyframes arrowIn {
   from {
     opacity: 0;
@@ -388,6 +567,13 @@
   to {
     opacity: 1;
     clip-path: inset(-10% -10% -10% -10%);
+  }
+}
+
+@media (max-width: 1100px) {
+  .decor,
+  .sticker {
+    display: none;
   }
 }
 
@@ -429,6 +615,11 @@
     padding: 16px 16px 18px;
   }
 
+  .tag {
+    top: 18px;
+    right: 52px;
+  }
+
   .value {
     font-size: 16px;
   }
@@ -439,6 +630,12 @@
   }
 }
 
+@media (hover: none) {
+  .main::after {
+    display: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .orb,
   .rail,
@@ -446,7 +643,9 @@
   .main::before,
   .letter,
   .highlighted,
-  .lead,
+  .sticker,
+  .leadWord,
+  .decor,
   .tiles::before,
   .tile,
   .icon,
@@ -466,9 +665,20 @@
     background-size: 100% 100%;
   }
 
+  .orb,
+  .decor,
+  .title {
+    translate: none;
+  }
+
   .fill,
   .icon,
-  .action {
+  .action,
+  .tag,
+  .orb,
+  .decor,
+  .title,
+  .letter {
     transition: none;
   }
 }

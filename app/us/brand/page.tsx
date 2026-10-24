@@ -1,6 +1,12 @@
 "use client";
 
-import { useEffect, useRef, useState, type CSSProperties } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+  type MouseEvent,
+} from "react";
 import {
   Copy,
   Check,
@@ -67,6 +73,17 @@ const DONTS = [
 ];
 
 const WORD = "syntaxly";
+
+const TITLE_TONES = [
+  "#ffd84d",
+  "#ff7ab8",
+  "#8ab6ff",
+  "#ff9a5c",
+  "#b5f23d",
+  "#ffffff",
+  "#ffd84d",
+  "#ff7ab8",
+];
 
 const at = (seconds: number, distance?: number) =>
   ({
@@ -162,12 +179,47 @@ export default function Brand() {
   }, []);
 
   useEffect(() => {
+    const el = root.current;
+    if (!el) return;
+
+    let frame = 0;
+
+    const update = () => {
+      frame = 0;
+      el.style.setProperty(
+        "--hp",
+        Math.min(1, window.scrollY / window.innerHeight).toFixed(4),
+      );
+    };
+
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(update);
+    };
+
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      if (frame) cancelAnimationFrame(frame);
+    };
+  }, []);
+
+  useEffect(() => {
     setHex(
       refs.current.map((el) =>
         el ? toHex(getComputedStyle(el).backgroundColor) : "#000000",
       ),
     );
   }, [theme]);
+
+  const trackPointer = (e: MouseEvent<HTMLElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    e.currentTarget.style.setProperty("--mx", `${e.clientX - rect.left}px`);
+    e.currentTarget.style.setProperty("--my", `${e.clientY - rect.top}px`);
+  };
 
   const copy = async (i: number) => {
     try {
@@ -184,7 +236,7 @@ export default function Brand() {
           <span className={styles.railName}>BRAND</span>
         </aside>
 
-        <div className={styles.heroMain}>
+        <div className={styles.heroMain} onMouseMove={trackPointer}>
           <div className={styles.orb} />
 
           <button
@@ -207,7 +259,12 @@ export default function Brand() {
                   key={i}
                   aria-hidden="true"
                   className={styles.letter}
-                  style={{ "--i": i } as CSSProperties}
+                  style={
+                    {
+                      "--i": i,
+                      "--tone": TITLE_TONES[i % TITLE_TONES.length],
+                    } as CSSProperties
+                  }
                 >
                   {letter}
                 </span>
@@ -215,7 +272,18 @@ export default function Brand() {
             </h1>
 
             <p className={styles.tagline}>
-              Syntax, <span className={styles.hl}>remembered.</span>
+              <span
+                className={styles.tagWord}
+                style={{ "--i": 0 } as CSSProperties}
+              >
+                Syntax,
+              </span>{" "}
+              <span
+                className={styles.tagWord}
+                style={{ "--i": 1 } as CSSProperties}
+              >
+                <span className={styles.hl}>remembered.</span>
+              </span>
             </p>
 
             <div
@@ -264,6 +332,7 @@ export default function Brand() {
               className={`${styles.tile} ${styles.reveal} ${styles.wipe} ${styles.up}`}
               data-reveal
               style={at(0)}
+              onMouseMove={trackPointer}
             >
               <span className={styles.markLg}>✦</span>
               <span className={styles.cap}>Mark</span>
@@ -273,6 +342,7 @@ export default function Brand() {
               className={`${styles.tile} ${styles.reveal} ${styles.wipe} ${styles.up}`}
               data-reveal
               style={at(0.1)}
+              onMouseMove={trackPointer}
             >
               <span className={styles.wordLg}>syntaxly</span>
               <span className={styles.cap}>Wordmark</span>
@@ -282,6 +352,7 @@ export default function Brand() {
               className={`${styles.tile} ${styles.tileDark} ${styles.reveal} ${styles.wipe} ${styles.up}`}
               data-reveal
               style={at(0.2)}
+              onMouseMove={trackPointer}
             >
               <Lockup dark />
               <span className={styles.cap}>On dark</span>
@@ -291,6 +362,7 @@ export default function Brand() {
               className={`${styles.tile} ${styles.reveal} ${styles.wipe} ${styles.up}`}
               data-reveal
               style={at(0.3)}
+              onMouseMove={trackPointer}
             >
               <div className={styles.clear}>
                 <Lockup />
@@ -417,6 +489,7 @@ export default function Brand() {
             className={`${styles.spec} ${styles.reveal} ${styles.slide} ${styles.up}`}
             data-reveal
             style={at(0, 40)}
+            onMouseMove={trackPointer}
           >
             <span className={`${styles.aa} ${styles.fSpace}`}>Aa</span>
             <h3>Space Grotesk</h3>
@@ -433,6 +506,7 @@ export default function Brand() {
             className={`${styles.spec} ${styles.reveal} ${styles.slide} ${styles.up}`}
             data-reveal
             style={at(0.1, 40)}
+            onMouseMove={trackPointer}
           >
             <span className={`${styles.aa} ${styles.fSans}`}>AA</span>
             <h3>Sansation</h3>
@@ -451,6 +525,7 @@ export default function Brand() {
             className={`${styles.spec} ${styles.reveal} ${styles.slide} ${styles.up}`}
             data-reveal
             style={at(0.2, 40)}
+            onMouseMove={trackPointer}
           >
             <span className={`${styles.aa} ${styles.fMono}`}>{"{}"}</span>
             <h3>JetBrains Mono</h3>
@@ -489,6 +564,7 @@ export default function Brand() {
             className={`${styles.compLight} ${styles.reveal} ${styles.slide} ${styles.left}`}
             data-reveal
             style={at(0.1, 48)}
+            onMouseMove={trackPointer}
           >
             <div className={styles.row}>
               <kbd className={styles.kbd}>Ctrl</kbd>
@@ -586,6 +662,7 @@ export default function Brand() {
                 className={styles.voiceRow}
                 data-reveal
                 style={at(i * 0.05)}
+                onMouseMove={trackPointer}
               >
                 <p className={styles.yes}>{yes}</p>
                 <p className={styles.no}>{no}</p>
@@ -596,6 +673,21 @@ export default function Brand() {
       </section>
 
       <section className={styles.cta}>
+        <svg
+          className={`${styles.spark} ${styles.s1}`}
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <path d="M12 0C13 8 16 11 24 12C16 13 13 16 12 24C11 16 8 13 0 12C8 11 11 8 12 0Z" />
+        </svg>
+        <svg
+          className={`${styles.spark} ${styles.s2}`}
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <path d="M12 0C13 8 16 11 24 12C16 13 13 16 12 24C11 16 8 13 0 12C8 11 11 8 12 0Z" />
+        </svg>
+
         <h2 className={styles.ctaTitle} data-reveal>
           <span className={styles.mask}>
             <span className={styles.maskIn}>Now go recall something.</span>

@@ -1,6 +1,12 @@
 "use client";
 
-import { useState, type CSSProperties } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+  type MouseEvent,
+} from "react";
 import Link from "next/link";
 import {
   ArrowUpRight,
@@ -28,6 +34,23 @@ const FIELDS: Record<Field, string> = {
 const ORDER = Object.keys(FIELDS) as Field[];
 
 const BLOCK_CODE = "useEffect(() => {\n  return () => {};\n}, [dep]);";
+
+const LEAD =
+  "A cheatsheet for the moment you know exactly what you want to write and can't recall how it's spelled.";
+
+const TONES = ["#ffd84d", "#ff7ab8", "#8ab6ff"];
+
+const TITLE_TONES = [
+  "#ffd84d",
+  "#ff7ab8",
+  "#8ab6ff",
+  "#ff9a5c",
+  "#b5f23d",
+  "#ffffff",
+  "#ffd84d",
+  "#ff7ab8",
+  "#8ab6ff",
+];
 
 const PRINCIPLES = [
   {
@@ -59,13 +82,114 @@ const at = (seconds: number, distance?: number) =>
     ...(distance ? { "--dist": `${distance}px` } : {}),
   }) as CSSProperties;
 
+const letters = (text: string, line: number) => {
+  let n = 0;
+
+  return text.split(" ").map((word, w, all) => (
+    <span key={w}>
+      <span className={styles.word}>
+        {word.split("").map((letter) => {
+          const i = n++;
+
+          return (
+            <span
+              key={i}
+              aria-hidden="true"
+              className={styles.letter}
+              style={
+                {
+                  "--i": i,
+                  "--l": line,
+                  "--tone": TITLE_TONES[i % TITLE_TONES.length],
+                } as CSSProperties
+              }
+            >
+              {letter}
+            </span>
+          );
+        })}
+      </span>
+      {w < all.length - 1 ? " " : ""}
+    </span>
+  ));
+};
+
 export default function About() {
   const revealRef = useReveal<HTMLElement>(0.15);
+  const tabsRef = useRef<HTMLDivElement>(null);
+  const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const [field, setField] = useState<Field>("What it is");
   const [swapDir, setSwapDir] = useState<"fwd" | "back">("fwd");
   const [touched, setTouched] = useState(false);
   const isCode = field === "Example";
   const [blockCopied, setBlockCopied] = useState(false);
+
+  useEffect(() => {
+    const el = revealRef.current;
+    if (!el) return;
+
+    let frame = 0;
+
+    const update = () => {
+      frame = 0;
+      const y = window.scrollY;
+      const vh = window.innerHeight;
+      const max = Math.max(1, el.offsetHeight - vh);
+
+      el.style.setProperty("--hp", Math.min(1, y / vh).toFixed(4));
+      el.style.setProperty("--pp", Math.min(1, y / max).toFixed(4));
+    };
+
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(update);
+    };
+
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      if (frame) cancelAnimationFrame(frame);
+    };
+  }, [revealRef]);
+
+  useEffect(() => {
+    const tabs = tabsRef.current;
+    const el = tabRefs.current[ORDER.indexOf(field)];
+    if (!tabs || !el) return;
+
+    const place = (snap: boolean) => {
+      if (snap) tabs.style.setProperty("--pt", "0s");
+
+      tabs.style.setProperty("--tx", `${el.offsetLeft}px`);
+      tabs.style.setProperty("--ty", `${el.offsetTop}px`);
+      tabs.style.setProperty("--tw", `${el.offsetWidth}px`);
+      tabs.style.setProperty("--th", `${el.offsetHeight}px`);
+      tabs.style.setProperty("--to", "1");
+
+      if (snap) {
+        requestAnimationFrame(() =>
+          requestAnimationFrame(() => tabs.style.removeProperty("--pt")),
+        );
+      }
+    };
+
+    place(tabs.style.getPropertyValue("--to") !== "1");
+
+    const onResize = () => place(true);
+    window.addEventListener("resize", onResize);
+    document.fonts?.ready.then(onResize);
+
+    return () => window.removeEventListener("resize", onResize);
+  }, [field]);
+
+  const trackPointer = (e: MouseEvent<HTMLElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    e.currentTarget.style.setProperty("--mx", `${e.clientX - rect.left}px`);
+    e.currentTarget.style.setProperty("--my", `${e.clientY - rect.top}px`);
+  };
 
   const selectField = (f: Field) => {
     if (f === field) return;
@@ -84,37 +208,53 @@ export default function About() {
 
   return (
     <main ref={revealRef} className={styles.page}>
+      <span className={`${styles.decor} ${styles.d1}`} aria-hidden="true" />
+      <span className={`${styles.decor} ${styles.d2}`} aria-hidden="true" />
+      <span className={`${styles.decor} ${styles.d3}`} aria-hidden="true" />
+
       <section className={styles.hero}>
         <aside className={styles.rail}>
           <span className={styles.railName}>ABOUT</span>
         </aside>
 
-        <div className={styles.heroMain}>
+        <div className={styles.heroMain} onMouseMove={trackPointer}>
           <div className={styles.orb} />
 
           <div className={styles.heroInner}>
-            <h1 className={styles.title}>
+            <h1
+              className={styles.title}
+              aria-label="Docs are for learning. Syntaxly is for remembering."
+            >
               <span className={styles.line}>
-                <span style={{ animationDelay: "0.2s" }}>
-                  Docs are for learning.
-                </span>
+                {letters("Docs are for learning.", 0)}
               </span>
 
               <span className={styles.line}>
-                <span style={{ animationDelay: "0.32s" }}>Syntaxly is for</span>
+                {letters("Syntaxly is for", 1)}
               </span>
 
               <span className={styles.line}>
-                <span style={{ animationDelay: "0.44s" }}>
-                  <em className={styles.highlighted}>remembering.</em>
+                <em className={styles.highlighted}>
+                  {letters("remembering.", 2)}
+                </em>
+                <span className={styles.sticker} aria-hidden="true">
+                  not a tutorial
                 </span>
               </span>
             </h1>
 
             <div className={styles.heroFoot}>
               <p className={styles.lead}>
-                A cheatsheet for the moment you know exactly what you want to
-                write and can&apos;t recall how it&apos;s spelled.
+                {LEAD.split(" ").map((word, i) => (
+                  <span key={i}>
+                    <span
+                      className={styles.leadWord}
+                      style={{ "--i": i } as CSSProperties}
+                    >
+                      {word}
+                    </span>{" "}
+                  </span>
+                ))}
               </p>
 
               <Link
@@ -177,7 +317,13 @@ export default function About() {
               key={p.title}
               className={styles.row}
               data-reveal
-              style={at(index * 0.12)}
+              style={
+                {
+                  ...at(index * 0.12),
+                  "--tone": TONES[index % TONES.length],
+                } as CSSProperties
+              }
+              onMouseMove={trackPointer}
             >
               <div className={styles.rowIcon}>{p.icon}</div>
               <h3 className={styles.rowTitle}>{p.title}</h3>
@@ -211,7 +357,11 @@ export default function About() {
             data-reveal
             style={at(0.2, 40)}
           >
-            <div className={styles.miniBlock}>
+            <div
+              className={`${styles.miniBlock} ${
+                blockCopied ? styles.miniBlockOn : ""
+              }`}
+            >
               <div className={styles.miniTitle}>useEffect</div>
 
               <button
@@ -247,10 +397,15 @@ export default function About() {
           data-reveal
           style={at(0.1, 36)}
         >
-          <div className={styles.tabs} role="tablist">
+          <div ref={tabsRef} className={styles.tabs} role="tablist">
+            <span className={styles.tabPill} aria-hidden="true" />
+
             {ORDER.map((f, i) => (
               <button
                 key={f}
+                ref={(node) => {
+                  tabRefs.current[i] = node;
+                }}
                 role="tab"
                 aria-selected={field === f}
                 onClick={() => selectField(f)}
@@ -281,22 +436,51 @@ export default function About() {
             )}
           </div>
 
-          <div className={styles.panelFoot}>useEffect · React</div>
+          <div className={styles.panelFoot}>
+            <span>useEffect · React</span>
+
+            <span
+              className={`${styles.hint} ${touched ? styles.hintGone : ""}`}
+              aria-hidden="true"
+            >
+              try the tabs
+            </span>
+          </div>
         </div>
       </section>
 
       <section className={styles.stats}>
-        {STATS.map((s, index) => (
-          <div
-            key={s.label}
-            className={styles.stat}
-            data-reveal
-            style={at(index * 0.12)}
-          >
-            <span className={styles.statValue}>{s.value}</span>
-            <span className={styles.statLabel}>{s.label}</span>
-          </div>
-        ))}
+        {STATS.map((s, index) => {
+          const n = parseInt(s.value, 10);
+          const suffix = s.value.replace(/\d+/, "");
+
+          return (
+            <div
+              key={s.label}
+              className={styles.stat}
+              data-reveal
+              style={at(index * 0.12)}
+            >
+              <span className={styles.statValue} aria-label={s.value}>
+                <span
+                  className={styles.odo}
+                  aria-hidden="true"
+                  style={{ "--n": n } as CSSProperties}
+                >
+                  <span className={styles.odoCol}>
+                    {Array.from({ length: 10 }, (_, d) => (
+                      <span key={d}>{d}</span>
+                    ))}
+                  </span>
+                </span>
+
+                {suffix && <span aria-hidden="true">{suffix}</span>}
+              </span>
+
+              <span className={styles.statLabel}>{s.label}</span>
+            </div>
+          );
+        })}
       </section>
 
       <section className={styles.maker}>
@@ -320,6 +504,21 @@ export default function About() {
       </section>
 
       <section className={styles.cta}>
+        <svg
+          className={`${styles.spark} ${styles.s1}`}
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <path d="M12 0C13 8 16 11 24 12C16 13 13 16 12 24C11 16 8 13 0 12C8 11 11 8 12 0Z" />
+        </svg>
+        <svg
+          className={`${styles.spark} ${styles.s2}`}
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <path d="M12 0C13 8 16 11 24 12C16 13 13 16 12 24C11 16 8 13 0 12C8 11 11 8 12 0Z" />
+        </svg>
+
         <h2 className={styles.ctaTitle} data-reveal>
           <span className={styles.mask}>
             <span className={styles.maskIn}>Stop scrolling docs.</span>
@@ -328,7 +527,7 @@ export default function About() {
 
         <div className={styles.buttons}>
           <Link
-            href="/syntaxs"
+            href="/syntax"
             className={`${styles.button} ${styles.primaryButton} ${styles.reveal} ${styles.wipe} ${styles.right}`}
             data-reveal
             style={at(0.4)}

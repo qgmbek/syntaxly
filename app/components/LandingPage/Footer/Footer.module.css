@@ -265,7 +265,7 @@
 @media (hover: hover) {
   .letter:hover {
     color: var(--tone, #fff);
-    -webkit-text-stroke-width: 6px;
+    -webkit-text-stroke-width: 0.04em;
     paint-order: stroke fill;
     translate: 0 -34px;
     rotate: calc(var(--dir, 1) * 5deg);

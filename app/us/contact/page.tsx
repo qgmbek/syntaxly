@@ -5,6 +5,7 @@ import {
   useRef,
   useState,
   type CSSProperties,
+  type MouseEvent,
   type ReactNode,
 } from "react";
 
@@ -25,6 +26,7 @@ type Item = {
   label: string;
   value: string;
   icon: ReactNode;
+  tone: string;
   href?: string;
 };
 
@@ -34,6 +36,7 @@ const ITEMS: Item[] = [
     label: "GitHub",
     value: "github.com",
     icon: <GithubLogo size={34} weight="regular" />,
+    tone: "var(--primary)",
     href: "https://github.com",
   },
   {
@@ -41,21 +44,39 @@ const ITEMS: Item[] = [
     label: "Email",
     value: "hogambek011@gmail.com",
     icon: <EnvelopeSimple size={34} weight="regular" />,
+    tone: "#ffd84d",
   },
   {
     id: "discord",
     label: "Discord",
     value: "@",
     icon: <DiscordLogo size={34} weight="regular" />,
+    tone: "#8ab6ff",
   },
   {
     id: "tiktok",
     label: "TikTok",
     value: "@",
     icon: <TiktokLogo size={34} weight="regular" />,
+    tone: "#ff7ab8",
     href: "https://www.tiktok.com",
   },
 ];
+
+const TONES = [
+  "#ffd84d",
+  "#ff7ab8",
+  "#8ab6ff",
+  "#ff9a5c",
+  "#b5f23d",
+  "#ffffff",
+  "#ffd84d",
+  "#ff7ab8",
+  "#8ab6ff",
+];
+
+const LEAD =
+  "Questions, ideas, or a bug in Syntaxly. Pick whichever channel is easiest for you.";
 
 const letters = (text: string, start: number) =>
   text.split("").map((letter, i) => (
@@ -63,7 +84,12 @@ const letters = (text: string, start: number) =>
       key={i}
       aria-hidden="true"
       className={styles.letter}
-      style={{ "--i": start + i } as CSSProperties}
+      style={
+        {
+          "--i": start + i,
+          "--tone": TONES[(start + i) % TONES.length],
+        } as CSSProperties
+      }
     >
       {letter}
     </span>
@@ -78,6 +104,28 @@ export default function Contact() {
       if (timer.current) clearTimeout(timer.current);
     };
   }, []);
+
+  const trackPointer = (e: MouseEvent<HTMLElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    e.currentTarget.style.setProperty("--mx", `${x}px`);
+    e.currentTarget.style.setProperty("--my", `${y}px`);
+    e.currentTarget.style.setProperty(
+      "--px",
+      ((x / rect.width - 0.5) * 2).toFixed(3),
+    );
+    e.currentTarget.style.setProperty(
+      "--py",
+      ((y / rect.height - 0.5) * 2).toFixed(3),
+    );
+  };
+
+  const resetPointer = (e: MouseEvent<HTMLElement>) => {
+    e.currentTarget.style.setProperty("--px", "0");
+    e.currentTarget.style.setProperty("--py", "0");
+  };
 
   const copy = async (item: Item) => {
     try {
@@ -111,6 +159,13 @@ export default function Contact() {
           </span>
         </span>
 
+        <span
+          className={`${styles.tag} ${done ? styles.tagOn : ""}`}
+          aria-hidden="true"
+        >
+          {item.href ? "open" : done ? "got it" : "copy"}
+        </span>
+
         <span className={styles.tileBottom}>
           <span className={styles.label}>{done ? "Copied" : item.label}</span>
 
@@ -126,20 +181,39 @@ export default function Contact() {
         <span className={styles.railName}>CONTACT</span>
       </aside>
 
-      <div className={styles.main}>
+      <div
+        className={styles.main}
+        onMouseMove={trackPointer}
+        onMouseLeave={resetPointer}
+      >
         <div className={styles.orb} />
+
+        <span className={`${styles.decor} ${styles.d1}`} aria-hidden="true" />
+        <span className={`${styles.decor} ${styles.d2}`} aria-hidden="true" />
+        <span className={`${styles.decor} ${styles.d3}`} aria-hidden="true" />
 
         <div className={styles.intro}>
           <h1 className={styles.title} aria-label="Say hello.">
             <span className={styles.line}>
               {letters("Say", 0)}{" "}
               <em className={styles.highlighted}>{letters("hello.", 3)}</em>
+              <span className={styles.sticker} aria-hidden="true">
+                one human reads these
+              </span>
             </span>
           </h1>
 
           <p className={styles.lead}>
-            Questions, ideas, or a bug in Syntaxly. Pick whichever channel is
-            easiest for you.
+            {LEAD.split(" ").map((word, i) => (
+              <span key={i}>
+                <span
+                  className={styles.leadWord}
+                  style={{ "--i": i } as CSSProperties}
+                >
+                  {word}
+                </span>{" "}
+              </span>
+            ))}
           </p>
         </div>
 
@@ -152,7 +226,7 @@ export default function Contact() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className={styles.tile}
-                style={{ "--i": index } as CSSProperties}
+                style={{ "--i": index, "--tone": item.tone } as CSSProperties}
                 aria-label={`${item.label}: ${item.value}`}
               >
                 {body(item)}
@@ -163,7 +237,7 @@ export default function Contact() {
                 type="button"
                 onClick={() => copy(item)}
                 className={styles.tile}
-                style={{ "--i": index } as CSSProperties}
+                style={{ "--i": index, "--tone": item.tone } as CSSProperties}
                 aria-label={`Copy ${item.label}: ${item.value}`}
               >
                 {body(item)}

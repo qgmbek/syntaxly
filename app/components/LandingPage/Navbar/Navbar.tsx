@@ -1,6 +1,13 @@
 "use client";
 
-import { useEffect, useState, type ReactNode } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+  type MouseEvent,
+  type ReactNode,
+} from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -90,10 +97,35 @@ const LINKS = [
 
 export default function Navbar() {
   const pathname = usePathname();
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const navRef = useRef<HTMLElement>(null);
 
   const [menu, setMenu] = useState<MenuKey | null>(null);
   const [shown, setShown] = useState<MenuKey>("features");
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [hidden, setHidden] = useState(false);
+
+  const placePill = (el: HTMLElement) => {
+    const nav = navRef.current;
+    if (!nav) return;
+
+    const wasHidden = nav.style.getPropertyValue("--po") !== "1";
+
+    if (wasHidden) nav.style.setProperty("--pt", "0s");
+
+    nav.style.setProperty("--px", `${el.offsetLeft}px`);
+    nav.style.setProperty("--pw", `${el.offsetWidth}px`);
+    nav.style.setProperty("--po", "1");
+
+    if (wasHidden) {
+      requestAnimationFrame(() =>
+        requestAnimationFrame(() => nav.style.removeProperty("--pt")),
+      );
+    }
+  };
+
+  const hidePill = () => navRef.current?.style.setProperty("--po", "0");
 
   const open = (key: MenuKey) => {
     setShown(key);
@@ -103,6 +135,13 @@ export default function Navbar() {
   const closeMenus = () => {
     setMenu(null);
     setMobileOpen(false);
+    hidePill();
+  };
+
+  const trackItem = (e: MouseEvent<HTMLAnchorElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    e.currentTarget.style.setProperty("--mx", `${e.clientX - rect.left}px`);
+    e.currentTarget.style.setProperty("--my", `${e.clientY - rect.top}px`);
   };
 
   useEffect(() => {
@@ -121,8 +160,78 @@ export default function Navbar() {
     return () => window.removeEventListener("keydown", onKeyDown);
   }, []);
 
+  useEffect(() => {
+    const wrap = wrapRef.current;
+    if (!wrap) return;
+
+    const reduce = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+
+    let frame = 0;
+    let lastY = window.scrollY;
+
+    const update = () => {
+      frame = 0;
+      const y = window.scrollY;
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+
+      wrap.style.setProperty(
+        "--prog",
+        max > 0 ? Math.min(1, Math.max(0, y / max)).toFixed(4) : "0",
+      );
+
+      setScrolled(y > 24);
+
+      if (Math.abs(y - lastY) > 6) {
+        if (!reduce) setHidden(y > 240 && y > lastY);
+        lastY = y;
+      }
+    };
+
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(update);
+    };
+
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (frame) cancelAnimationFrame(frame);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!mobileOpen) return;
+
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = previous;
+    };
+  }, [mobileOpen]);
+
+  const tucked = hidden && !menu && !mobileOpen;
+
   return (
-    <div className={styles.headerWrapper} onMouseLeave={() => setMenu(null)}>
+    <div
+      ref={wrapRef}
+      className={`${styles.headerWrapper} ${scrolled ? styles.scrolled : ""} ${
+        tucked ? styles.tucked : ""
+      }`}
+      onMouseLeave={() => {
+        setMenu(null);
+        hidePill();
+      }}
+      onFocusCapture={() => setHidden(false)}
+    >
+      <div
+        className={`${styles.scrim} ${menu ? styles.scrimOn : ""}`}
+        aria-hidden="true"
+      />
+
       <header className={styles.navbar}>
         <Link
           href="/"
@@ -136,12 +245,24 @@ export default function Navbar() {
           <span className={styles.logoText}>syntaxly</span>
         </Link>
 
-        <nav className={styles.centerNav} aria-label="Main navigation">
+        <nav
+          ref={navRef}
+          className={styles.centerNav}
+          aria-label="Main navigation"
+          onMouseLeave={() => {
+            if (!menu) hidePill();
+          }}
+        >
+          <span className={styles.pill} aria-hidden="true" />
+
           {(Object.keys(MENUS) as MenuKey[]).map((key) => (
             <div
               key={key}
               className={styles.navItem}
-              onMouseEnter={() => open(key)}
+              onMouseEnter={(e) => {
+                open(key);
+                placePill(e.currentTarget);
+              }}
             >
               <button
                 type="button"
@@ -151,7 +272,12 @@ export default function Navbar() {
                 aria-expanded={menu === key}
                 aria-haspopup="true"
                 onClick={() => (menu === key ? setMenu(null) : open(key))}
-                onFocus={() => open(key)}
+                onFocus={(e) => {
+                  open(key);
+                  if (e.currentTarget.parentElement) {
+                    placePill(e.currentTarget.parentElement);
+                  }
+                }}
               >
                 {MENUS[key].label}
 
@@ -171,7 +297,10 @@ export default function Navbar() {
             <div
               key={link.href}
               className={styles.navItem}
-              onMouseEnter={() => setMenu(null)}
+              onMouseEnter={(e) => {
+                setMenu(null);
+                placePill(e.currentTarget);
+              }}
             >
               <Link
                 href={link.href}
@@ -212,6 +341,8 @@ export default function Navbar() {
             {mobileOpen ? <X size={24} /> : <List size={24} />}
           </button>
         </div>
+
+        <span className={styles.progress} aria-hidden="true" />
       </header>
 
       <div
@@ -225,13 +356,10 @@ export default function Navbar() {
               key={item.title}
               href={item.href}
               className={styles.item}
-              style={
-                {
-                  "--item-index": index,
-                } as React.CSSProperties
-              }
+              style={{ "--item-index": index } as CSSProperties}
               tabIndex={menu ? 0 : -1}
               onClick={closeMenus}
+              onMouseMove={trackItem}
             >
               <span className={styles.itemIcon} aria-hidden="true">
                 {item.icon}
@@ -267,11 +395,7 @@ export default function Navbar() {
                 key={`${key}-${item.title}`}
                 href={item.href}
                 className={styles.mobileLink}
-                style={
-                  {
-                    "--item-index": index,
-                  } as React.CSSProperties
-                }
+                style={{ "--item-index": index } as CSSProperties}
                 onClick={closeMenus}
               >
                 <span>{item.title}</span>

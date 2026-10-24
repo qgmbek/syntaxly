@@ -207,6 +207,9 @@
 .rotator {
   display: inline-grid;
   justify-items: center;
+  overflow: hidden;
+  padding: 0.06em 0 0.14em;
+  margin: -0.06em 0 -0.14em;
 }
 
 .rotWord {
@@ -255,24 +258,35 @@
   text-align: center;
   translate: 0 calc(var(--e) * -50px);
   clip-path: inset(-10% -10% -10% calc(var(--e) * 105%));
+}
 
+.sWord {
+  display: inline-block;
   opacity: 0;
 }
 
-.mounted .subtitle {
-  animation: subtitleReveal 1000ms var(--hero-ease) 650ms forwards;
+.mounted .sWord {
+  opacity: 1;
+  animation: subWordEnter 1100ms var(--hero-ease)
+    calc(650ms + var(--i, 0) * 28ms) backwards;
 }
 
-@keyframes subtitleReveal {
-  from {
+@keyframes subWordEnter {
+  0% {
     opacity: 0;
-    filter: blur(8px);
-    transform: translate3d(0, 10px, 0);
+    transform: translate3d(0, 80px, 0);
   }
 
-  to {
+  15% {
     opacity: 1;
-    filter: blur(0);
+  }
+
+  72% {
+    transform: translate3d(0, -4px, 0);
+  }
+
+  100% {
+    opacity: 1;
     transform: translate3d(0, 0, 0);
   }
 }
@@ -285,7 +299,7 @@
   gap: 14px;
   scale: calc(1 - var(--e) * 0.3);
   translate: 0 calc(var(--e) * -80px);
-  clip-path: inset(-10% -10% calc(var(--e) * 120%) -10%);
+  clip-path: inset(-40% -10% calc(-40% + var(--e) * 160%) -10%);
 }
 
 .button {
@@ -363,13 +377,35 @@
 }
 
 .getButton {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border-color: #080808;
   background-color: #080808;
   color: #fff;
 }
 
+.getButton::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  z-index: -1;
+  background: var(--primary);
+  border-radius: 50% 50% 0 0 / 45% 45% 0 0;
+  transform: translateY(101%);
+  transition:
+    transform 480ms var(--hero-ease),
+    border-radius 480ms var(--hero-ease);
+}
+
 .getButton:hover {
-  background-color: #242424;
-  transform: translateY(-3px);
+  transform: translateY(-2px);
+  color: #080808;
+}
+
+.getButton:hover::before {
+  border-radius: 0;
+  transform: translateY(0);
 }
 
 .buttonArrow {
@@ -683,7 +719,7 @@
   .mounted .overlayCell,
   .mounted .word,
   .mounted .highlighted,
-  .mounted .subtitle,
+  .mounted .sWord,
   .mounted .card,
   .mounted .getButton,
   .mounted .learnButton,
@@ -743,9 +779,8 @@
     background-size: 100% 100%;
   }
 
-  .subtitle {
+  .sWord {
     opacity: 1;
-    transform: none;
   }
 
   .button {
@@ -755,6 +790,7 @@
   .button,
   .buttonArrow,
   .learnButton::before,
+  .getButton::before,
   .cardBlock {
     transition: none;
   }

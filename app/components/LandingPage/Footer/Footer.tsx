@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect, CSSProperties } from "react";
+import { useState, useRef, useEffect, MouseEvent, CSSProperties } from "react";
 import Link from "next/link";
 import styles from "./Footer.module.css";
 
@@ -12,12 +12,14 @@ type FooterLink = {
 
 type FooterColumn = {
   title: string;
+  tone: string;
   links: FooterLink[];
 };
 
 const columns: FooterColumn[] = [
   {
     title: "Product",
+    tone: "#ff7ab8",
     links: [
       { label: "Open Syntaxly", href: "/syntax" },
       { label: "How it works", href: "/us/how-it-works" },
@@ -27,6 +29,7 @@ const columns: FooterColumn[] = [
   },
   {
     title: "Company",
+    tone: "#ffd84d",
     links: [
       { label: "About", href: "/us/about" },
       { label: "Roadmap", href: "/us/roadmap" },
@@ -36,6 +39,7 @@ const columns: FooterColumn[] = [
   },
   {
     title: "Resources",
+    tone: "#8ab6ff",
     links: [
       { label: "Download", href: "/us/download" },
       { label: "Terms of Use", href: "/us/terms" },
@@ -45,6 +49,7 @@ const columns: FooterColumn[] = [
   },
   {
     title: "Connect",
+    tone: "#ff9a5c",
     links: [
       { label: "GitHub", href: "https://github.com/", external: true },
       { label: "TikTok", href: "https://www.tiktok.com/", external: true },
@@ -55,6 +60,17 @@ const columns: FooterColumn[] = [
 ];
 
 const WORDMARK = "Syntaxly";
+
+const TONES = [
+  "#ffd84d",
+  "#ff7ab8",
+  "#8ab6ff",
+  "#ff9a5c",
+  "#b5f23d",
+  "#ffffff",
+  "#ffd84d",
+  "#ff7ab8",
+];
 
 export default function Footer() {
   const footerRef = useRef<HTMLElement>(null);
@@ -95,12 +111,21 @@ export default function Footer() {
     };
   }, []);
 
+  const trackPointer = (e: MouseEvent<HTMLElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    e.currentTarget.style.setProperty("--mx", `${e.clientX - rect.left}px`);
+    e.currentTarget.style.setProperty("--my", `${e.clientY - rect.top}px`);
+  };
+
   return (
     <footer
       ref={footerRef}
       className={styles.footer}
+      onMouseMove={trackPointer}
       {...(shown ? { "data-in": "" } : {})}
     >
+      <div className={styles.glow} aria-hidden="true" />
+
       <div className={styles.top}>
         <div className={styles.brandSection}>
           <div className={styles.logoWrapper}>
@@ -114,7 +139,7 @@ export default function Footer() {
             <div
               key={column.title}
               className={styles.column}
-              style={{ "--col": col } as CSSProperties}
+              style={{ "--col": col, "--tone": column.tone } as CSSProperties}
             >
               <div className={styles.heading}>{column.title}</div>
 
@@ -131,6 +156,11 @@ export default function Footer() {
                       : {})}
                   >
                     {link.label}
+                    {link.external && (
+                      <span className={styles.ext} aria-hidden="true">
+                        ↗
+                      </span>
+                    )}
                   </a>
                 ) : (
                   <Link key={link.label} style={style} href={link.href}>
@@ -146,13 +176,45 @@ export default function Footer() {
       <div className={styles.bottom}>
         <p className={styles.copyright}>Syntaxly. All rights reserved.</p>
 
+        <button
+          type="button"
+          className={styles.toTop}
+          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+        >
+          Back to top
+          <span className={styles.toTopArrow} aria-hidden="true">
+            ↑
+          </span>
+        </button>
+
+        <svg
+          className={`${styles.spark} ${styles.s1}`}
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <path d="M12 0C13 8 16 11 24 12C16 13 13 16 12 24C11 16 8 13 0 12C8 11 11 8 12 0Z" />
+        </svg>
+        <svg
+          className={`${styles.spark} ${styles.s2}`}
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <path d="M12 0C13 8 16 11 24 12C16 13 13 16 12 24C11 16 8 13 0 12C8 11 11 8 12 0Z" />
+        </svg>
+
         <h1 className={styles.bigText} aria-label={WORDMARK}>
           {WORDMARK.split("").map((letter, index) => (
             <span
               key={index}
               aria-hidden="true"
               className={styles.letter}
-              style={{ "--i": index } as CSSProperties}
+              style={
+                {
+                  "--i": index,
+                  "--tone": TONES[index % TONES.length],
+                  "--dir": index % 2 === 0 ? -1 : 1,
+                } as CSSProperties
+              }
             >
               {letter}
             </span>

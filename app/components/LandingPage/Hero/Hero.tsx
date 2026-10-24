@@ -8,6 +8,9 @@ const MAGNET_REACH = 90;
 
 const WORDS = ["programming.", "JavaScript.", "TypeScript.", "React."];
 
+const SUBTITLE =
+  "Browse every syntax at a glance, organized into blocks by topic. Click any one to see a quick refresher: definition, usage, example, and tips.";
+
 type Kind = "kw" | "fn" | "pa" | "nm" | "pl";
 type Token = [string, Kind];
 
@@ -555,9 +558,16 @@ export default function Hero() {
         </h1>
 
         <p className={styles.subtitle}>
-          Browse every syntax at a glance, organized into blocks by topic. Click
-          any one to see a quick refresher: definition, usage, example, and
-          tips.
+          {SUBTITLE.split(" ").map((word, i) => (
+            <span key={i}>
+              <span
+                className={styles.sWord}
+                style={{ "--i": i } as React.CSSProperties}
+              >
+                {word}
+              </span>{" "}
+            </span>
+          ))}
         </p>
 
         <div className={styles.buttonContainer}>

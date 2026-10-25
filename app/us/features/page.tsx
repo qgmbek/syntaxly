@@ -6,6 +6,7 @@ import {
   useState,
   type CSSProperties,
   type KeyboardEvent,
+  type MouseEvent,
 } from "react";
 import Link from "next/link";
 import {
@@ -96,11 +97,73 @@ const SMALL = [
   ["Esc clears it", "Close overlays, deselect, start over."],
 ];
 
+const LEAD =
+  "Syntaxly does a handful of things and does them quickly. Every demo below is live, so poke at them.";
+
+const TITLE_TONES = [
+  "#ffd84d",
+  "#ff7ab8",
+  "#8ab6ff",
+  "#ff9a5c",
+  "#b5f23d",
+  "#ffffff",
+  "#ffd84d",
+  "#ff7ab8",
+  "#8ab6ff",
+];
+
+const TILE_TONES = [
+  "var(--primary)",
+  "#ffd84d",
+  "#ff7ab8",
+  "#8ab6ff",
+  "#ff9a5c",
+  "#b5f23d",
+];
+
 const at = (seconds: number, distance?: number) =>
   ({
     "--delay": `${seconds}s`,
     ...(distance ? { "--dist": `${distance}px` } : {}),
   }) as CSSProperties;
+
+const trackPointer = (e: MouseEvent<HTMLElement>) => {
+  const rect = e.currentTarget.getBoundingClientRect();
+  e.currentTarget.style.setProperty("--mx", `${e.clientX - rect.left}px`);
+  e.currentTarget.style.setProperty("--my", `${e.clientY - rect.top}px`);
+};
+
+const letters = (text: string, line: number, start = 0) => {
+  let n = start;
+
+  return text.split(" ").map((word, w, all) => (
+    <span key={w}>
+      <span className={styles.word}>
+        {word.split("").map((letter) => {
+          const i = n++;
+
+          return (
+            <span
+              key={i}
+              aria-hidden="true"
+              className={styles.letter}
+              style={
+                {
+                  "--i": i,
+                  "--l": line,
+                  "--tone": TITLE_TONES[i % TITLE_TONES.length],
+                } as CSSProperties
+              }
+            >
+              {letter}
+            </span>
+          );
+        })}
+      </span>
+      {w < all.length - 1 ? " " : ""}
+    </span>
+  ));
+};
 
 function Hl({ text, q }: { text: string; q: string }) {
   const i = q ? text.toLowerCase().indexOf(q) : -1;
@@ -169,6 +232,7 @@ function Card({
       className={`${styles.card} ${styles.reveal} ${styles[type]} ${styles[dir]} ${span}`}
       data-reveal
       style={at(delay, distance)}
+      onMouseMove={trackPointer}
     >
       <div className={styles.glow} />
 
@@ -550,33 +614,76 @@ export default function Features() {
     return () => io.disconnect();
   }, []);
 
+  useEffect(() => {
+    const el = root.current;
+    if (!el) return;
+
+    let frame = 0;
+
+    const update = () => {
+      frame = 0;
+      const y = window.scrollY;
+      const vh = window.innerHeight;
+      const max = Math.max(1, el.offsetHeight - vh);
+
+      el.style.setProperty("--hp", Math.min(1, y / vh).toFixed(4));
+      el.style.setProperty("--pp", Math.min(1, y / max).toFixed(4));
+    };
+
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(update);
+    };
+
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      if (frame) cancelAnimationFrame(frame);
+    };
+  }, []);
+
   return (
     <main className={styles.page} ref={root}>
+      <span className={`${styles.decor} ${styles.d1}`} aria-hidden="true" />
+      <span className={`${styles.decor} ${styles.d2}`} aria-hidden="true" />
+      <span className={`${styles.decor} ${styles.d3}`} aria-hidden="true" />
+
       <section className={styles.hero}>
         <aside className={styles.rail}>
           <span className={styles.railName}>FEATURES</span>
         </aside>
 
-        <div className={styles.heroMain}>
+        <div className={styles.heroMain} onMouseMove={trackPointer}>
           <div className={styles.orb} />
 
           <div className={styles.heroInner}>
-            <h1 className={styles.title}>
-              <span className={styles.line}>
-                <span style={{ animationDelay: "0.2s" }}>Few features.</span>
-              </span>
+            <h1 className={styles.title} aria-label="Few features. All sharp.">
+              <span className={styles.line}>{letters("Few features.", 0)}</span>
 
               <span className={styles.line}>
-                <span style={{ animationDelay: "0.34s" }}>
-                  All <em className={styles.hl}>sharp.</em>
+                {letters("All", 1)}{" "}
+                <em className={styles.hl}>{letters("sharp.", 1, 4)}</em>
+                <span className={styles.sticker} aria-hidden="true">
+                  all demos are live
                 </span>
               </span>
             </h1>
 
             <div className={styles.heroFoot}>
               <p className={styles.lead}>
-                Syntaxly does a handful of things and does them quickly. Every
-                demo below is live, so poke at them.
+                {LEAD.split(" ").map((word, i) => (
+                  <span key={i}>
+                    <span
+                      className={styles.leadWord}
+                      style={{ "--i": i } as CSSProperties}
+                    >
+                      {word}
+                    </span>{" "}
+                  </span>
+                ))}
               </p>
 
               <a
@@ -679,7 +786,12 @@ export default function Features() {
               key={t}
               className={`${styles.tile} ${styles.reveal} ${styles.wipe} ${styles.right}`}
               data-reveal
-              style={at(((i % 3) + Math.floor(i / 3)) * 0.08)}
+              style={
+                {
+                  ...at(((i % 3) + Math.floor(i / 3)) * 0.08),
+                  "--tone": TILE_TONES[i % TILE_TONES.length],
+                } as CSSProperties
+              }
             >
               <span className={styles.fill} />
               <span className={styles.tileNum}>
@@ -696,6 +808,21 @@ export default function Features() {
       </section>
 
       <section className={styles.cta}>
+        <svg
+          className={`${styles.spark} ${styles.s1}`}
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <path d="M12 0C13 8 16 11 24 12C16 13 13 16 12 24C11 16 8 13 0 12C8 11 11 8 12 0Z" />
+        </svg>
+        <svg
+          className={`${styles.spark} ${styles.sp2}`}
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <path d="M12 0C13 8 16 11 24 12C16 13 13 16 12 24C11 16 8 13 0 12C8 11 11 8 12 0Z" />
+        </svg>
+
         <h2 className={styles.ctaTitle} data-reveal>
           <span className={styles.mask}>
             <span className={styles.maskIn}>See them where they live.</span>

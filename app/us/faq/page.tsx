@@ -6,6 +6,7 @@ import {
   useRef,
   useState,
   type CSSProperties,
+  type MouseEvent,
 } from "react";
 import { MagnifyingGlass, Plus, ArrowUpRight, X } from "@phosphor-icons/react";
 import styles from "./Faq.module.css";
@@ -121,7 +122,63 @@ const ITEMS: Item[] = [
   },
 ];
 
+const LEAD =
+  "The short version of everything people ask about Syntaxly. Search, or pick a column.";
+
+const TITLE_TONES = [
+  "#ffd84d",
+  "#ff7ab8",
+  "#8ab6ff",
+  "#ff9a5c",
+  "#b5f23d",
+  "#ffffff",
+  "#ffd84d",
+  "#ff7ab8",
+  "#8ab6ff",
+  "#ff9a5c",
+];
+
+const ROW_TONES = ["#ffd84d", "#ff7ab8", "#8ab6ff"];
+
 const at = (seconds: number) => ({ "--delay": `${seconds}s` }) as CSSProperties;
+
+const trackPointer = (e: MouseEvent<HTMLElement>) => {
+  const rect = e.currentTarget.getBoundingClientRect();
+  e.currentTarget.style.setProperty("--mx", `${e.clientX - rect.left}px`);
+  e.currentTarget.style.setProperty("--my", `${e.clientY - rect.top}px`);
+};
+
+const letters = (text: string, line: number) => {
+  let n = 0;
+
+  return text.split(" ").map((word, w, all) => (
+    <span key={w}>
+      <span className={styles.word}>
+        {word.split("").map((letter) => {
+          const i = n++;
+
+          return (
+            <span
+              key={i}
+              aria-hidden="true"
+              className={styles.letter}
+              style={
+                {
+                  "--i": i,
+                  "--l": line,
+                  "--tone": TITLE_TONES[i % TITLE_TONES.length],
+                } as CSSProperties
+              }
+            >
+              {letter}
+            </span>
+          );
+        })}
+      </span>
+      {w < all.length - 1 ? " " : ""}
+    </span>
+  ));
+};
 
 function Hl({ text, q }: { text: string; q: string }) {
   const i = q ? text.toLowerCase().indexOf(q) : -1;
@@ -160,6 +217,8 @@ export default function Faq() {
   const input = useRef<HTMLInputElement>(null);
   const rootRef = useRef<HTMLElement>(null);
   const ioRef = useRef<IntersectionObserver | null>(null);
+  const chipsRef = useRef<HTMLDivElement>(null);
+  const chipRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
   const q = query.trim().toLowerCase();
 
@@ -236,6 +295,67 @@ export default function Faq() {
     };
   }, []);
 
+  useEffect(() => {
+    const el = rootRef.current;
+    if (!el) return;
+
+    let frame = 0;
+
+    const update = () => {
+      frame = 0;
+      const y = window.scrollY;
+      const vh = window.innerHeight;
+      const max = Math.max(1, el.offsetHeight - vh);
+
+      el.style.setProperty("--hp", Math.min(1, y / vh).toFixed(4));
+      el.style.setProperty("--pp", Math.min(1, y / max).toFixed(4));
+    };
+
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(update);
+    };
+
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      if (frame) cancelAnimationFrame(frame);
+    };
+  }, []);
+
+  useEffect(() => {
+    const wrap = chipsRef.current;
+    const el = chipRefs.current[CATS.indexOf(cat)];
+    if (!wrap || !el) return;
+
+    const place = (snap: boolean) => {
+      if (snap) wrap.style.setProperty("--pt", "0s");
+
+      wrap.style.setProperty("--tx", `${el.offsetLeft}px`);
+      wrap.style.setProperty("--ty", `${el.offsetTop}px`);
+      wrap.style.setProperty("--tw", `${el.offsetWidth}px`);
+      wrap.style.setProperty("--th", `${el.offsetHeight}px`);
+      wrap.style.setProperty("--to", "1");
+
+      if (snap) {
+        requestAnimationFrame(() =>
+          requestAnimationFrame(() => wrap.style.removeProperty("--pt")),
+        );
+      }
+    };
+
+    place(wrap.style.getPropertyValue("--to") !== "1");
+
+    const onResize = () => place(true);
+    window.addEventListener("resize", onResize);
+    document.fonts?.ready.then(onResize);
+
+    return () => window.removeEventListener("resize", onResize);
+  }, [cat]);
+
   const watch = (el: HTMLElement | null) => {
     if (el && ioRef.current && !el.hasAttribute("data-in")) {
       ioRef.current.observe(el);
@@ -244,25 +364,36 @@ export default function Faq() {
 
   return (
     <main className={styles.page} ref={rootRef}>
-      <header className={styles.hero}>
+      <span className={`${styles.decor} ${styles.d1}`} aria-hidden="true" />
+      <span className={`${styles.decor} ${styles.d2}`} aria-hidden="true" />
+      <span className={`${styles.decor} ${styles.d3}`} aria-hidden="true" />
+
+      <header className={styles.hero} onMouseMove={trackPointer}>
         <div className={styles.orb} />
 
         <div className={styles.heroInner}>
-          <h1 className={styles.title}>
-            <span className={styles.line}>
-              <span style={{ animationDelay: "0.2s" }}>Questions,</span>
-            </span>
+          <h1 className={styles.title} aria-label="Questions, answered.">
+            <span className={styles.line}>{letters("Questions,", 0)}</span>
 
             <span className={styles.line}>
-              <span style={{ animationDelay: "0.32s" }}>
-                <em className={styles.hl}>answered.</em>
+              <em className={styles.hl}>{letters("answered.", 1)}</em>
+              <span className={styles.sticker} aria-hidden="true">
+                ask away
               </span>
             </span>
           </h1>
 
           <p className={styles.lead}>
-            The short version of everything people ask about Syntaxly. Search,
-            or pick a column.
+            {LEAD.split(" ").map((word, i) => (
+              <span key={i}>
+                <span
+                  className={styles.leadWord}
+                  style={{ "--i": i } as CSSProperties}
+                >
+                  {word}
+                </span>{" "}
+              </span>
+            ))}
           </p>
         </div>
       </header>
@@ -306,10 +437,15 @@ export default function Faq() {
       </div>
 
       <div className={styles.chips} role="group" aria-label="Filter by topic">
-        <div className={styles.chipsInner}>
+        <div ref={chipsRef} className={styles.chipsInner}>
+          <span className={styles.chipPill} aria-hidden="true" />
+
           {CATS.map((c, ci) => (
             <button
               key={c}
+              ref={(node) => {
+                chipRefs.current[ci] = node;
+              }}
               className={`${styles.chip} ${cat === c ? styles.chipOn : ""}`}
               style={{ "--c": ci } as CSSProperties}
               onClick={() => setCat(c)}
@@ -344,7 +480,13 @@ export default function Faq() {
               ref={watch}
               data-reveal
               className={`${styles.item} ${isOpen ? styles.itemOpen : ""}`}
-              style={{ "--i": Math.min(n, 8) } as CSSProperties}
+              style={
+                {
+                  "--i": Math.min(n, 8),
+                  "--tone": ROW_TONES[n % ROW_TONES.length],
+                } as CSSProperties
+              }
+              onMouseMove={trackPointer}
             >
               <h3 className={styles.h3}>
                 <button
@@ -417,6 +559,21 @@ export default function Faq() {
       </section>
 
       <section className={styles.cta}>
+        <svg
+          className={`${styles.spark} ${styles.s1}`}
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <path d="M12 0C13 8 16 11 24 12C16 13 13 16 12 24C11 16 8 13 0 12C8 11 11 8 12 0Z" />
+        </svg>
+        <svg
+          className={`${styles.spark} ${styles.sp2}`}
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <path d="M12 0C13 8 16 11 24 12C16 13 13 16 12 24C11 16 8 13 0 12C8 11 11 8 12 0Z" />
+        </svg>
+
         <h2 className={styles.ctaTitle} data-reveal>
           <span className={styles.mask}>
             <span className={styles.maskIn}>Still stuck?</span>

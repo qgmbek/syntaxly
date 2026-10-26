@@ -245,6 +245,25 @@
   background-color: #fff;
 }
 
+.heroMain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: radial-gradient(
+    circle 420px at var(--mx, 70%) var(--my, 35%),
+    rgba(0, 255, 208, 0.16),
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.heroMain:hover::after {
+  opacity: 1;
+}
+
 .heroMain::before {
   content: "";
   position: absolute;
@@ -280,9 +299,47 @@
   top: -220px;
   right: -200px;
   pointer-events: none;
+  z-index: 0;
   animation:
     drift 14s ease-in-out infinite,
     kOrbIn 2.4s ease backwards;
+}
+
+.blob {
+  position: absolute;
+  z-index: 0;
+  width: 280px;
+  height: 180px;
+  border-radius: 50%;
+  filter: blur(52px);
+  opacity: 0.18;
+  pointer-events: none;
+  animation: blobDrift 11s ease-in-out infinite;
+}
+
+.blobPink {
+  top: 21%;
+  right: 19%;
+  background: #ff7ab8;
+}
+
+.blobBlue {
+  right: 4%;
+  bottom: 12%;
+  width: 340px;
+  height: 160px;
+  background: #8ab6ff;
+  animation-delay: -4s;
+}
+
+@keyframes blobDrift {
+  0%,
+  100% {
+    transform: translate3d(-8px, -10px, 0) rotate(-8deg);
+  }
+  50% {
+    transform: translate3d(12px, 12px, 0) rotate(6deg);
+  }
 }
 
 @keyframes drift {
@@ -324,6 +381,36 @@
   animation: rise 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
+.word {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.letter {
+  display: inline-block;
+  transform-origin: 0 100%;
+  -webkit-text-stroke: 0 #000;
+  transition:
+    color 0.25s ease,
+    -webkit-text-stroke-width 0.25s ease;
+  animation: letterRise 0.9s var(--ease)
+    calc(0.2s + var(--l, 0) * 0.12s + var(--i, 0) * 0.025s) backwards;
+}
+
+@keyframes letterRise {
+  from {
+    transform: translate3d(0, 115%, 0) rotate(3deg);
+  }
+}
+
+@media (hover: hover) {
+  .letter:hover {
+    color: var(--tone, #fff);
+    -webkit-text-stroke-width: 0.04em;
+    paint-order: stroke fill;
+  }
+}
+
 .hl {
   font-style: normal;
   padding: 0 0.12em;
@@ -331,6 +418,37 @@
     left center / 0% 100%;
   border-radius: 2px;
   animation: kMark 0.9s var(--ease) 0.95s forwards;
+}
+
+.sticker {
+  display: inline-block;
+  margin-left: 20px;
+  padding: 8px 14px;
+  border: 2px solid #171717;
+  border-radius: 999px;
+  background: var(--primary);
+  box-shadow: 3px 3px 0 #171717;
+  color: #171717;
+  font-size: clamp(11px, 1.2vw, 16px);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1;
+  white-space: nowrap;
+  vertical-align: middle;
+  rotate: -6deg;
+  animation:
+    kPopRot 0.8s var(--ease) 1.6s backwards,
+    stickerBob 2.6s ease-in-out 2.7s infinite;
+}
+
+@keyframes stickerBob {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 -5px;
+  }
 }
 
 .heroFoot {
@@ -363,6 +481,9 @@
 }
 
 .btn {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -371,8 +492,32 @@
   border-radius: 2px;
   transition:
     transform 0.2s ease,
-    background 0.2s ease,
     color 0.2s ease;
+}
+
+.btn::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  z-index: -1;
+  border-radius: 50% 50% 0 0 / 45% 45% 0 0;
+  transform: translateY(101%);
+  transition:
+    transform 0.48s var(--ease),
+    border-radius 0.48s var(--ease);
+}
+
+.btn:hover::before {
+  border-radius: 0;
+  transform: translateY(0);
+}
+
+.btn > svg {
+  transition: transform 0.3s var(--ease);
+}
+
+.btn:hover > svg {
+  transform: translate(3px, -3px);
 }
 
 .btn:hover {
@@ -384,8 +529,12 @@
   background: #000;
 }
 
+.btnA::before {
+  background: var(--primary);
+}
+
 .btnA:hover {
-  color: #fff;
+  color: #000;
 }
 
 .btnB {
@@ -393,9 +542,18 @@
   border: 1px solid #000;
 }
 
+.btnB::before {
+  background: #000;
+}
+
 .btnB:hover {
   color: #fff;
   background: #000;
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--secondary);
+  outline-offset: 3px;
 }
 
 .heroBtn {
@@ -689,6 +847,10 @@
 }
 
 @media (max-width: 900px) {
+  .sticker {
+    display: none;
+  }
+
   .row {
     grid-template-columns: 48px 1fr 28px;
     gap: 16px;
@@ -706,6 +868,12 @@
 
   .lead {
     font-size: 18px;
+  }
+}
+
+@media (hover: none) {
+  .heroMain::after {
+    display: none;
   }
 }
 
@@ -758,6 +926,9 @@
 
 @media (prefers-reduced-motion: reduce) {
   .orb,
+  .blob,
+  .sticker,
+  .letter,
   .line > span,
   .rail,
   .railName,
@@ -786,6 +957,10 @@
     mask-size: 320% 320%;
   }
 
+  .heroMain::after {
+    display: none;
+  }
+
   .hl {
     background-size: 100% 100%;
   }
@@ -793,7 +968,9 @@
   .row,
   .mark,
   .arrow,
-  .btn {
+  .btn,
+  .btn::before,
+  .btn > svg {
     transition: none;
   }
 }

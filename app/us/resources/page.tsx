@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, type CSSProperties } from "react";
+import { useEffect, useRef, type CSSProperties, type MouseEvent } from "react";
 
 import { ArrowUpRight, ArrowDown } from "@phosphor-icons/react";
 
@@ -149,6 +149,50 @@ const GROUPS: { title: string; items: Res[] }[] = [
   },
 ];
 
+const TITLE_TONES = [
+  "#ffd84d",
+  "#ff7ab8",
+  "#8ab6ff",
+  "#ff9a5c",
+  "#b5f23d",
+  "#ffffff",
+  "#ffd84d",
+  "#ff7ab8",
+  "#8ab6ff",
+];
+
+const titleLetters = (text: string, line: number) => {
+  let index = 0;
+
+  return text.split(" ").map((word, wordIndex, words) => (
+    <span key={wordIndex}>
+      <span className={styles.word}>
+        {word.split("").map((letter) => {
+          const i = index++;
+
+          return (
+            <span
+              key={i}
+              aria-hidden="true"
+              className={styles.letter}
+              style={
+                {
+                  "--i": i,
+                  "--l": line,
+                  "--tone": TITLE_TONES[i % TITLE_TONES.length],
+                } as CSSProperties
+              }
+            >
+              {letter}
+            </span>
+          );
+        })}
+      </span>
+      {wordIndex < words.length - 1 ? " " : ""}
+    </span>
+  ));
+};
+
 const at = (seconds: number) => ({ "--delay": `${seconds}s` }) as CSSProperties;
 
 function Meta({
@@ -172,7 +216,9 @@ function Meta({
           <div className={styles.metaNum}>{n}</div>
           <h2 className={styles.metaTitle}>{title}</h2>
         </div>
-        <span className={styles.metaCount}>Blocks: {count}</span>
+        <span className={styles.metaCount}>
+          {count} {count === 1 ? "link" : "links"}
+        </span>
       </div>
     </div>
   );
@@ -180,6 +226,12 @@ function Meta({
 
 export default function Resources() {
   const root = useRef<HTMLElement>(null);
+
+  const trackPointer = (e: MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    e.currentTarget.style.setProperty("--mx", `${e.clientX - rect.left}px`);
+    e.currentTarget.style.setProperty("--my", `${e.clientY - rect.top}px`);
+  };
 
   useEffect(() => {
     const els = root.current?.querySelectorAll("[data-reveal]");
@@ -214,18 +266,31 @@ export default function Resources() {
           <span className={styles.railName}>RESOURCES</span>
         </aside>
 
-        <div className={styles.heroMain}>
+        <div className={styles.heroMain} onMouseMove={trackPointer}>
           <div className={styles.orb} />
+          <span
+            className={`${styles.blob} ${styles.blobPink}`}
+            aria-hidden="true"
+          />
+          <span
+            className={`${styles.blob} ${styles.blobBlue}`}
+            aria-hidden="true"
+          />
 
           <div className={styles.heroInner}>
-            <h1 className={styles.title}>
+            <h1 className={styles.title} aria-label="Read the source.">
               <span className={styles.line}>
-                <span style={{ animationDelay: "0.2s" }}>Read the</span>
+                <span style={{ animationDelay: "0.2s" }}>
+                  {titleLetters("Read the", 0)}
+                </span>
               </span>
 
               <span className={styles.line}>
                 <span style={{ animationDelay: "0.32s" }}>
-                  <em className={styles.hl}>source.</em>
+                  <em className={styles.hl}>{titleLetters("source.", 1)}</em>
+                  <span className={styles.sticker} aria-hidden="true">
+                    curated links
+                  </span>
                 </span>
               </span>
             </h1>

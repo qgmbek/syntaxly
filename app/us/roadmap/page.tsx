@@ -1,6 +1,12 @@
 "use client";
 
-import { useEffect, useRef, useState, type CSSProperties } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+  type MouseEvent,
+} from "react";
 
 import { ArrowUpRight, ArrowDown } from "@phosphor-icons/react";
 
@@ -9,6 +15,22 @@ import styles from "./Roadmap.module.css";
 const UPDATED = "October 6, 2026";
 
 const FIRST_OPEN = "Search every block";
+
+const LEAD =
+  "What is live, what is being built and what is still an idea. It is a plan, not a promise.";
+
+const TITLE_TONES = [
+  "#ffd84d",
+  "#ff7ab8",
+  "#8ab6ff",
+  "#ff9a5c",
+  "#b5f23d",
+  "#ffffff",
+  "#ffd84d",
+  "#ff7ab8",
+  "#8ab6ff",
+  "#ff9a5c",
+];
 
 type Status = "live" | "making" | "planned" | "exploring";
 
@@ -142,6 +164,44 @@ const at = (seconds: number, distance?: number) =>
     ...(distance ? { "--dist": `${distance}px` } : {}),
   }) as CSSProperties;
 
+const trackPointer = (e: MouseEvent<HTMLElement>) => {
+  const rect = e.currentTarget.getBoundingClientRect();
+  e.currentTarget.style.setProperty("--mx", `${e.clientX - rect.left}px`);
+  e.currentTarget.style.setProperty("--my", `${e.clientY - rect.top}px`);
+};
+
+const letters = (text: string, line: number) => {
+  let n = 0;
+
+  return text.split(" ").map((word, w, all) => (
+    <span key={w}>
+      <span className={styles.word}>
+        {word.split("").map((letter) => {
+          const i = n++;
+
+          return (
+            <span
+              key={i}
+              aria-hidden="true"
+              className={styles.letter}
+              style={
+                {
+                  "--i": i,
+                  "--l": line,
+                  "--tone": TITLE_TONES[i % TITLE_TONES.length],
+                } as CSSProperties
+              }
+            >
+              {letter}
+            </span>
+          );
+        })}
+      </span>
+      {w < all.length - 1 ? " " : ""}
+    </span>
+  ));
+};
+
 export default function Roadmap() {
   const [open, setOpen] = useState<string | null>(null);
   const root = useRef<HTMLElement>(null);
@@ -179,32 +239,75 @@ export default function Roadmap() {
     };
   }, []);
 
+  useEffect(() => {
+    const el = root.current;
+    if (!el) return;
+
+    let frame = 0;
+
+    const update = () => {
+      frame = 0;
+      const y = window.scrollY;
+      const vh = window.innerHeight;
+      const max = Math.max(1, el.offsetHeight - vh);
+
+      el.style.setProperty("--hp", Math.min(1, y / vh).toFixed(4));
+      el.style.setProperty("--pp", Math.min(1, y / max).toFixed(4));
+    };
+
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(update);
+    };
+
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      if (frame) cancelAnimationFrame(frame);
+    };
+  }, []);
+
   return (
     <main className={styles.page} ref={root}>
+      <span className={`${styles.decor} ${styles.d1}`} aria-hidden="true" />
+      <span className={`${styles.decor} ${styles.d2}`} aria-hidden="true" />
+      <span className={`${styles.decor} ${styles.d3}`} aria-hidden="true" />
+
       <section className={styles.hero}>
         <aside className={styles.rail}>
           <span className={styles.railName}>ROADMAP</span>
         </aside>
 
-        <div className={styles.heroMain}>
+        <div className={styles.heroMain} onMouseMove={trackPointer}>
           <div className={styles.orb} />
 
           <div className={styles.heroInner}>
-            <h1 className={styles.title}>
+            <h1 className={styles.title} aria-label="Where it's going.">
+              <span className={styles.line}>{letters("Where it's", 0)}</span>
+
               <span className={styles.line}>
-                <span style={{ animationDelay: "0.2s" }}>Where it&apos;s</span>
-              </span>
-              <span className={styles.line}>
-                <span style={{ animationDelay: "0.32s" }}>
-                  <em className={styles.hl}>going.</em>
+                <em className={styles.hl}>{letters("going.", 1)}</em>
+                <span className={styles.sticker} aria-hidden="true">
+                  a plan, not a promise
                 </span>
               </span>
             </h1>
 
             <div className={styles.heroFoot}>
               <p className={styles.lead}>
-                What is live, what is being built and what is still an idea. It
-                is a plan, not a promise.
+                {LEAD.split(" ").map((word, i) => (
+                  <span key={i}>
+                    <span
+                      className={styles.leadWord}
+                      style={{ "--i": i } as CSSProperties}
+                    >
+                      {word}
+                    </span>{" "}
+                  </span>
+                ))}
               </p>
 
               <span className={styles.updated}>Updated {UPDATED}</span>
@@ -296,6 +399,21 @@ export default function Roadmap() {
       </section>
 
       <section className={styles.cta}>
+        <svg
+          className={`${styles.spark} ${styles.s1}`}
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <path d="M12 0C13 8 16 11 24 12C16 13 13 16 12 24C11 16 8 13 0 12C8 11 11 8 12 0Z" />
+        </svg>
+        <svg
+          className={`${styles.spark} ${styles.sp2}`}
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <path d="M12 0C13 8 16 11 24 12C16 13 13 16 12 24C11 16 8 13 0 12C8 11 11 8 12 0Z" />
+        </svg>
+
         <h2 className={styles.ctaTitle} data-reveal>
           <span className={styles.mask}>
             <span className={styles.maskIn}>Missing something?</span>

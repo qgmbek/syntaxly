@@ -6,12 +6,27 @@ import {
   useRef,
   useState,
   type CSSProperties,
+  type MouseEvent,
 } from "react";
 import Link from "next/link";
 import { ArrowUpRight } from "@phosphor-icons/react";
 import styles from "./Privacy.module.css";
 
 const UPDATED = "October 2, 2026";
+
+const LEAD =
+  "What happens to your information when you use Syntaxly. The short version: very little. The details are below, one section at a time.";
+
+const TITLE_TONES = [
+  "#ffd84d",
+  "#ff7ab8",
+  "#8ab6ff",
+  "#ff9a5c",
+  "#b5f23d",
+  "#ffffff",
+  "#ffd84d",
+  "#ff7ab8",
+];
 
 const PH: Record<string, string> = {
   OWNER: "[Khogambyek Yersin]",
@@ -144,6 +159,44 @@ const at = (seconds: number, distance?: number) =>
     ...(distance ? { "--dist": `${distance}px` } : {}),
   }) as CSSProperties;
 
+const trackPointer = (e: MouseEvent<HTMLElement>) => {
+  const rect = e.currentTarget.getBoundingClientRect();
+  e.currentTarget.style.setProperty("--mx", `${e.clientX - rect.left}px`);
+  e.currentTarget.style.setProperty("--my", `${e.clientY - rect.top}px`);
+};
+
+const letters = (text: string, line: number) => {
+  let n = 0;
+
+  return text.split(" ").map((word, w, all) => (
+    <span key={w}>
+      <span className={styles.word}>
+        {word.split("").map((letter) => {
+          const i = n++;
+
+          return (
+            <span
+              key={i}
+              aria-hidden="true"
+              className={styles.letter}
+              style={
+                {
+                  "--i": i,
+                  "--l": line,
+                  "--tone": TITLE_TONES[i % TITLE_TONES.length],
+                } as CSSProperties
+              }
+            >
+              {letter}
+            </span>
+          );
+        })}
+      </span>
+      {w < all.length - 1 ? " " : ""}
+    </span>
+  ));
+};
+
 const fill = (text: string) =>
   text.split(/(\{[A-Z]+\})/g).map((part, i) => {
     const key = part.slice(1, -1);
@@ -178,6 +231,12 @@ export default function Privacy() {
         if (bar.current) {
           bar.current.style.transform = `scaleX(${p})`;
         }
+
+        rootRef.current?.style.setProperty(
+          "--hp",
+          Math.min(1, window.scrollY / window.innerHeight).toFixed(4),
+        );
+        rootRef.current?.style.setProperty("--pp", p.toFixed(4));
 
         const lay = layoutRef.current;
         const toc = tocRef.current;
@@ -290,31 +349,41 @@ export default function Privacy() {
 
   return (
     <main className={styles.page} ref={rootRef}>
+      <span className={`${styles.decor} ${styles.d1}`} aria-hidden="true" />
+      <span className={`${styles.decor} ${styles.d2}`} aria-hidden="true" />
+      <span className={`${styles.decor} ${styles.d3}`} aria-hidden="true" />
+
       <div className={styles.progress}>
         <div ref={bar} className={styles.progressBar} />
       </div>
 
-      <header className={styles.hero}>
+      <header className={styles.hero} onMouseMove={trackPointer}>
         <div className={styles.orb} />
 
         <div className={styles.heroInner}>
-          <h1 className={styles.title}>
-            <span className={styles.line}>
-              <span style={{ animationDelay: "0.2s" }}>Privacy</span>
-            </span>
+          <h1 className={styles.title} aria-label="Privacy Policy.">
+            <span className={styles.line}>{letters("Privacy", 0)}</span>
 
             <span className={styles.line}>
-              <span style={{ animationDelay: "0.32s" }}>
-                <em className={styles.hl}>Policy.</em>
+              <em className={styles.hl}>{letters("Policy.", 1)}</em>
+              <span className={styles.sticker} aria-hidden="true">
+                nothing to hand over
               </span>
             </span>
           </h1>
 
           <div className={styles.heroFoot}>
             <p className={styles.lead}>
-              What happens to your information when you use Syntaxly. The short
-              version: very little. The details are below, one section at a
-              time.
+              {LEAD.split(" ").map((word, i) => (
+                <span key={i}>
+                  <span
+                    className={styles.leadWord}
+                    style={{ "--i": i } as CSSProperties}
+                  >
+                    {word}
+                  </span>{" "}
+                </span>
+              ))}
             </p>
 
             <span className={styles.updated}>Last updated {UPDATED}</span>

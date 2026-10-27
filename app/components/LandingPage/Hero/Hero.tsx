@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, useMemo, useCallback } from "react";
 import styles from "./Hero.module.css";
+import { Arrow, Eye, MeltingClock } from "../../../../app/ui/HandDrawn";
 
 const CELL_SIZE = 80;
 const MAGNET_REACH = 90;
@@ -432,23 +433,11 @@ export default function Hero() {
     const clearHighlights = () => {
       lastHoverCellRef.current = null;
       setHighlightOpacities(new Array(rows * cols).fill(0));
-      container.style.setProperty("--px", "0");
-      container.style.setProperty("--py", "0");
       if (buttonRef.current) buttonRef.current.style.translate = "";
     };
 
     const handleMouseMove = (event: MouseEvent) => {
       const rect = container.getBoundingClientRect();
-
-      container.style.setProperty(
-        "--px",
-        (((event.clientX - rect.left) / rect.width - 0.5) * 2).toFixed(3),
-      );
-      container.style.setProperty(
-        "--py",
-        (((event.clientY - rect.top) / rect.height - 0.5) * 2).toFixed(3),
-      );
-
       const button = buttonRef.current;
 
       if (button) {
@@ -511,8 +500,12 @@ export default function Hero() {
     <section
       ref={containerRef}
       className={`${styles.container} ${mounted ? styles.mounted : ""}`}
+      {...(mounted ? { "data-in": "" } : {})}
     >
       <div className={styles.bgOrb} aria-hidden="true" />
+
+      <Eye className={`${styles.decor} ${styles.decorEye}`} />
+      <MeltingClock className={`${styles.decor} ${styles.decorClock}`} />
 
       <div className={styles.overlayContainer} aria-hidden="true">
         {cells.map((cell, index) => {
@@ -564,7 +557,9 @@ export default function Hero() {
               className={styles.word}
               style={{ "--w": 1 } as React.CSSProperties}
             >
-              <span className={styles.highlighted}>{letters("cheatsheet")}</span>
+              <span className={styles.highlighted}>
+                {letters("cheatsheet")}
+              </span>
             </span>{" "}
             <span
               className={styles.word}
@@ -616,6 +611,14 @@ export default function Hero() {
             Learn Syntaxly
           </a>
         </div>
+
+        <span className={styles.note} aria-hidden="true">
+          start here
+          <Arrow
+            className={styles.noteArrow}
+            style={{ "--draw-delay": "2.4s" } as React.CSSProperties}
+          />
+        </span>
       </div>
     </section>
   );

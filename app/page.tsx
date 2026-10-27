@@ -6,7 +6,7 @@ import Footer from "./components/LandingPage/Footer/Footer";
 
 export default function Home() {
   return (
-    <div>
+    <div style={{ backgroundColor: "var(--paper)" }}>
       <Navbar />
       <Hero />
       <BentoCards />

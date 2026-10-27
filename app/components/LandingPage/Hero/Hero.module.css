@@ -3,8 +3,6 @@
   --hero-duration: 900ms;
   --sp: 0;
   --e: 0;
-  --px: 0;
-  --py: 0;
 
   position: relative;
   isolation: isolate;
@@ -19,7 +17,7 @@
 
   overflow: hidden;
   z-index: 1;
-  background-color: #fff;
+  background-color: var(--paper);
 }
 
 .container::before {
@@ -31,8 +29,8 @@
   opacity: calc(1 - var(--sp) * 1.1);
   transform: scale(calc(1 + var(--sp) * 0.3));
   background-image:
-    linear-gradient(to right, #e5e5e5 1px, transparent 1px),
-    linear-gradient(to bottom, #e5e5e5 1px, transparent 1px);
+    linear-gradient(to right, rgba(23, 23, 23, 0.08) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(23, 23, 23, 0.08) 1px, transparent 1px);
   background-size: 80px 80px;
   -webkit-mask-image: radial-gradient(
     circle closest-side,
@@ -54,9 +52,9 @@
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  opacity: 0.07;
+  opacity: 0.08;
   mix-blend-mode: multiply;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-image: var(--grain);
 }
 
 .mounted::before {
@@ -79,7 +77,7 @@
   width: min(800px, 85vw);
   aspect-ratio: 1;
   border-radius: 50%;
-  background: rgba(0, 255, 208, 0.09);
+  background: rgba(0, 255, 208, 0.05);
   filter: blur(100px);
   pointer-events: none;
 
@@ -104,6 +102,42 @@
   to {
     translate: 5% 4%;
   }
+}
+
+.decor {
+  display: none;
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.mounted .decor {
+  opacity: 1;
+  transition: opacity 1200ms ease 1200ms;
+}
+
+.decorEye {
+  top: 26%;
+  left: -90px;
+  width: 240px;
+  height: 150px;
+  --fill: var(--paper-2);
+  --fill2: var(--h-cobalt);
+  color: var(--ink);
+  rotate: -8deg;
+  translate: 0 calc(var(--sp) * -90px);
+}
+
+.decorClock {
+  top: 8%;
+  right: -80px;
+  width: 230px;
+  height: 192px;
+  --fill: var(--h-butter);
+  color: var(--ink);
+  rotate: 8deg;
+  translate: 0 calc(var(--sp) * -120px);
 }
 
 .overlayContainer {
@@ -165,11 +199,13 @@
   width: 100%;
   margin: 0;
 
-  font-size: clamp(3rem, 7.2vw, 6.4rem);
-  font-weight: 600;
-  line-height: 1.04;
-  letter-spacing: -0.075em;
+  font-family: var(--font-display);
+  font-size: clamp(3.2rem, 8vw, 7.2rem);
+  font-weight: 400;
+  line-height: 1.02;
+  letter-spacing: -0.03em;
   text-align: center;
+  color: var(--ink);
 }
 
 .titleLine {
@@ -248,10 +284,10 @@
 .highlighted {
   display: inline-block;
   padding: 0.015em 0.11em 0.055em;
-  border-radius: 3px;
+  border-radius: 12px 4px 14px 5px / 5px 14px 4px 12px;
   background: linear-gradient(var(--accent-soft), var(--accent-soft)) no-repeat
     left center / 0% 100%;
-  letter-spacing: -0.07em;
+  letter-spacing: -0.03em;
 }
 
 .mounted .highlighted {
@@ -268,7 +304,7 @@
   max-width: 760px;
   margin: 0;
 
-  color: #555;
+  color: rgba(23, 23, 23, 0.72);
   font-size: clamp(1rem, 1.6vw, 1.25rem);
   line-height: 1.7;
   text-align: center;
@@ -325,10 +361,10 @@
   gap: 12px;
 
   min-height: 52px;
-  padding: 14px 22px;
+  padding: 14px 24px;
 
-  border: 1px solid transparent;
-  border-radius: 3px;
+  border: 1.5px solid transparent;
+  border-radius: 999px;
 
   font-size: 15px;
   font-weight: 500;
@@ -396,8 +432,8 @@
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  border-color: #080808;
-  background-color: #080808;
+  border-color: var(--ink);
+  background-color: var(--ink);
   color: #fff;
 }
 
@@ -416,7 +452,7 @@
 
 .getButton:hover {
   transform: translateY(-2px);
-  color: #080808;
+  color: var(--ink);
 }
 
 .getButton:hover::before {
@@ -426,7 +462,6 @@
 
 .buttonArrow {
   display: inline-block;
-  transition: transform 220ms var(--hero-ease);
 }
 
 .mounted .buttonArrow {
@@ -440,17 +475,13 @@
   }
 }
 
-.getButton:hover .buttonArrow {
-  transform: translate(2px, -2px);
-}
-
 .learnButton {
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  border-color: #d4d4d4;
-  background-color: rgba(255, 255, 255, 0.6);
-  color: #111;
+  border-color: var(--ink);
+  background-color: var(--paper-2);
+  color: var(--ink);
 }
 
 .learnButton::before {
@@ -458,7 +489,7 @@
   position: absolute;
   inset: -1px;
   z-index: -1;
-  background: #111;
+  background: var(--ink);
   border-radius: 50% 50% 0 0 / 45% 45% 0 0;
   transform: translateY(101%);
   transition:
@@ -467,7 +498,6 @@
 }
 
 .learnButton:hover {
-  border-color: #111;
   color: #fff;
   transform: translateY(-3px);
 }
@@ -482,33 +512,59 @@
   outline-offset: 4px;
 }
 
+.note {
+  position: absolute;
+  right: calc(50% + 190px);
+  bottom: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-hand);
+  font-size: 26px;
+  line-height: 1;
+  color: var(--h-red);
+  rotate: -6deg;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: calc(1 - var(--e) * 3);
+}
+
+.noteArrow {
+  width: 40px;
+  height: 18px;
+  transform: scaleX(-1);
+}
+
+.mounted .note {
+  animation: noteIn 600ms var(--hero-ease) 2400ms backwards;
+}
+
+@keyframes noteIn {
+  from {
+    opacity: 0;
+    transform: translateX(10px);
+  }
+}
+
 .card {
   position: absolute;
   z-index: 1;
   right: max(4vw, 32px);
   bottom: 56px;
   width: 310px;
-  border: 1px solid rgba(0, 0, 0, 0.11);
-  border-radius: 12px;
+  border: 1px solid rgba(23, 23, 23, 0.14);
+  border-radius: 22px;
   overflow: hidden;
   background: var(--column-bg, #121212);
-  box-shadow: 0 28px 60px -24px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 28px 60px -24px rgba(23, 23, 23, 0.4);
   opacity: 0;
   rotate: calc(4deg + var(--e) * 22deg);
-  translate: calc(var(--px) * -16px + var(--e) * 380px)
-    calc(var(--py) * -12px - var(--e) * 120px);
-  transition:
-    translate 700ms var(--hero-ease),
-    rotate 600ms var(--hero-ease);
+  translate: calc(var(--e) * 380px) calc(var(--e) * -120px);
 }
 
 .mounted .card {
   opacity: 1;
   animation: cardIn 1100ms var(--hero-ease) 1500ms backwards;
-}
-
-.card:hover {
-  rotate: 0deg;
 }
 
 @keyframes cardIn {
@@ -562,7 +618,7 @@
 
 .cardBlock {
   position: relative;
-  border-radius: 12px;
+  border-radius: 14px;
   overflow: hidden;
   background-color: var(--column-block-bg, #ffffff);
   outline: 2px solid transparent;
@@ -580,7 +636,7 @@
   content: "";
   position: absolute;
   inset: 0;
-  border-radius: 12px;
+  border-radius: 14px;
   pointer-events: none;
   animation: cardFlash 0.7s var(--hero-ease);
 }
@@ -600,8 +656,8 @@
   top: 0;
   left: 0;
   padding: 5px 10px;
-  border-top-left-radius: 12px;
-  border-bottom-right-radius: 12px;
+  border-top-left-radius: 14px;
+  border-bottom-right-radius: 14px;
   background-color: var(--primary);
   color: #0a0a0a;
   font-size: 12px;
@@ -656,6 +712,12 @@
   }
 }
 
+@media (min-width: 1100px) {
+  .decor {
+    display: block;
+  }
+}
+
 @media (min-width: 1200px) {
   .content {
     gap: 38px;
@@ -664,6 +726,12 @@
 
 @media (max-width: 1279px) {
   .card {
+    display: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .note {
     display: none;
   }
 }
@@ -683,8 +751,8 @@
   }
 
   .title {
-    font-size: clamp(2.8rem, 8.5vw, 4.2rem);
-    letter-spacing: -0.065em;
+    font-size: clamp(3rem, 10vw, 4.8rem);
+    letter-spacing: -0.03em;
   }
 
   .subtitle {
@@ -709,7 +777,7 @@
   }
 
   .title {
-    font-size: clamp(2.3rem, 10vw, 3rem);
+    font-size: clamp(2.7rem, 12vw, 3.4rem);
   }
 
   .subtitle {
@@ -740,6 +808,7 @@
   .mounted .getButton,
   .mounted .learnButton,
   .mounted .buttonArrow,
+  .mounted .note,
   .caret {
     animation: none;
     transition: none;
@@ -760,7 +829,8 @@
   .word,
   .subtitle,
   .buttonContainer,
-  .card {
+  .card,
+  .decor {
     translate: none;
     rotate: none;
     scale: none;
@@ -801,6 +871,15 @@
   }
 
   .button {
+    opacity: 1;
+  }
+
+  .mounted .decor {
+    opacity: 1;
+    transition: none;
+  }
+
+  .note {
     opacity: 1;
   }
 

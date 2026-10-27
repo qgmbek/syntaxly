@@ -1,6 +1,13 @@
 "use client";
 
-import { useState, useRef, useEffect, MouseEvent, CSSProperties } from "react";
+import {
+  useState,
+  useRef,
+  useEffect,
+  Fragment,
+  MouseEvent,
+  CSSProperties,
+} from "react";
 import {
   ClockCounterClockwise,
   SquaresFour,
@@ -12,12 +19,19 @@ import {
   GitBranch,
   Stack,
   Cpu,
-  ArrowLeft,
   CubeTransparentIcon,
 } from "@phosphor-icons/react";
 
 import styles from "./BentoCards.module.css";
 import useReveal from "../../../hooks/useReveal";
+import {
+  Underline,
+  Loop,
+  Arrow,
+  Goldfish,
+  HandString,
+  Coffee,
+} from "../../../../app/ui/HandDrawn";
 
 type SyntaxKey = "useState" | "useRef" | "useEffect";
 
@@ -33,12 +47,16 @@ type SyntaxItem = {
 };
 
 const HEADING = "Everything you need to recall on the fly.";
+const MARKED_WORD = "recall";
 
 const at = (seconds: number, distance?: number) =>
   ({
     "--delay": `${seconds}s`,
     ...(distance ? { "--dist": `${distance}px` } : {}),
   }) as CSSProperties;
+
+const drawAt = (seconds: number) =>
+  ({ "--draw-delay": `${seconds}s` }) as CSSProperties;
 
 export default function BentoCards() {
   const sectionRef = useReveal<HTMLElement>(0.15);
@@ -103,13 +121,6 @@ export default function BentoCards() {
 
     card.style.setProperty("--mx", `${x}px`);
     card.style.setProperty("--my", `${y}px`);
-    card.style.setProperty("--rx", (x / rect.width - 0.5).toFixed(3));
-    card.style.setProperty("--ry", (y / rect.height - 0.5).toFixed(3));
-  };
-
-  const resetPointer = (e: MouseEvent<HTMLDivElement>) => {
-    e.currentTarget.style.setProperty("--rx", "0");
-    e.currentTarget.style.setProperty("--ry", "0");
   };
 
   const syntaxData: Record<SyntaxKey, SyntaxItem> = {
@@ -163,9 +174,8 @@ export default function BentoCards() {
       <div className={styles.bgOrbOne} />
       <div className={styles.bgOrbTwo} />
 
-      <span className={`${styles.decor} ${styles.d1}`} aria-hidden="true" />
-      <span className={`${styles.decor} ${styles.d2}`} aria-hidden="true" />
-      <span className={`${styles.decor} ${styles.d3}`} aria-hidden="true" />
+      <Goldfish className={`${styles.decor} ${styles.decorFish}`} />
+      <HandString className={`${styles.decor} ${styles.decorHand}`} />
 
       <div className={styles.headerWrapper}>
         <span
@@ -179,16 +189,26 @@ export default function BentoCards() {
 
         <h2 className={styles.mainHeading} data-reveal>
           {HEADING.split(" ").map((word, i) => (
-            <span key={i}>
-              <span className={styles.mask}>
-                <span
-                  className={styles.maskIn}
-                  style={{ "--w": i } as CSSProperties}
-                >
-                  {word}
+            <Fragment key={i}>
+              <span
+                className={word === MARKED_WORD ? styles.markedWord : undefined}
+              >
+                <span className={styles.mask}>
+                  <span
+                    className={styles.maskIn}
+                    style={{ "--w": i } as CSSProperties}
+                  >
+                    {word}
+                  </span>
                 </span>
+                {word === MARKED_WORD && (
+                  <Underline
+                    className={styles.headingUnderline}
+                    style={drawAt(1.1)}
+                  />
+                )}
               </span>{" "}
-            </span>
+            </Fragment>
           ))}
         </h2>
 
@@ -208,7 +228,6 @@ export default function BentoCards() {
           style={at(0.35)}
           data-reveal
           onMouseMove={trackPointer}
-          onMouseLeave={resetPointer}
         >
           <div className={styles.cardGlowEffect} />
 
@@ -219,7 +238,6 @@ export default function BentoCards() {
                   size={30}
                   weight="regular"
                   className={styles.icon}
-                  style={{ "--k": 12 } as CSSProperties}
                 />
               </div>
               Built for Instant Recall
@@ -275,9 +293,19 @@ export default function BentoCards() {
                   <span className={`${styles.timerFill} ${styles.fillFast}`} />
                 </div>
 
-                <span className={styles.syntaxModeText}>
-                  2 seconds reference
-                </span>
+                <div className={styles.fastRow}>
+                  <span className={styles.circled}>
+                    <span className={styles.syntaxModeText}>
+                      2 seconds reference
+                    </span>
+                    <Loop className={styles.loop} style={drawAt(2.5)} />
+                  </span>
+
+                  <span className={styles.note} aria-hidden="true">
+                    <Arrow className={styles.noteArrow} style={drawAt(3.1)} />
+                    yes, really
+                  </span>
+                </div>
               </div>
             </div>
           </div>
@@ -288,7 +316,6 @@ export default function BentoCards() {
           style={at(0.5)}
           data-reveal
           onMouseMove={trackPointer}
-          onMouseLeave={resetPointer}
         >
           <div className={styles.cardGlowEffect} />
 
@@ -300,7 +327,6 @@ export default function BentoCards() {
                   size={30}
                   weight="regular"
                   className={styles.icon}
-                  style={{ "--k": -10 } as CSSProperties}
                 />
               </div>
             </h3>
@@ -343,7 +369,6 @@ export default function BentoCards() {
           className={`${styles.bentoCard} ${styles.fullWidthCard} ${styles.reveal} ${styles.wipe} ${styles.up}`}
           style={at(0)}
           onMouseMove={trackPointer}
-          onMouseLeave={resetPointer}
           {...snippetAttr}
         >
           <div className={styles.cardGlowEffect} />
@@ -358,6 +383,7 @@ export default function BentoCards() {
                 Pure Snippet Extraction
               </h3>
             </div>
+            <Coffee className={styles.cardCoffee} draw style={drawAt(0.6)} />
           </div>
 
           <div className={styles.playgroundSplitBody}>
@@ -429,11 +455,7 @@ export default function BentoCards() {
                   }`}
                   aria-hidden="true"
                 >
-                  <ArrowLeft
-                    size={12}
-                    weight="bold"
-                    className={styles.hintArrow}
-                  />
+                  <Arrow className={styles.hintArrow} style={drawAt(1.6)} />
                   click a block
                 </span>
               </div>

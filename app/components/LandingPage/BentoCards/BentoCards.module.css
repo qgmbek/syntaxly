@@ -3,8 +3,8 @@
   --p: 0;
 
   position: relative;
-  background: #ffffff;
-  color: #171717;
+  background: var(--paper);
+  color: var(--ink);
   padding: 80px 24px;
   overflow: hidden;
   display: flex;
@@ -13,6 +13,17 @@
   z-index: 11;
 
   margin-bottom: 80vh;
+}
+
+.sectionContainer::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: var(--grain);
+  opacity: 0.08;
+  mix-blend-mode: multiply;
 }
 
 .reveal {
@@ -129,7 +140,7 @@
 .bgOrbOne {
   width: 800px;
   height: 800px;
-  background: rgba(0, 255, 208, 0.08);
+  background: rgba(0, 255, 208, 0.05);
   top: -120px;
   left: -120px;
   animation: gradientMove 14s ease-in-out infinite;
@@ -138,7 +149,7 @@
 .bgOrbTwo {
   width: 800px;
   height: 800px;
-  background: rgba(0, 255, 208, 0.08);
+  background: rgba(0, 255, 208, 0.05);
   right: -80px;
   bottom: -80px;
   animation: gradientMove 18s ease-in-out infinite reverse;
@@ -163,36 +174,27 @@
   pointer-events: none;
 }
 
-.d1 {
-  top: 36%;
-  left: -24px;
-  width: 56px;
-  height: 56px;
-  border-radius: 999px;
-  background: #ff7ab8;
-  translate: 0 calc(var(--p) * -140px);
+.decorFish {
+  top: 19%;
+  left: -64px;
+  width: 240px;
+  height: 160px;
+  --fill: var(--h-red);
+  --fill2: var(--h-butter);
+  color: var(--ink);
+  transform: rotate(-8deg);
+  translate: 0 calc(var(--p) * -90px);
 }
 
-.d2 {
-  top: 14%;
-  right: -74px;
-  width: 170px;
-  height: 85px;
-  border-radius: 170px 170px 0 0;
-  background: #8ab6ff;
-  transform: rotate(-90deg);
-  translate: 0 calc(var(--p) * -200px);
-}
-
-.d3 {
-  top: 66%;
-  right: -36px;
-  width: 130px;
-  height: 36px;
-  border-radius: 999px;
-  background: #b5f23d;
-  transform: rotate(-14deg);
-  translate: 0 calc(var(--p) * -110px);
+.decorHand {
+  top: 48%;
+  right: -30px;
+  width: 150px;
+  height: 206px;
+  --fill: var(--h-pink);
+  color: var(--ink);
+  transform: rotate(8deg);
+  translate: 0 calc(var(--p) * -80px);
 }
 
 .headerWrapper {
@@ -213,16 +215,18 @@
   letter-spacing: 0.18em;
   background: var(--accent-soft);
   padding: 18px 26px;
-  border-radius: 2px;
-  border: 1px solid var(--primary);
+  border-radius: var(--wobble);
+  border: 2px solid var(--ink);
+  rotate: -1.5deg;
   backdrop-filter: blur(10px);
 }
 
 .mainHeading {
+  font-family: var(--font-display);
   font-size: 68px;
-  line-height: 1.1;
-  font-weight: 500;
-  letter-spacing: -0.05em;
+  line-height: 1.05;
+  font-weight: 400;
+  letter-spacing: -0.02em;
   margin-top: 40px;
   margin-bottom: 34px;
 }
@@ -252,6 +256,22 @@
   }
 }
 
+.markedWord {
+  position: relative;
+  display: inline-block;
+}
+
+.headingUnderline {
+  position: absolute;
+  left: -2%;
+  bottom: -0.04em;
+  width: 104%;
+  height: 0.2em;
+  color: var(--h-red);
+  overflow: visible;
+  pointer-events: none;
+}
+
 .subHeading {
   font-size: 20px;
   line-height: 1.2;
@@ -274,15 +294,15 @@
   --ry: 0;
 
   position: relative;
-  background: rgba(255, 255, 255, 0.78);
+  background: var(--paper-2);
   backdrop-filter: blur(20px);
-  border-radius: 6px;
-  border: 1px solid rgba(15, 23, 42, 0.06);
+  border-radius: 28px;
+  border: 1px solid rgba(23, 23, 23, 0.12);
+  box-shadow: 0 18px 40px -26px rgba(23, 23, 23, 0.3);
   overflow: hidden;
   display: flex;
   flex-direction: column;
   transition:
-    transform 0.6s var(--ease),
     border-color 0.3s ease,
     box-shadow 0.4s ease;
 }
@@ -314,8 +334,6 @@
 
 .bentoCard:hover {
   border-color: rgba(0, 255, 208, 0.25);
-  transform: perspective(1000px) rotateX(calc(var(--ry) * -4deg))
-    rotateY(calc(var(--rx) * 4deg)) translateY(-6px);
 }
 
 .bentoCard:hover::before {
@@ -326,22 +344,22 @@
   grid-column: span 4;
   min-height: 360px;
   padding: 40px;
+  rotate: 0.4deg;
 }
 
 .smallCard {
   grid-column: span 2;
   min-height: 360px;
   padding: 40px;
+  rotate: -0.7deg;
+  background: var(--h-butter);
+  border-color: rgba(23, 23, 23, 0.18);
 }
 
 .fullWidthCard {
   grid-column: span 6;
   padding: 42px;
-  background: rgba(255, 255, 255, 0.92);
-}
-
-.fullWidthCard:hover {
-  transform: translateY(-4px);
+  background: var(--paper-2);
 }
 
 .fullWidthCard > :not(.cardGlowEffect) {
@@ -375,10 +393,11 @@
 }
 
 .cardTitle {
-  font-size: 36px;
+  font-family: var(--font-display);
+  font-size: 40px;
   line-height: 1.1;
-  font-weight: 500;
-  letter-spacing: -0.03em;
+  font-weight: 400;
+  letter-spacing: -0.02em;
   margin-bottom: 12px;
   color: #0f172a;
   display: flex;
@@ -403,18 +422,15 @@
 
 .icon {
   color: #111;
-  translate: calc(var(--rx, 0) * var(--k, 12) * 1px)
-    calc(var(--ry, 0) * var(--k, 12) * 1px);
-  transition: translate 0.35s var(--ease);
 }
 
 .comparisonTrack {
   display: flex;
   gap: 18px;
   margin-top: auto;
-  background: rgba(248, 250, 252, 0.8);
+  background: rgba(255, 210, 74, 0.1);
   padding: 18px;
-  border-radius: 4px;
+  border-radius: 18px;
   border: 1px solid rgba(15, 23, 42, 0.04);
 }
 
@@ -438,7 +454,7 @@
   overflow: hidden;
   background: rgba(15, 23, 42, 0.02);
   padding: 14px;
-  border-radius: 2px;
+  border-radius: 10px;
   display: flex;
   flex-direction: column;
   gap: 7px;
@@ -479,7 +495,7 @@
   background: var(--accent-soft);
   border: 1px solid var(--primary);
   padding: 12px;
-  border-radius: 10px;
+  border-radius: 12px;
   color: var(--black);
 }
 
@@ -530,6 +546,31 @@
   color: #737373;
 }
 
+.fastRow {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+}
+
+.circled {
+  position: relative;
+  display: inline-block;
+  padding: 6px 4px;
+}
+
+.loop {
+  position: absolute;
+  left: -10px;
+  top: -4px;
+  width: calc(100% + 20px);
+  height: calc(100% + 8px);
+  color: var(--h-red);
+  overflow: visible;
+  pointer-events: none;
+}
+
 .syntaxModeText {
   display: inline-block;
   font-size: 12px;
@@ -548,6 +589,34 @@
   }
 }
 
+.note {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-hand);
+  font-size: 22px;
+  line-height: 1;
+  color: var(--h-red);
+  rotate: -4deg;
+  white-space: nowrap;
+}
+
+.noteArrow {
+  width: 34px;
+  height: 16px;
+}
+
+.largeCard[data-in] .note {
+  animation: kNoteIn 0.6s var(--ease) 3.1s backwards;
+}
+
+@keyframes kNoteIn {
+  from {
+    opacity: 0;
+    transform: translateX(-8px);
+  }
+}
+
 .miniCanvasView {
   margin-top: auto;
   display: flex;
@@ -559,28 +628,20 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 12px 14px;
-  background: rgba(248, 250, 252, 0.9);
-  border: 1px solid rgba(15, 23, 42, 0.05);
-  border-radius: 2px;
-  font-size: 12px;
-  color: #111;
+  padding: 12px 16px;
+  background: var(--paper-2);
+  border: 1.5px solid var(--ink);
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink);
   transition:
     transform 0.25s ease,
     border-color 0.25s ease;
 }
 
-.miniBlockItem:nth-child(2) {
-  opacity: 0.7;
-}
-
-.miniBlockItem:nth-child(3) {
-  opacity: 0.5;
-}
-
 .miniBlockItem:hover {
   transform: translateX(4px);
-  border: 1px solid rgba(0, 255, 208, 0.25);
 }
 
 .smallCard[data-in] .miniBlockItem {
@@ -601,15 +662,15 @@
   35%,
   100% {
     translate: 0 0;
-    background: rgba(248, 250, 252, 0.9);
-    border-color: rgba(15, 23, 42, 0.05);
+    background: var(--paper-2);
+    color: var(--ink);
   }
 
   6%,
   29% {
     translate: 6px 0;
-    background: var(--accent-soft);
-    border-color: var(--primary);
+    background: var(--ink);
+    color: var(--paper-2);
   }
 }
 
@@ -669,28 +730,15 @@
   position: relative;
   overflow: hidden;
   padding: 18px;
-  border-radius: 4px;
+  border-radius: 18px;
   cursor: pointer;
-  background: rgba(248, 250, 252, 0.9);
+  background: var(--paper);
   border: 1px solid rgba(15, 23, 42, 0.05);
   transition:
     transform 0.4s var(--ease),
     background 0.3s ease,
     border-color 0.3s ease,
     box-shadow 0.4s ease;
-}
-
-.syntaxSelectBlock::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 3px;
-  background: var(--secondary);
-  transform: scaleY(0);
-  transform-origin: bottom;
-  transition: transform 0.5s var(--ease);
 }
 
 .syntaxSelectBlock::after {
@@ -736,11 +784,6 @@
   transform: scale(1.02);
 }
 
-.syntaxSelectBlockActive::before {
-  transform: scaleY(1);
-  transform-origin: top;
-}
-
 .syntaxTop {
   display: flex;
   justify-content: space-between;
@@ -769,8 +812,8 @@
 .syntaxLang {
   font-size: 11px;
   color: #111;
-  padding: 2px 6px;
-  border-radius: 2px;
+  padding: 2px 8px;
+  border-radius: 999px;
   border: 1px solid #868686;
 }
 
@@ -787,7 +830,7 @@
 .playgroundRightPanel {
   flex: 1.2 1 460px;
   background: var(--accent-soft);
-  border-radius: 4px;
+  border-radius: 20px;
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.04);
   box-shadow:
@@ -813,15 +856,15 @@
 .hint {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 6px 12px;
-  border: 2px solid #171717;
-  border-radius: 999px;
-  background: var(--primary);
-  box-shadow: 3px 3px 0 #171717;
-  color: #171717;
-  font-size: 12px;
-  font-weight: 600;
+  gap: 8px;
+  padding: 0;
+  border: 0;
+  background: none;
+  box-shadow: none;
+  color: var(--h-red);
+  font-family: var(--font-hand);
+  font-size: 22px;
+  font-weight: 400;
   line-height: 1;
   white-space: nowrap;
   opacity: 0;
@@ -849,6 +892,11 @@
   50% {
     translate: -4px 0;
   }
+}
+
+.hintArrow {
+  width: 38px;
+  height: 16px;
 }
 
 .bolt {
@@ -909,7 +957,7 @@
   gap: 10px;
   background: transparent;
   padding: 14px 16px;
-  border-radius: 2px;
+  border-radius: 10px;
   border: 1px solid rgba(0, 0, 0, 0.4);
   overflow-x: auto;
 }
@@ -958,6 +1006,16 @@
   }
 }
 
+.cardCoffee {
+  width: 64px;
+  height: 64px;
+  flex-shrink: 0;
+  margin-top: -8px;
+  --fill: var(--h-pink);
+  color: var(--ink);
+  rotate: 8deg;
+}
+
 @media (max-width: 1249px) {
   .decor {
     display: none;
@@ -987,6 +1045,10 @@
 
   .hintArrow {
     rotate: 90deg;
+  }
+
+  .cardCoffee {
+    display: none;
   }
 }
 
@@ -1046,6 +1108,7 @@
   .docBlockBlob::after,
   .smallCard[data-in] .miniBlockItem,
   .largeCard[data-in] .syntaxModeText,
+  .largeCard[data-in] .note,
   .hintOn {
     animation: none;
   }
@@ -1056,16 +1119,7 @@
     transform: scaleX(1);
   }
 
-  .decor,
-  .icon {
+  .decor {
     translate: none;
-  }
-
-  .bentoCard:hover {
-    transform: translateY(-6px);
-  }
-
-  .syntaxSelectBlock::before {
-    transition: none;
   }
 }

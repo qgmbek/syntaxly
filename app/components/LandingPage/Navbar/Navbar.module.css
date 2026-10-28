@@ -28,7 +28,7 @@
   z-index: 80;
   width: 100%;
   height: 100vh;
-  background: rgba(255, 255, 255, 0.45);
+  background: rgba(251, 248, 242, 0.5);
   -webkit-backdrop-filter: blur(5px);
   backdrop-filter: blur(5px);
   opacity: 0;
@@ -49,7 +49,7 @@
   width: 100%;
   height: var(--nav-h);
   padding: 0 5vw;
-  color: var(--black);
+  color: var(--ink);
   background: transparent;
   transition: height 420ms var(--nav-ease);
 }
@@ -59,10 +59,10 @@
   position: absolute;
   inset: 0;
   z-index: -1;
-  background: rgba(255, 255, 255, 0.74);
+  background: rgba(251, 248, 242, 0.82);
   -webkit-backdrop-filter: blur(16px);
   backdrop-filter: blur(16px);
-  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+  border-bottom: 1px solid rgba(23, 23, 23, 0.1);
   opacity: 0;
   transition: opacity 400ms ease;
 }
@@ -92,30 +92,28 @@
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  color: var(--black);
+  color: var(--ink);
   text-decoration: none;
 }
 
 .logoMark {
   display: grid;
-  width: 28px;
-  height: 28px;
+  width: 30px;
+  height: 30px;
   place-items: center;
-  border-radius: 2px;
+  border: 2px solid var(--ink);
+  border-radius: var(--wobble);
   background: var(--primary);
-  color: var(--black);
+  color: var(--ink);
   font-size: 0.85rem;
-  transition: transform 500ms var(--nav-ease);
-}
-
-.logo:hover .logoMark {
-  transform: rotate(90deg);
+  rotate: -6deg;
 }
 
 .logoText {
-  font-size: 1.5rem;
-  font-weight: 500;
-  letter-spacing: -0.04em;
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  font-weight: 400;
+  letter-spacing: -0.02em;
 }
 
 .centerNav {
@@ -138,7 +136,7 @@
   z-index: 0;
   width: var(--pw);
   height: 40px;
-  border-radius: 2px;
+  border-radius: 12px 4px 14px 5px / 5px 14px 4px 12px;
   background: var(--accent-soft);
   opacity: var(--po);
   translate: var(--px) 0;
@@ -162,9 +160,9 @@
   height: 40px;
   padding: 0 16px;
   border: 0;
-  border-radius: 2px;
+  border-radius: 12px;
   background: transparent;
-  color: var(--black);
+  color: var(--ink);
   font: inherit;
   font-size: 16px;
   text-decoration: none;
@@ -183,12 +181,11 @@
 
 .current::after {
   position: absolute;
-  right: 16px;
-  bottom: 3px;
-  left: 16px;
-  height: 2px;
-  border-radius: 2px;
-  background: var(--primary);
+  right: 14px;
+  bottom: -1px;
+  left: 14px;
+  height: 6px;
+  background: var(--scribble) center / 100% 100% no-repeat;
   content: "";
 }
 
@@ -215,10 +212,10 @@
   display: inline-flex;
   align-items: center;
   gap: 12px;
-  padding: 12px 18px;
-  border: 1px solid #080808;
-  border-radius: 2px;
-  background: #080808;
+  padding: 12px 20px;
+  border: 1.5px solid var(--ink);
+  border-radius: 999px;
+  background: var(--ink);
   color: #fff;
   font-size: 15px;
   text-decoration: none;
@@ -242,7 +239,7 @@
 
 .ctaButton:hover {
   transform: translateY(-2px);
-  color: #080808;
+  color: var(--ink);
 }
 
 .ctaButton:hover::before {
@@ -252,11 +249,6 @@
 
 .ctaArrow {
   display: inline-block;
-  transition: transform 220ms var(--nav-ease);
-}
-
-.ctaButton:hover .ctaArrow {
-  transform: translate(2px, -2px);
 }
 
 .menuToggle {
@@ -265,18 +257,15 @@
   justify-content: center;
   width: 42px;
   height: 42px;
-  border: 1px solid #d4d4d4;
-  border-radius: 2px;
+  border: 1.5px solid var(--ink);
+  border-radius: 14px 6px 14px 6px / 6px 14px 6px 14px;
   background: transparent;
-  color: var(--black);
+  color: var(--ink);
   cursor: pointer;
-  transition:
-    background-color 200ms ease,
-    border-color 200ms ease;
+  transition: background-color 200ms ease;
 }
 
 .menuToggle:hover {
-  border-color: #999;
   background: var(--accent-soft);
 }
 
@@ -288,9 +277,9 @@
   width: 100%;
   overflow: hidden;
 
-  border-top: 1px solid rgba(15, 23, 42, 0.08);
-  border-bottom: 1px solid rgba(15, 23, 42, 0.12);
-  background: rgba(255, 255, 255, 0.97);
+  border-top: 1px solid rgba(23, 23, 23, 0.08);
+  border-bottom: 1px solid rgba(23, 23, 23, 0.14);
+  background: rgba(255, 254, 251, 0.97);
   -webkit-backdrop-filter: blur(18px);
   backdrop-filter: blur(18px);
 
@@ -321,6 +310,41 @@
     visibility 0s;
 }
 
+.menuDoodle {
+  display: none;
+  position: absolute;
+  top: 20px;
+  right: 3vw;
+  width: 84px;
+  height: 84px;
+  color: var(--ink);
+  rotate: 8deg;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.menuBolt {
+  --fill: var(--h-butter);
+  width: 63px;
+  height: 84px;
+}
+
+.menuPointer {
+  --fill: var(--h-cyan);
+}
+
+.menuOpen .menuDoodle {
+  opacity: 1;
+  animation: menuDoodleIn 600ms var(--nav-ease) 200ms backwards;
+}
+
+@keyframes menuDoodleIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
 .menuContainer {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -348,16 +372,14 @@
   padding: 21px 17px;
 
   overflow: hidden;
-  border-radius: 3px;
-  color: #111;
+  border-radius: 22px;
+  color: var(--ink);
   text-decoration: none;
 
   opacity: 0;
   transform: translate3d(0, 12px, 0);
 
-  transition:
-    transform 320ms var(--nav-ease),
-    opacity 320ms ease;
+  transition: opacity 320ms ease;
 }
 
 .menuOpen .item {
@@ -392,8 +414,7 @@
 }
 
 .item:hover {
-  transform: translateY(-2px);
-  color: #111;
+  color: var(--ink);
 }
 
 .item:hover::before {
@@ -405,7 +426,7 @@
   display: flex;
   flex-shrink: 0;
   padding-top: 2px;
-  color: #202020;
+  color: var(--ink);
 }
 
 .itemContent {
@@ -416,15 +437,16 @@
 .itemTitle {
   display: block;
   margin-bottom: 7px;
-  font-size: 17px;
-  font-weight: 550;
-  letter-spacing: -0.025em;
-  line-height: 1.3;
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
 }
 
 .itemText {
   display: block;
-  color: #646464;
+  color: rgba(23, 23, 23, 0.68);
   font-size: 13px;
   line-height: 1.65;
 }
@@ -434,19 +456,21 @@
   top: 18px;
   right: 14px;
   opacity: 0;
-  transform: translate(-4px, 4px);
-  transition:
-    opacity 220ms ease,
-    transform 280ms var(--nav-ease);
+  transition: opacity 220ms ease;
 }
 
 .item:hover .itemArrow {
   opacity: 1;
-  transform: translate(0, 0);
 }
 
 .mobilePanel {
   display: none;
+}
+
+@media (min-width: 1500px) {
+  .menuDoodle {
+    display: block;
+  }
 }
 
 @media (max-width: 1100px) {
@@ -497,8 +521,8 @@
     overflow-y: auto;
     overscroll-behavior: contain;
 
-    border-bottom: 1px solid rgba(15, 23, 42, 0.12);
-    background: #fff;
+    border-bottom: 1px solid rgba(23, 23, 23, 0.14);
+    background: var(--paper);
 
     opacity: 0;
     visibility: hidden;
@@ -534,7 +558,7 @@
 
   .mobileGroupLabel {
     padding: 24px 0 10px;
-    color: #888;
+    color: rgba(23, 23, 23, 0.55);
     font-size: 11px;
     font-weight: 600;
     letter-spacing: 0.12em;
@@ -550,10 +574,11 @@
     gap: 16px;
     padding: 15px 0;
 
-    border-bottom: 1px solid rgba(15, 23, 42, 0.09);
-    color: var(--black);
-    font-size: 19px;
-    letter-spacing: -0.025em;
+    border-bottom: 1px solid rgba(23, 23, 23, 0.1);
+    color: var(--ink);
+    font-family: var(--font-display);
+    font-size: 26px;
+    letter-spacing: -0.01em;
     text-decoration: none;
   }
 
@@ -575,16 +600,8 @@
   }
 
   .mobileArrow {
-    color: #888;
+    color: rgba(23, 23, 23, 0.55);
     font-size: 16px;
-    transition:
-      color 200ms ease,
-      transform 240ms var(--nav-ease);
-  }
-
-  .mobileLink:hover .mobileArrow {
-    color: #008f76;
-    transform: translate(2px, -2px);
   }
 
   .mobileFooter {
@@ -596,7 +613,7 @@
 
   .mobileSecondary {
     padding: 8px 0;
-    color: #444;
+    color: rgba(23, 23, 23, 0.75);
     font-size: 15px;
     text-decoration: none;
   }
@@ -608,9 +625,10 @@
     gap: 18px;
     width: 100%;
     margin-top: 4px;
-    padding: 16px 18px;
+    padding: 16px 22px;
 
-    background: #080808;
+    border-radius: 999px;
+    background: var(--ink);
     color: #fff;
     font-size: 16px;
     text-decoration: none;
@@ -635,7 +653,7 @@
   }
 
   .logoText {
-    font-size: 1.35rem;
+    font-size: 1.5rem;
   }
 
   .ctaButton {
@@ -750,14 +768,12 @@
   .caret,
   .ctaButton,
   .ctaButton::before,
-  .ctaArrow,
   .menuToggle,
   .megaMenu,
   .item,
   .item::before,
   .itemArrow,
   .mobilePanel,
-  .mobileArrow,
   .headerWrapper,
   .navbar,
   .navbar::before,
@@ -774,7 +790,8 @@
   }
 
   .menuOpen .item,
-  .mobileOpen .mobileLink {
+  .mobileOpen .mobileLink,
+  .menuOpen .menuDoodle {
     opacity: 1;
     transform: none;
     animation: none;

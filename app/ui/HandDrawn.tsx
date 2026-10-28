@@ -281,3 +281,114 @@ export function MeltingClock({ draw = false, ...rest }: MarkProps) {
     </svg>
   );
 }
+
+export function Magnifier({ draw = false, ...rest }: MarkProps) {
+  return (
+    <svg viewBox="0 0 200 220" strokeWidth={3} {...base} {...rest}>
+      <path d="M138 140 L182 184" strokeWidth={22} />
+      <path
+        d="M138 140 L182 184"
+        strokeWidth={13}
+        style={{ stroke: "var(--fill2, none)" }}
+      />
+      <path
+        d="M92 28 C128 26 158 54 156 92 C154 130 124 158 90 156 C54 154 28 126 30 90 C32 56 58 30 92 28 Z"
+        {...filled}
+        {...d(draw)}
+      />
+      <path
+        d="M52 76 C62 72 72 80 84 76 S106 72 126 76 M52 112 C62 108 74 116 88 112 S104 110 112 112"
+        {...d(draw)}
+      />
+      <path
+        d="M50 94 C64 90 76 98 90 94 S116 90 134 94"
+        strokeWidth={5}
+        {...string}
+        {...d(draw)}
+      />
+    </svg>
+  );
+}
+
+export function Scissors({ draw = false, ...rest }: MarkProps) {
+  return (
+    <svg viewBox="0 0 300 150" strokeWidth={3} {...base} {...rest}>
+      <path d="M4 75 H70" strokeDasharray="7 9" />
+      <path d="M82 36 L192 72 L184 84 Z" {...filled2} {...d(draw)} />
+      <path d="M82 114 L192 78 L184 66 Z" {...filled2} {...d(draw)} />
+      <path
+        d="M188 75 L222 90 M188 75 L222 60"
+        strokeWidth={7}
+        {...d(draw)}
+      />
+      <ellipse
+        cx="252"
+        cy="104"
+        rx="30"
+        ry="19"
+        transform="rotate(24 252 104)"
+        {...filled}
+      />
+      <ellipse
+        cx="252"
+        cy="46"
+        rx="30"
+        ry="19"
+        transform="rotate(-24 252 46)"
+        {...filled}
+      />
+      <circle cx="188" cy="75" r="6" {...solid} />
+    </svg>
+  );
+}
+
+export function Rocket({ draw = false, ...rest }: MarkProps) {
+  return (
+    <svg viewBox="0 0 120 220" strokeWidth={3} {...base} {...rest}>
+      <path
+        d="M32 100 C14 112 10 134 12 152 L34 130 Z M88 100 C106 112 110 134 108 152 L86 130 Z"
+        {...filled2}
+        {...d(draw)}
+      />
+      <path
+        d="M46 146 C40 170 52 186 60 214 C68 186 80 170 74 146 Z"
+        style={{ fill: "var(--h-butter)" }}
+        {...d(draw)}
+      />
+      <path
+        d="M60 8 C84 34 92 74 88 130 L32 130 C28 74 36 34 60 8 Z"
+        {...filled}
+        {...d(draw)}
+      />
+      <path
+        d="M60 8 C70 20 77 34 81 50 L39 50 C43 34 50 20 60 8 Z"
+        {...filled2}
+        {...d(draw)}
+      />
+      <circle cx="60" cy="78" r="14" style={{ fill: "var(--h-cyan)" }} />
+      <path d="M40 130 H80 L76 142 H44 Z" {...solid} />
+      <path d="M60 156 C56 172 60 182 60 194 M20 170 V200 M100 170 V204" />
+    </svg>
+  );
+}
+
+export function SleepyMoon({ draw = false, ...rest }: MarkProps) {
+  return (
+    <svg viewBox="0 0 200 200" strokeWidth={3} {...base} {...rest}>
+      <path
+        d="M130 20 C90 26 56 62 56 104 C56 150 94 184 140 180 C108 172 88 144 90 108 C92 72 108 40 130 20 Z"
+        {...filled}
+        {...d(draw)}
+      />
+      <path d="M64 98 C69 106 79 106 84 98 M70 130 C73 133 77 133 80 130" />
+      <circle
+        cx="66"
+        cy="120"
+        r="5"
+        style={{ fill: "var(--h-pink)", stroke: "none" }}
+      />
+      <path d="M140 56 H160 L140 80 H162 M158 28 H170 L158 44 H172 M176 6 H184 L176 16 H186" />
+      <path d="M168 124 V136 M162 130 H174" />
+    </svg>
+  );
+}

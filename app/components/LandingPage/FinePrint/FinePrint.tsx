@@ -2,6 +2,12 @@
 
 import { useEffect, useRef, type CSSProperties } from "react";
 import styles from "./FinePrint.module.css";
+import {
+  Underline,
+  Loop,
+  Magnifier,
+  Scissors,
+} from "../../../../app/ui/HandDrawn";
 
 const LINES = [
   {
@@ -55,6 +61,9 @@ const MARQUEE = [
 
 const at = (seconds: number) => ({ "--delay": `${seconds}s` }) as CSSProperties;
 
+const drawAt = (seconds: number) =>
+  ({ "--draw-delay": `${seconds}s` }) as CSSProperties;
+
 export default function FinePrint() {
   const root = useRef<HTMLElement>(null);
 
@@ -92,7 +101,6 @@ export default function FinePrint() {
       const vh = window.innerHeight;
       const p = Math.min(1, Math.max(0, (vh - r.top) / (vh + r.height)));
       el.style.setProperty("--p", p.toFixed(4));
-      el.style.setProperty("--spin", (p * 540).toFixed(1));
     };
 
     const onScroll = () => {
@@ -118,35 +126,8 @@ export default function FinePrint() {
     >
       <div className={styles.orb} aria-hidden="true" />
 
-      <svg className={styles.bigStar} viewBox="0 0 100 100" aria-hidden="true">
-        <g
-          stroke="currentColor"
-          strokeWidth="9"
-          strokeLinecap="round"
-          fill="none"
-        >
-          <path d="M50 6V94" />
-          <path d="M12 28L88 72" />
-          <path d="M88 28L12 72" />
-        </g>
-      </svg>
-
-      <span className={`${styles.decor} ${styles.d1}`} aria-hidden="true" />
-      <span className={`${styles.decor} ${styles.d2}`} aria-hidden="true" />
-      <span className={`${styles.decor} ${styles.d4}`} aria-hidden="true" />
-      <svg
-        className={`${styles.decor} ${styles.d3}`}
-        viewBox="0 0 130 44"
-        aria-hidden="true"
-      >
-        <path
-          d="M6 22Q19 2 32 22T58 22T84 22T110 22T124 22"
-          fill="none"
-          stroke="#ffd84d"
-          strokeWidth="9"
-          strokeLinecap="round"
-        />
-      </svg>
+      <Magnifier className={`${styles.decor} ${styles.decorGlass}`} />
+      <Scissors className={`${styles.decor} ${styles.decorScissors}`} />
 
       <div className={styles.inner}>
         <div className={styles.head}>
@@ -167,62 +148,29 @@ export default function FinePrint() {
             data-reveal
             style={at(0.12)}
           >
-            Things most landing pages hide in the footer.
+            Things most landing pages hide in the{" "}
+            <span className={styles.under}>
+              footer.
+              <Underline className={styles.underline} style={drawAt(0.9)} />
+            </span>
           </h2>
 
-          <div className={styles.stamp} aria-hidden="true">
-            <svg className={styles.stampRing} viewBox="0 0 200 200">
-              <defs>
-                <path
-                  id="fine-print-ring"
-                  d="M100,100 m-80,0 a80,80 0 1,1 160,0 a80,80 0 1,1 -160,0"
-                />
-              </defs>
-              <text className={styles.stampText}>
-                <textPath
-                  href="#fine-print-ring"
-                  textLength="496"
-                  lengthAdjust="spacing"
-                >
-                  NO CATCH * READ IT ALL * NO CATCH * READ IT ALL *{" "}
-                </textPath>
-              </text>
-            </svg>
-            <svg className={styles.stampCore} viewBox="0 0 100 100">
-              <g
-                stroke="currentColor"
-                strokeWidth="11"
-                strokeLinecap="round"
-                fill="none"
-              >
-                <path d="M50 14V86" />
-                <path d="M19 32L81 68" />
-                <path d="M81 32L19 68" />
-              </g>
-            </svg>
+          <div className={styles.note} data-reveal aria-hidden="true">
+            <span className={styles.noteTape} />
+            <div className={styles.notePaper}>
+              <span className={styles.noteTop}>psst...</span>
+              <span className={styles.noteBody}>
+                yes, we read it{" "}
+                <span className={styles.noteUnder}>
+                  too.
+                  <Underline
+                    className={styles.noteUnderline}
+                    style={drawAt(1.4)}
+                  />
+                </span>
+              </span>
+            </div>
           </div>
-
-          <svg
-            className={`${styles.spark} ${styles.s1}`}
-            viewBox="0 0 24 24"
-            aria-hidden="true"
-          >
-            <path d="M12 0C13 8 16 11 24 12C16 13 13 16 12 24C11 16 8 13 0 12C8 11 11 8 12 0Z" />
-          </svg>
-          <svg
-            className={`${styles.spark} ${styles.s2}`}
-            viewBox="0 0 24 24"
-            aria-hidden="true"
-          >
-            <path d="M12 0C13 8 16 11 24 12C16 13 13 16 12 24C11 16 8 13 0 12C8 11 11 8 12 0Z" />
-          </svg>
-          <svg
-            className={`${styles.spark} ${styles.s3}`}
-            viewBox="0 0 24 24"
-            aria-hidden="true"
-          >
-            <path d="M12 0C13 8 16 11 24 12C16 13 13 16 12 24C11 16 8 13 0 12C8 11 11 8 12 0Z" />
-          </svg>
         </div>
 
         <div
@@ -325,7 +273,14 @@ export default function FinePrint() {
           <span className={styles.endStar} aria-hidden="true">
             *
           </span>
-          This line has no fine print.
+          <span>
+            This line has{" "}
+            <span className={styles.circled}>
+              no fine print
+              <Loop className={styles.loop} style={drawAt(0.8)} />
+            </span>
+            .
+          </span>
         </p>
       </div>
     </section>

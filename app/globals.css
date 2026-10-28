@@ -74,6 +74,7 @@
   --font-hand: var(--font-caveat, "Caveat"), "Segoe Print", "Bradley Hand",
     cursive;
   --wobble: 255px 18px 225px 18px / 18px 225px 18px 255px;
+  --scribble: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 6' preserveAspectRatio='none'%3E%3Cpath d='M1 4 C6 0 10 6 16 3 S28 5 33 2 S38 3 39 3' fill='none' stroke='%23e8222c' stroke-width='1.8' stroke-linecap='round'/%3E%3C/svg%3E");
   --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .25 0 0 0 0 .2 0 0 0 0 .15 0 0 0 .6 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 

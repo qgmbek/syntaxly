@@ -1,0 +1,15 @@
+.wrapper {
+  position: relative;
+  background-color: var(--paper);
+}
+
+.wrapper::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: var(--grain);
+  opacity: 0.08;
+  mix-blend-mode: multiply;
+}

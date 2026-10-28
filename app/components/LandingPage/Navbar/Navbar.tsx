@@ -25,6 +25,7 @@ import {
 } from "@phosphor-icons/react";
 
 import styles from "./Navbar.module.css";
+import { Bolt, Pointer } from "../../../../app/ui/HandDrawn";
 
 type MenuKey = "features" | "tools";
 
@@ -350,6 +351,12 @@ export default function Navbar() {
         aria-hidden={!menu}
         inert={!menu}
       >
+        {shown === "features" ? (
+          <Bolt className={`${styles.menuDoodle} ${styles.menuBolt}`} />
+        ) : (
+          <Pointer className={`${styles.menuDoodle} ${styles.menuPointer}`} />
+        )}
+
         <div className={styles.menuContainer} key={shown}>
           {MENUS[shown].items.map((item, index) => (
             <Link

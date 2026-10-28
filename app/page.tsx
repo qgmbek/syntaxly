@@ -4,9 +4,11 @@ import BentoCards from "./components/LandingPage/BentoCards/BentoCards";
 import FinePrint from "./components/LandingPage/FinePrint/FinePrint";
 import Footer from "./components/LandingPage/Footer/Footer";
 
+import styles from "./page.module.css";
+
 export default function Home() {
   return (
-    <div style={{ backgroundColor: "var(--paper)" }}>
+    <div className={styles.wrapper}>
       <Navbar />
       <Hero />
       <BentoCards />

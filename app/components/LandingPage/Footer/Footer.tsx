@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect, MouseEvent, CSSProperties } from "react";
 import Link from "next/link";
 import styles from "./Footer.module.css";
+import { Arrow, Rocket, SleepyMoon } from "../../../../app/ui/HandDrawn";
 
 type FooterLink = {
   label: string;
@@ -126,6 +127,9 @@ export default function Footer() {
     >
       <div className={styles.glow} aria-hidden="true" />
 
+      <SleepyMoon className={`${styles.decor} ${styles.decorMoon}`} />
+      <Rocket className={`${styles.decor} ${styles.decorRocket}`} />
+
       <div className={styles.top}>
         <div className={styles.brandSection}>
           <div className={styles.logoWrapper}>
@@ -181,26 +185,12 @@ export default function Footer() {
           className={styles.toTop}
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
         >
-          Back to top
-          <span className={styles.toTopArrow} aria-hidden="true">
-            ↑
-          </span>
+          back to top
+          <Arrow
+            className={styles.toTopArrow}
+            style={{ "--draw-delay": "1.6s" } as CSSProperties}
+          />
         </button>
-
-        <svg
-          className={`${styles.spark} ${styles.s1}`}
-          viewBox="0 0 24 24"
-          aria-hidden="true"
-        >
-          <path d="M12 0C13 8 16 11 24 12C16 13 13 16 12 24C11 16 8 13 0 12C8 11 11 8 12 0Z" />
-        </svg>
-        <svg
-          className={`${styles.spark} ${styles.s2}`}
-          viewBox="0 0 24 24"
-          aria-hidden="true"
-        >
-          <path d="M12 0C13 8 16 11 24 12C16 13 13 16 12 24C11 16 8 13 0 12C8 11 11 8 12 0Z" />
-        </svg>
 
         <h1 className={styles.bigText} aria-label={WORDMARK}>
           {WORDMARK.split("").map((letter, index) => (

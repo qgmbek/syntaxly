@@ -128,8 +128,7 @@
   }
 }
 
-.bgOrbOne,
-.bgOrbTwo {
+.bgOrbOne {
   position: absolute;
   border-radius: 999px;
   filter: blur(90px);
@@ -145,7 +144,7 @@
   left: -120px;
   animation: gradientMove 14s ease-in-out infinite;
 }
-
+/* 
 .bgOrbTwo {
   width: 800px;
   height: 800px;
@@ -153,7 +152,7 @@
   right: -80px;
   bottom: -80px;
   animation: gradientMove 18s ease-in-out infinite reverse;
-}
+} */
 
 @keyframes gradientMove {
   0% {

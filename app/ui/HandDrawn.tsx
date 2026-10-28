@@ -392,3 +392,334 @@ export function SleepyMoon({ draw = false, ...rest }: MarkProps) {
     </svg>
   );
 }
+
+export function Duck({ draw = false, ...rest }: MarkProps) {
+  return (
+    <svg viewBox="0 0 120 100" strokeWidth={3} {...base} {...rest}>
+      <path
+        d="M20 62 C20 44 38 36 56 40 C60 28 70 18 84 20 C98 22 102 38 92 48 C100 52 106 60 100 72 C92 88 60 90 40 84 C26 80 20 72 20 62 Z"
+        {...filled}
+        {...d(draw)}
+      />
+      <path
+        d="M96 36 C108 34 114 40 108 46 C102 50 96 46 94 42 Z"
+        {...filled2}
+        {...d(draw)}
+      />
+      <circle cx="86" cy="32" r="2.5" {...solid} />
+      <path d="M44 62 C52 70 68 70 74 60 M10 94 C20 90 30 98 40 94 S60 90 70 94 S90 98 110 94" />
+    </svg>
+  );
+}
+
+export function Snail({ draw = false, ...rest }: MarkProps) {
+  return (
+    <svg viewBox="0 0 60 38" strokeWidth={2.5} {...base} {...rest}>
+      <path d="M4 34 H42 C50 34 52 28 50 22 C49 18 50 14 52 10 M50 14 L47 6 M52 12 L57 6" />
+      <path
+        d="M30 8 C42 6 46 16 44 24 C42 32 28 34 22 28 C16 22 20 12 30 8 Z"
+        {...filled}
+        {...d(draw)}
+      />
+      <path d="M30 14 C36 14 38 22 32 24 C28 25 26 20 30 19" />
+    </svg>
+  );
+}
+
+export function Caterpillar({ draw = false, ...rest }: MarkProps) {
+  return (
+    <svg viewBox="0 0 68 30" strokeWidth={2.5} {...base} {...rest}>
+      <circle cx="10" cy="22" r="7" {...filled} />
+      <circle cx="22" cy="21" r="7.5" {...filled} />
+      <circle cx="35" cy="22" r="8" {...filled} />
+      <circle cx="47" cy="20" r="8" {...filled} />
+      <circle cx="58" cy="16" r="9" {...filled} />
+      <circle cx="55" cy="14" r="1.6" {...solid} />
+      <circle cx="61" cy="14" r="1.6" {...solid} />
+      <path d="M54 20 C57 23 61 23 63 20 M54 8 L52 2 M62 8 L65 2" />
+    </svg>
+  );
+}
+
+export function Ladybug({ draw = false, ...rest }: MarkProps) {
+  return (
+    <svg viewBox="0 0 36 30" strokeWidth={2.5} {...base} {...rest}>
+      <path
+        d="M4 24 C4 8 32 8 32 24 Z"
+        style={{ fill: "var(--h-red)" }}
+      />
+      <path d="M13 10 C13 3 23 3 23 10 Z" {...solid} />
+      <path d="M18 10 V24 M8 26 L5 30 M18 26 V30 M28 26 L31 30 M15 4 L12 0 M21 4 L24 0" />
+      <circle cx="11" cy="17" r="2" {...solid} />
+      <circle cx="25" cy="17" r="2" {...solid} />
+    </svg>
+  );
+}
+
+export function PeekingCat({ draw = false, ...rest }: MarkProps) {
+  return (
+    <svg viewBox="0 0 60 32" strokeWidth={2.5} {...base} {...rest}>
+      <path
+        d="M8 32 C6 20 8 12 14 9 L16 1 L24 7 C28 6 32 6 36 7 L44 1 L46 9 C52 12 54 20 52 32"
+        {...filled}
+      />
+      <circle cx="22" cy="18" r="2.2" {...solid} />
+      <circle cx="38" cy="18" r="2.2" {...solid} />
+      <path d="M28 23 L32 23 L30 26 Z" style={{ fill: "var(--h-pink)" }} />
+      <path d="M14 23 L4 21 M14 26 L4 28 M46 23 L56 21 M46 26 L56 28 M16 32 C16 27 22 27 22 32 M38 32 C38 27 44 27 44 32" />
+    </svg>
+  );
+}
+
+export function Mushroom({ draw = false, ...rest }: MarkProps) {
+  return (
+    <svg viewBox="0 0 36 36" strokeWidth={2.5} {...base} {...rest}>
+      <path
+        d="M13 20 C12 28 12 32 14 34 H22 C24 32 24 28 23 20"
+        style={{ fill: "var(--paper-2)" }}
+      />
+      <path d="M4 20 C4 6 32 6 32 20 Z" {...filled} />
+      <circle cx="12" cy="14" r="2" style={{ fill: "var(--paper-2)", stroke: "none" }} />
+      <circle cx="22" cy="12" r="2.2" style={{ fill: "var(--paper-2)", stroke: "none" }} />
+      <circle cx="27" cy="17" r="1.6" style={{ fill: "var(--paper-2)", stroke: "none" }} />
+    </svg>
+  );
+}
+
+export function Ghost({ draw = false, ...rest }: MarkProps) {
+  return (
+    <svg viewBox="0 0 32 40" strokeWidth={2.5} {...base} {...rest}>
+      <path
+        d="M4 36 V16 C4 4 28 4 28 16 V36 L23 31 L18 36 L14 31 L9 36 Z"
+        style={{ fill: "var(--paper-2)" }}
+      />
+      <circle cx="12" cy="17" r="2" {...solid} />
+      <circle cx="20" cy="17" r="2" {...solid} />
+      <path d="M13 24 C15 27 17 27 19 24" />
+    </svg>
+  );
+}
+
+export function PaperBoat({ draw = false, ...rest }: MarkProps) {
+  return (
+    <svg viewBox="0 0 56 34" strokeWidth={2.5} {...base} {...rest}>
+      <path d="M28 4 L44 20 H28 Z M28 8 L16 20 H28 Z" style={{ fill: "var(--paper-2)" }} />
+      <path d="M4 20 H52 L44 30 H12 Z" {...filled} />
+      <path d="M2 33 C8 30 12 36 18 33 S30 30 36 33 S48 36 54 33" />
+    </svg>
+  );
+}
+
+export function Cactus({ draw = false, ...rest }: MarkProps) {
+  return (
+    <svg viewBox="0 0 36 44" strokeWidth={2.5} {...base} {...rest}>
+      <path d="M14 34 V10 C14 3 22 3 22 10 V34 Z" {...filled} />
+      <path d="M14 22 H8 C5 22 5 14 8 14 M22 18 H28 C31 18 31 10 28 10" />
+      <path d="M8 34 H28 L26 44 H10 Z" style={{ fill: "var(--h-red)" }} />
+      <circle cx="18" cy="4" r="3" style={{ fill: "var(--h-pink)" }} />
+    </svg>
+  );
+}
+
+export function Bee({ draw = false, ...rest }: MarkProps) {
+  return (
+    <svg viewBox="0 0 44 32" strokeWidth={2.5} {...base} {...rest}>
+      <path
+        d="M16 10 C14 2 22 0 24 8 M24 8 C28 0 36 4 30 10"
+        style={{ fill: "var(--paper-2)" }}
+      />
+      <path d="M10 18 C10 8 32 8 32 18 C32 28 10 28 10 18 Z" {...filled} />
+      <path d="M17 10 V26 M24 10 V26 M32 18 L38 18" />
+      <circle cx="14" cy="16" r="1.5" {...solid} />
+    </svg>
+  );
+}
+
+export function Jellyfish({ draw = false, ...rest }: MarkProps) {
+  return (
+    <svg viewBox="0 0 36 44" strokeWidth={2.5} {...base} {...rest}>
+      <path d="M4 22 C4 4 32 4 32 22 Z" {...filled} />
+      <path d="M9 22 C6 30 12 32 9 40 M16 22 C13 30 19 32 16 42 M23 22 C20 30 26 32 23 40 M29 22 C26 30 32 32 29 38" />
+      <circle cx="13" cy="14" r="1.6" {...solid} />
+      <circle cx="23" cy="14" r="1.6" {...solid} />
+    </svg>
+  );
+}
+
+export function Sprout({ draw = false, ...rest }: MarkProps) {
+  return (
+    <svg viewBox="0 0 30 40" strokeWidth={2.5} {...base} {...rest}>
+      <path d="M15 38 V20 M6 38 H24" />
+      <path d="M15 24 C6 24 4 14 4 14 C14 12 15 20 15 24 Z" {...filled} />
+      <path d="M15 20 C24 20 26 10 26 10 C16 8 15 16 15 20 Z" {...filled} />
+    </svg>
+  );
+}
+
+export function Frog({ draw = false, ...rest }: MarkProps) {
+  return (
+    <svg viewBox="0 0 48 34" strokeWidth={2.5} {...base} {...rest}>
+      <path d="M6 32 C4 20 12 14 24 14 C36 14 44 20 42 32 Z" {...filled} />
+      <path d="M10 16 C8 8 18 6 18 14 M30 14 C30 6 40 8 38 16" style={{ fill: "var(--paper-2)" }} />
+      <circle cx="14" cy="11" r="1.6" {...solid} />
+      <circle cx="34" cy="11" r="1.6" {...solid} />
+      <path d="M16 24 C22 28 30 28 34 24" />
+    </svg>
+  );
+}
+
+export function Octopus({ draw = false, ...rest }: MarkProps) {
+  return (
+    <svg viewBox="0 0 44 40" strokeWidth={2.5} {...base} {...rest}>
+      <path
+        d="M8 20 C8 4 36 4 36 20 C36 24 34 26 30 26 H14 C10 26 8 24 8 20 Z"
+        {...filled}
+      />
+      <path d="M12 26 C8 32 12 36 8 38 M18 26 C16 32 20 36 17 39 M26 26 C28 32 24 36 27 39 M32 26 C36 32 32 36 36 38 M19 21 C21 23 23 23 25 21" />
+      <circle cx="17" cy="16" r="2" {...solid} />
+      <circle cx="27" cy="16" r="2" {...solid} />
+    </svg>
+  );
+}
+
+export function Whale({ draw = false, ...rest }: MarkProps) {
+  return (
+    <svg viewBox="0 0 60 36" strokeWidth={2.5} {...base} {...rest}>
+      <path
+        d="M4 26 C4 10 24 6 38 10 C50 13 56 20 56 24 C56 30 50 32 44 30 C40 32 30 34 20 32 C10 32 4 30 4 26 Z"
+        {...filled}
+      />
+      <path d="M6 24 C2 22 1 16 3 12 C7 14 9 18 10 22 M30 8 V2 M30 4 C26 2 24 6 26 8 M30 4 C34 2 36 6 34 8 M14 28 C26 31 38 29 46 27" />
+      <circle cx="46" cy="20" r="1.8" {...solid} />
+    </svg>
+  );
+}
+
+export function Penguin({ draw = false, ...rest }: MarkProps) {
+  return (
+    <svg viewBox="0 0 32 44" strokeWidth={2.5} {...base} {...rest}>
+      <path
+        d="M16 4 C26 4 28 18 28 30 C28 40 22 42 16 42 C10 42 4 40 4 30 C4 18 6 4 16 4 Z"
+        {...filled}
+      />
+      <path
+        d="M16 16 C22 16 24 28 22 36 C20 40 12 40 10 36 C8 28 10 16 16 16 Z"
+        style={{ fill: "var(--paper-2)" }}
+      />
+      <path d="M14 15 L18 15 L16 18 Z" style={{ fill: "var(--h-butter)" }} />
+      <path d="M10 42 L8 44 M22 42 L24 44 M4 24 L1 30 M28 24 L31 30" />
+      <circle cx="12" cy="11" r="1.6" {...solid} />
+      <circle cx="20" cy="11" r="1.6" {...solid} />
+    </svg>
+  );
+}
+
+export function Owl({ draw = false, ...rest }: MarkProps) {
+  return (
+    <svg viewBox="0 0 36 40" strokeWidth={2.5} {...base} {...rest}>
+      <path
+        d="M18 3 C30 3 32 16 32 26 C32 36 24 38 18 38 C12 38 4 36 4 26 C4 16 6 3 18 3 Z"
+        {...filled}
+      />
+      <circle cx="12" cy="16" r="6" style={{ fill: "var(--paper-2)" }} />
+      <circle cx="24" cy="16" r="6" style={{ fill: "var(--paper-2)" }} />
+      <circle cx="12" cy="16" r="2" {...solid} />
+      <circle cx="24" cy="16" r="2" {...solid} />
+      <path d="M16 22 L20 22 L18 26 Z" style={{ fill: "var(--h-butter)" }} />
+      <path d="M8 8 L6 2 L13 5 M28 8 L30 2 L23 5 M12 30 C14 33 16 33 18 30 M18 30 C20 33 22 33 24 30 M12 38 V40 M24 38 V40" />
+    </svg>
+  );
+}
+
+export function Crab({ draw = false, ...rest }: MarkProps) {
+  return (
+    <svg viewBox="0 0 52 34" strokeWidth={2.5} {...base} {...rest}>
+      <path
+        d="M10 20 C10 8 42 8 42 20 C42 28 34 30 26 30 C18 30 10 28 10 20 Z"
+        {...filled}
+      />
+      <path d="M8 18 C2 16 0 8 6 6 C8 10 12 10 12 14 M44 18 C50 16 52 8 46 6 C44 10 40 10 40 14 M20 10 V5 M32 10 V5 M12 28 L6 32 M16 30 L12 34 M40 28 L46 32 M36 30 L40 34 M22 21 C24 24 28 24 30 21" />
+      <circle cx="20" cy="4" r="2" {...solid} />
+      <circle cx="32" cy="4" r="2" {...solid} />
+    </svg>
+  );
+}
+
+export function Turtle({ draw = false, ...rest }: MarkProps) {
+  return (
+    <svg viewBox="0 0 56 34" strokeWidth={2.5} {...base} {...rest}>
+      <path
+        d="M40 22 C44 14 52 16 52 22 C52 26 46 28 42 26 Z"
+        style={{ fill: "var(--paper-2)" }}
+      />
+      <path d="M8 26 C8 6 40 6 40 26 Z" {...filled} />
+      <path d="M24 8 V26 M14 14 L18 26 M34 14 L30 26 M12 26 V32 H18 V26 M30 26 V32 H36 V26 M8 24 L2 26" />
+      <circle cx="48" cy="20" r="1.4" {...solid} />
+    </svg>
+  );
+}
+
+export function Bunny({ draw = false, ...rest }: MarkProps) {
+  return (
+    <svg viewBox="0 0 44 36" strokeWidth={2.5} {...base} {...rest}>
+      <path
+        d="M8 36 C6 22 10 14 22 14 C34 14 38 22 36 36"
+        {...filled}
+      />
+      <path d="M14 16 C10 4 14 0 18 2 C20 6 20 12 20 15 M30 16 C34 4 30 0 26 2 C24 6 24 12 24 15 M14 36 C14 32 20 32 20 36 M24 36 C24 32 30 32 30 36" />
+      <path d="M20 30 L24 30 L22 32 Z" style={{ fill: "var(--h-pink)" }} />
+      <circle cx="17" cy="26" r="2" {...solid} />
+      <circle cx="27" cy="26" r="2" {...solid} />
+    </svg>
+  );
+}
+
+export function Teapot({ draw = false, ...rest }: MarkProps) {
+  return (
+    <svg viewBox="0 0 52 38" strokeWidth={2.5} {...base} {...rest}>
+      <path
+        d="M8 22 C8 8 32 8 32 22 C32 32 28 36 20 36 C12 36 8 32 8 22 Z"
+        {...filled}
+      />
+      <path d="M14 10 C14 6 26 6 26 10 M20 6 V3 M32 18 C38 18 40 12 44 10 C44 16 42 24 32 26 M8 16 C0 14 0 28 8 28" />
+    </svg>
+  );
+}
+
+export function Cloudy({ draw = false, ...rest }: MarkProps) {
+  return (
+    <svg viewBox="0 0 52 38" strokeWidth={2.5} {...base} {...rest}>
+      <path
+        d="M12 24 C4 24 2 14 10 12 C10 4 24 0 30 8 C36 4 48 8 44 18 C50 20 48 26 42 26 Z"
+        {...filled}
+      />
+      <path d="M21 20 C24 23 28 23 31 20 M14 31 V35 M24 30 V36 M34 31 V35" />
+      <circle cx="20" cy="16" r="1.5" {...solid} />
+      <circle cx="30" cy="16" r="1.5" {...solid} />
+    </svg>
+  );
+}
+
+export function Donut({ draw = false, ...rest }: MarkProps) {
+  return (
+    <svg viewBox="0 0 40 36" strokeWidth={2.5} {...base} {...rest}>
+      <path d="M4 18 C4 6 36 6 36 18 C36 30 4 30 4 18 Z" {...filled} />
+      <path d="M15 18 C15 14 25 14 25 18 C25 22 15 22 15 18 Z" />
+      <path d="M10 14 L13 12 M27 12 L30 14 M10 23 L13 25 M28 24 L31 22 M20 9 L20 11" />
+    </svg>
+  );
+}
+
+export function Cupcake({ draw = false, ...rest }: MarkProps) {
+  return (
+    <svg viewBox="0 0 36 40" strokeWidth={2.5} {...base} {...rest}>
+      <path d="M6 22 H30 L27 38 H9 Z" style={{ fill: "var(--paper-2)" }} />
+      <path d="M13 22 L12 38 M18 22 V38 M23 22 L24 38" />
+      <path
+        d="M4 22 C2 12 12 12 12 6 C16 0 22 4 22 8 C30 8 34 14 32 22 Z"
+        {...filled}
+      />
+      <circle cx="18" cy="3" r="3" style={{ fill: "var(--h-red)" }} />
+    </svg>
+  );
+}

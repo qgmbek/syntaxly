@@ -60,7 +60,9 @@
 
 .nameClickable {
   cursor: pointer;
-  transition: color 200ms ease, text-shadow 200ms ease;
+  transition:
+    color 200ms ease,
+    text-shadow 200ms ease;
   user-select: none;
 }
 
@@ -84,8 +86,8 @@
 .fontBtn {
   width: 28px;
   height: 28px;
-  border: 1px solid rgba(0, 0, 0, 0.4);
-  border-radius: 8px;
+  border: 1.5px solid var(--ink);
+  border-radius: 999px;
   background: transparent;
   color: inherit;
   font-size: 16px;
@@ -106,10 +108,12 @@
 }
 
 .fontValue {
-  font-size: 12px;
+  font-family: var(--font-hand);
+  font-size: 20px;
   font-variant-numeric: tabular-nums;
-  font-weight: 600;
-  opacity: 0.75;
+  font-weight: 700;
+  line-height: 1;
+  opacity: 0.8;
   padding: 4px 0;
   min-width: 20px;
   text-align: center;
@@ -158,17 +162,28 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 12px;
+  gap: 16px;
   flex: 1;
-  color: #bbb;
-  font-size: 12px;
-  letter-spacing: 0.06em;
+  color: var(--column-block-bg);
   padding: 48px 24px;
   animation: kEmpty 0.6s var(--ease) backwards;
 }
 
 .emptyFilter p {
   margin: 0;
+  font-family: var(--font-hand);
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.emptyDoodle {
+  width: 150px;
+  height: 165px;
+  color: var(--column-block-bg);
+  --fill: transparent;
+  --fill2: var(--primary);
+  rotate: -8deg;
 }
 
 .scrollButton {
@@ -177,7 +192,7 @@
   left: 100px;
   width: 44px;
   height: 44px;
-  border-radius: 8px;
+  border-radius: 50%;
   border: 2px solid var(--primary);
   background: var(--column-bg);
   color: var(--primary);
@@ -185,7 +200,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
   z-index: 100;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   animation: kPop 0.6s var(--ease) 1.1s backwards;
@@ -194,7 +211,6 @@
 .scrollButton:hover {
   background: var(--primary);
   color: var(--column-bg);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
 }
 
 .scrollButtonLeft {
@@ -211,15 +227,19 @@
   position: fixed;
   left: 45px;
   transform: translateY(-50%);
-  padding: 7px 12px;
+  padding: 4px 14px 6px;
   white-space: nowrap;
   pointer-events: none;
-  background: var(--column-bg);
-  border: 1px solid var(--primary);
-  border-radius: 2px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
-  font-size: 14px;
-  color: var(--column-block-bg);
+  background: var(--paper-2);
+  border: 2px solid var(--ink);
+  border-radius: 14px 6px 14px 6px / 6px 14px 6px 14px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+  font-family: var(--font-hand);
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--ink);
+  rotate: -2deg;
   animation: sidebarTipIn 0.18s cubic-bezier(0.16, 1, 0.3, 1);
   z-index: 200;
 }
@@ -228,12 +248,12 @@
   content: "";
   position: absolute;
   top: 50%;
-  left: -5px;
+  left: -7px;
   width: 8px;
   height: 8px;
-  background: var(--column-bg);
-  border-top: 1px solid var(--primary);
-  border-left: 1px solid var(--primary);
+  background: var(--paper-2);
+  border-top: 2px solid var(--ink);
+  border-left: 2px solid var(--ink);
   transform: translateY(-50%) rotate(45deg);
 }
 
@@ -279,7 +299,7 @@
   }
 }
 
-@keyframes kEmpty {
+@keyframes kEmpty { 
   from {
     opacity: 0;
     transform: translate3d(0, -8px, 0);

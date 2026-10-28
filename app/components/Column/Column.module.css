@@ -24,12 +24,15 @@
 }
 
 .number {
-  font-size: 20px;
+  font-family: var(--font-hand);
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1;
   animation: kTextIn 0.6s var(--ease) calc(var(--c, 0) * 70ms + 200ms) backwards;
 }
 
 .title {
-  margin-top: 5px;
+  margin-top: 2px;
   font-size: 26px;
   text-transform: uppercase;
   animation: kTitleIn 0.8s var(--ease) calc(var(--c, 0) * 70ms + 150ms)
@@ -38,12 +41,14 @@
 
 .blockCount {
   position: absolute;
-  bottom: 6px;
+  bottom: 8px;
   right: 10px;
-  font-size: 9px;
-  font-weight: 500;
-  opacity: 0.7;
-  letter-spacing: 0.04em;
+  font-family: var(--font-hand);
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+  opacity: 0.75;
   user-select: none;
   animation: kTextIn 0.7s var(--ease) calc(var(--c, 0) * 70ms + 350ms) backwards;
 }
@@ -70,28 +75,20 @@
   width: 100%;
   height: fit-content;
   margin-bottom: 15px;
-  border-radius: 12px;
+  border-radius: 14px;
   overflow: hidden;
   cursor: pointer;
   background-color: var(--column-block-bg);
   outline: 2px solid transparent;
   transition:
-    transform 160ms ease,
     box-shadow 160ms ease,
-    scale 120ms ease,
-    outline 120ms ease;
+    outline-color 160ms ease;
   animation: kBlockIn 0.8s var(--ease)
     calc(0.18s + var(--c, 0) * 70ms + var(--i, 0) * 55ms) backwards;
 }
 
 .block:hover {
-  transform: translateY(-2px);
-  scale: 1.012;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
-}
-
-.block:active {
-  transform: translateY(0px);
+  outline-color: rgba(0, 255, 208, 0.45);
 }
 
 .block.blockActive {
@@ -103,7 +100,7 @@
   content: "";
   position: absolute;
   inset: 0;
-  border-radius: 12px;
+  border-radius: 14px;
   pointer-events: none;
   animation: kFlash 0.7s var(--ease);
 }
@@ -115,8 +112,8 @@
   width: fit-content;
   height: fit-content;
   padding: 5px 10px;
-  border-top-left-radius: 12px;
-  border-bottom-right-radius: 12px;
+  border-top-left-radius: 14px;
+  border-bottom-right-radius: 14px;
   text-align: center;
   background-color: var(--primary);
 }
@@ -135,8 +132,8 @@
 }
 
 .column.compact .number {
-  font-size: 18px;
-  font-weight: 600;
+  font-size: 26px;
+  font-weight: 700;
 }
 
 .column.compact .title {
@@ -165,20 +162,13 @@
   width: 36px;
   height: 24px;
   padding: 2px 3px;
-  border-radius: 8px;
+  border-radius: 999px;
   border: 1px solid var(--secondary);
   font-size: 20px;
   font-weight: 600;
   color: inherit;
   margin-top: 8px;
   flex-shrink: 0;
-}
-
-.blockCount {
-  bottom: 10px;
-  right: 10px;
-  font-size: 12px;
-  white-space: nowrap;
 }
 
 .block:hover :global(.copyBtn) {
@@ -188,9 +178,10 @@
 .main::-webkit-scrollbar {
   width: 4px;
 }
+
 .main::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.2);
-  border-radius: 1px;
+  border-radius: 999px;
 }
 
 @keyframes kMetaIn {
@@ -246,13 +237,63 @@
   }
 }
 
+.headDoodle {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  width: 40px;
+  height: 40px;
+  color: var(--ink);
+  rotate: var(--tilt, 0deg);
+  pointer-events: none;
+  animation: kDoodleIn 0.7s var(--ease) calc(var(--c, 0) * 70ms + 450ms)
+    backwards;
+}
+
+.column.compact .headDoodle {
+  display: none;
+}
+
+.critterRow {
+  display: flex;
+  height: 22px;
+  padding: 0 18px;
+  pointer-events: none;
+}
+
+.critter {
+  height: 28px;
+  width: auto;
+  margin-top: -8px;
+  color: var(--column-block-bg);
+  opacity: 0.92;
+  animation: kCritterIn 0.7s var(--ease) calc(var(--c, 0) * 70ms + 900ms)
+    backwards;
+}
+
+@keyframes kCritterIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.8);
+  }
+}
+
+@keyframes kDoodleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.5) rotate(-20deg);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .meta,
   .number,
   .title,
   .blockCount,
   .block,
-  .blockActive::after {
+  .blockActive::after,
+  .headDoodle,
+  .critter {
     animation: none;
   }
 }

@@ -2,6 +2,20 @@
 
 import { useEffect, useState, type CSSProperties } from "react";
 import styles from "./ExplanationColumn.module.css";
+import {
+  Smiley,
+  Sparkle,
+  Burst,
+  Bolt,
+  Spiral,
+  Semicolon,
+  Braces,
+  Pointer,
+  Coffee,
+  Rocket,
+  Goldfish,
+  SleepyMoon,
+} from "../../../app/ui/HandDrawn";
 
 export interface ExplanationData {
   blockTitle: string;
@@ -18,6 +32,31 @@ interface ExplanationColumnProps {
   data: ExplanationData | null;
   onClose: () => void;
 }
+
+const DOODLES = [
+  Smiley,
+  Sparkle,
+  Burst,
+  Bolt,
+  Spiral,
+  Semicolon,
+  Braces,
+  Pointer,
+  Coffee,
+  Rocket,
+  Goldfish,
+  SleepyMoon,
+];
+
+const FILLS = [
+  "var(--h-butter)",
+  "var(--h-pink)",
+  "var(--h-cyan)",
+  "var(--paper-2)",
+];
+
+const titleSeed = (title: string) =>
+  Array.from(title).reduce((sum, ch, i) => sum + ch.charCodeAt(0) * (i + 1), 0);
 
 const MEMORY_MAX = 128;
 function memoryBarWidth(bytes: number): string {
@@ -46,10 +85,14 @@ function memoryBarColor(bytes: number): string {
 }
 function difficultyColor(level: string): string {
   switch (level) {
-    case "beginner": return "#00e676";
-    case "intermediate": return "#ffb74d";
-    case "advanced": return "#ef5350";
-    default: return "#aaa";
+    case "beginner":
+      return "#00e676";
+    case "intermediate":
+      return "#ffb74d";
+    case "advanced":
+      return "#ef5350";
+    default:
+      return "#aaa";
   }
 }
 
@@ -77,6 +120,9 @@ export default function ExplanationColumn({
     }
   }, [data]);
 
+  const seed = rendered ? titleSeed(rendered.blockTitle) : 0;
+  const Doodle = DOODLES[seed % DOODLES.length];
+
   return (
     <div
       className={`${styles.wrapper} ${visible ? styles.open : ""}`}
@@ -87,6 +133,20 @@ export default function ExplanationColumn({
           <div className={styles.title} key={session}>
             {rendered?.blockTitle ?? ""}
           </div>
+
+          {rendered && (
+            <Doodle
+              key={session}
+              className={styles.doodle}
+              style={
+                {
+                  "--fill": FILLS[seed % FILLS.length],
+                  rotate: `${(seed % 17) - 8}deg`,
+                } as CSSProperties
+              }
+            />
+          )}
+
           <button
             className={styles.close}
             onClick={onClose}
@@ -126,12 +186,16 @@ export default function ExplanationColumn({
                 </section>
               )}
 
-              {(rendered.version || rendered.difficulty || rendered.memoryUsage != null) && (
+              {(rendered.version ||
+                rendered.difficulty ||
+                rendered.memoryUsage != null) && (
                 <div className={styles.metaGroup} style={at(4)}>
                   {rendered.version && (
                     <div className={styles.metaRow}>
                       <span className={styles.metaLabel}>Version</span>
-                      <span className={styles.metaValue}>{rendered.version}</span>
+                      <span className={styles.metaValue}>
+                        {rendered.version}
+                      </span>
                     </div>
                   )}
 
@@ -140,7 +204,9 @@ export default function ExplanationColumn({
                       <span className={styles.metaLabel}>Difficulty</span>
                       <span
                         className={styles.difficultyBadge}
-                        style={{ background: difficultyColor(rendered.difficulty) }}
+                        style={{
+                          background: difficultyColor(rendered.difficulty),
+                        }}
                       >
                         {rendered.difficulty}
                       </span>
@@ -150,7 +216,9 @@ export default function ExplanationColumn({
                   {rendered.memoryUsage != null && (
                     <div className={styles.memorySection}>
                       <div className={styles.metaRow}>
-                        <span className={styles.metaLabel}>Memory Footprint</span>
+                        <span className={styles.metaLabel}>
+                          Memory Footprint
+                        </span>
                         <span className={styles.metaValue}>
                           {rendered.memoryUsage} B
                         </span>

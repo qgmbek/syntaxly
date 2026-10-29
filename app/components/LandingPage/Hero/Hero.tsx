@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, useMemo, useCallback } from "react";
+import Link from "next/link";
 import styles from "./Hero.module.css";
 import { Arrow, Eye, MeltingClock } from "../../../../app/ui/HandDrawn";
 
@@ -606,7 +607,7 @@ export default function Hero() {
         </p>
 
         <div className={styles.buttonContainer}>
-          <a
+          <Link
             ref={buttonRef}
             href="/syntax"
             className={`${styles.button} ${styles.getButton}`}
@@ -615,14 +616,14 @@ export default function Hero() {
             <span className={styles.buttonArrow} aria-hidden="true">
               ↗
             </span>
-          </a>
+          </Link>
 
-          <a
+          <Link
             href="/syntax"
             className={`${styles.button} ${styles.learnButton}`}
           >
             Learn Syntaxly
-          </a>
+          </Link>
         </div>
 
         <span className={styles.note} aria-hidden="true">

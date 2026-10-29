@@ -24,10 +24,10 @@ import {
 
 import styles from "./BentoCards.module.css";
 import useReveal from "../../../hooks/useReveal";
+import HandwrittenText, { HandwrittenArrow } from "../../../ui/HandwrittenText";
 import {
   Underline,
   Loop,
-  Arrow,
   Goldfish,
   HandString,
   Coffee,
@@ -302,8 +302,8 @@ export default function BentoCards() {
                   </span>
 
                   <span className={styles.note} aria-hidden="true">
-                    <Arrow className={styles.noteArrow} style={drawAt(3.1)} />
-                    yes, really
+                    <HandwrittenArrow className={styles.noteArrow} delay={4300} />
+                    <HandwrittenText text="yes, really" delay={3100} />
                   </span>
                 </div>
               </div>
@@ -455,8 +455,8 @@ export default function BentoCards() {
                   }`}
                   aria-hidden="true"
                 >
-                  <Arrow className={styles.hintArrow} style={drawAt(1.6)} />
-                  click a block
+                  <HandwrittenArrow className={styles.hintArrow} delay={2800} />
+                  <HandwrittenText text="click a block" delay={1600} />
                 </span>
               </div>
 

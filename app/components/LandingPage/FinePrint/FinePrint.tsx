@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, type CSSProperties } from "react";
 import styles from "./FinePrint.module.css";
+import HandwrittenText from "../../../ui/HandwrittenText";
 import {
   Underline,
   Loop,
@@ -158,14 +159,16 @@ export default function FinePrint() {
           <div className={styles.note} data-reveal aria-hidden="true">
             <span className={styles.noteTape} />
             <div className={styles.notePaper}>
-              <span className={styles.noteTop}>psst...</span>
+              <span className={styles.noteTop}>
+                <HandwrittenText text="psst..." delay={500} duration={650} />
+              </span>
               <span className={styles.noteBody}>
-                yes, we read it{" "}
+                <HandwrittenText text="yes, we read it" delay={1200} />{" "}
                 <span className={styles.noteUnder}>
-                  too.
+                  <HandwrittenText text="too." delay={2350} duration={400} />
                   <Underline
                     className={styles.noteUnderline}
-                    style={drawAt(1.4)}
+                    style={drawAt(2.8)}
                   />
                 </span>
               </span>
@@ -185,7 +188,7 @@ export default function FinePrint() {
                 <div className={styles.group} key={g}>
                   {MARQUEE.map((word) => (
                     <span className={styles.item} key={word}>
-                      {word}
+                      <HandwrittenText text={word.toUpperCase()} delay={450} />
                       <span className={styles.mStar}>*</span>
                     </span>
                   ))}
@@ -200,7 +203,7 @@ export default function FinePrint() {
                 <div className={styles.group} key={g}>
                   {[...MARQUEE].reverse().map((word) => (
                     <span className={styles.item} key={word}>
-                      {word}
+                      <HandwrittenText text={word.toUpperCase()} delay={650} />
                       <span className={styles.mStar}>*</span>
                     </span>
                   ))}
@@ -258,7 +261,7 @@ export default function FinePrint() {
                 </p>
 
                 <span className={styles.sticker} aria-hidden="true">
-                  {line.tag}
+                  <HandwrittenText text={line.tag} delay={800} />
                 </span>
               </div>
             </li>

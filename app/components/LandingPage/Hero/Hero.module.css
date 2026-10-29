@@ -529,6 +529,12 @@
   opacity: 0;
 }
 
+.noteText {
+  width: 124px;
+  height: 30px;
+  overflow: visible;
+}
+
 .noteArrow {
   width: 40px;
   height: 18px;
@@ -537,14 +543,16 @@
 
 .mounted .note {
   opacity: calc(1 - var(--e) * 3);
-  animation: noteIn 600ms var(--hero-ease) 2400ms backwards;
 }
 
-@keyframes noteIn {
-  from {
-    opacity: 0;
-    transform: translateX(10px);
-  }
+.noteArrow path:first-child {
+  --draw-delay: 3850ms;
+  --draw-dur: 450ms;
+}
+
+.noteArrow path:last-child {
+  --draw-delay: 4250ms;
+  --draw-dur: 220ms;
 }
 
 .card {

@@ -3,7 +3,8 @@
 import { useState, useRef, useEffect, MouseEvent, CSSProperties } from "react";
 import Link from "next/link";
 import styles from "./Footer.module.css";
-import { Arrow, Rocket, SleepyMoon } from "../../../../app/ui/HandDrawn";
+import { Rocket, SleepyMoon } from "../../../../app/ui/HandDrawn";
+import HandwrittenText, { HandwrittenArrow } from "../../../ui/HandwrittenText";
 
 type FooterLink = {
   label: string;
@@ -145,7 +146,9 @@ export default function Footer() {
               className={styles.column}
               style={{ "--col": col, "--tone": column.tone } as CSSProperties}
             >
-              <div className={styles.heading}>{column.title}</div>
+              <div className={styles.heading}>
+                <HandwrittenText text={column.title} delay={400 + col * 90} duration={850} />
+              </div>
 
               {column.links.map((link, row) => {
                 const style = { "--row": row } as CSSProperties;
@@ -185,10 +188,10 @@ export default function Footer() {
           className={styles.toTop}
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
         >
-          back to top
-          <Arrow
+          <HandwrittenText text="back to top" delay={1400} />
+          <HandwrittenArrow
             className={styles.toTopArrow}
-            style={{ "--draw-delay": "1.6s" } as CSSProperties}
+            delay={2600}
           />
         </button>
 

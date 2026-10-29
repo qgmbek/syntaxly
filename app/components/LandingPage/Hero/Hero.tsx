@@ -7,6 +7,19 @@ import { Arrow, Eye, MeltingClock } from "../../../../app/ui/HandDrawn";
 const CELL_SIZE = 80;
 const MAGNET_REACH = 90;
 
+// Each path follows the pen through one handwritten letter, left to right.
+const NOTE_STROKES = [
+  "M12 12 C7 8 2 13 7 16 C16 20 8 25 3 21",
+  "M22 5 L18 20 Q17 25 23 21 M15 12 L26 11",
+  "M36 13 C27 8 25 24 32 22 Q36 20 37 12 L35 22 L40 20",
+  "M43 12 L41 22 Q44 10 50 12",
+  "M59 5 L55 20 Q54 25 60 21 M51 12 L63 11",
+  "M77 4 L72 23 Q77 10 82 13 Q84 15 80 22 L85 21",
+  "M88 17 Q100 14 94 11 C88 9 84 24 95 21",
+  "M101 12 L99 22 Q102 10 108 12",
+  "M111 17 Q123 14 117 11 C111 9 107 24 119 21",
+];
+
 const WORDS = ["programming.", "JavaScript.", "TypeScript.", "React."];
 
 const TONES = [
@@ -613,11 +626,32 @@ export default function Hero() {
         </div>
 
         <span className={styles.note} aria-hidden="true">
-          start here
-          <Arrow
-            className={styles.noteArrow}
-            style={{ "--draw-delay": "2.4s" } as React.CSSProperties}
-          />
+          <svg
+            className={styles.noteText}
+            viewBox="0 0 124 30"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.8"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            focusable="false"
+          >
+            {NOTE_STROKES.map((path, i) => (
+              <path
+                key={i}
+                d={path}
+                pathLength={1}
+                data-draw=""
+                style={
+                  {
+                    "--draw-delay": `${2400 + i * 150}ms`,
+                    "--draw-dur": "180ms",
+                  } as React.CSSProperties
+                }
+              />
+            ))}
+          </svg>
+          <Arrow className={styles.noteArrow} />
         </span>
       </div>
     </section>

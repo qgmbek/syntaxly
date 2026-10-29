@@ -147,7 +147,11 @@ export default function Footer() {
               style={{ "--col": col, "--tone": column.tone } as CSSProperties}
             >
               <div className={styles.heading}>
-                <HandwrittenText text={column.title} delay={400 + col * 90} duration={850} />
+                <HandwrittenText
+                  text={column.title}
+                  delay={400 + col * 90}
+                  duration={850}
+                />
               </div>
 
               {column.links.map((link, row) => {
@@ -180,20 +184,17 @@ export default function Footer() {
         </div>
       </div>
 
+      <button
+        type="button"
+        className={styles.toTop}
+        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+      >
+        <HandwrittenText text="back to top" delay={1400} />
+        <HandwrittenArrow className={styles.toTopArrow} delay={2600} />
+      </button>
+
       <div className={styles.bottom}>
         <p className={styles.copyright}>Syntaxly. All rights reserved.</p>
-
-        <button
-          type="button"
-          className={styles.toTop}
-          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-        >
-          <HandwrittenText text="back to top" delay={1400} />
-          <HandwrittenArrow
-            className={styles.toTopArrow}
-            delay={2600}
-          />
-        </button>
 
         <h1 className={styles.bigText} aria-label={WORDMARK}>
           {WORDMARK.split("").map((letter, index) => (

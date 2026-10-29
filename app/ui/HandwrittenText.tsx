@@ -2,7 +2,6 @@ import type { CSSProperties, SVGProps } from "react";
 import { Arrow } from "./HandDrawn";
 import styles from "./HandwrittenText.module.css";
 
-// Centerline pen paths, rather than outlines, so the ink follows each letter.
 const GLYPHS: Record<string, string> = {
   a: "M11 13 C2 8 0 24 7 22 Q11 20 12 12 L10 22 L14 20",
   b: "M6 4 L2 22 Q4 11 10 12 C18 14 10 26 3 21",
@@ -90,7 +89,6 @@ export default function HandwrittenText({
   delay?: number;
   duration?: number;
 }) {
-  // Keep unsupported copy readable if this small lettering set is reused later.
   if (Array.from(text).some((letter) => letter !== " " && !GLYPHS[letter])) {
     return <span>{text}</span>;
   }

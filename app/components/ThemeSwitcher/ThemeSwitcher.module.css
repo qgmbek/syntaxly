@@ -6,6 +6,7 @@
   position: fixed;
   inset: 0;
   z-index: 150;
+  border: none;
   background: rgba(0, 0, 0, 0.45);
   backdrop-filter: blur(4px);
   animation: fadeIn 0.18s cubic-bezier(0.16, 1, 0.3, 1);
@@ -16,15 +17,26 @@
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  width: min(240px, calc(100vw - 32px));
-  padding: 14px;
+  width: min(260px, calc(100vw - 32px));
+  padding: 18px 16px 14px;
   background: var(--column-bg);
-  border: 1px solid var(--card-border, rgba(255, 255, 255, 0.15));
-  border-radius: 16px;
-  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.06);
+  border-radius: 22px;
+  box-shadow: 0 24px 56px -16px rgba(0, 0, 0, 0.55);
   z-index: 200;
+  rotate: -1deg;
   animation: panelIn 0.22s cubic-bezier(0.16, 1, 0.3, 1);
   color: var(--white);
+}
+
+.doodle {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  width: 30px;
+  height: 30px;
+  color: var(--white);
+  rotate: 12deg;
+  pointer-events: none;
 }
 
 @keyframes fadeIn {
@@ -48,19 +60,20 @@
 }
 
 .panelTitle {
-  font-size: 11px;
+  font-family: var(--font-hand);
+  font-size: 30px;
   font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
+  line-height: 1;
+  text-transform: lowercase;
   color: var(--primary);
-  margin-bottom: 10px;
+  margin-bottom: 12px;
   padding: 0 4px;
 }
 
 .options {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
 }
 
 .option {
@@ -69,67 +82,65 @@
   align-items: flex-start;
   gap: 3px;
   width: 100%;
-  padding: 10px 12px;
-  border: 1px solid transparent;
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.04);
+  padding: 8px 4px;
+  border: none;
+  background: none;
   cursor: pointer;
   text-align: left;
   color: var(--white);
-  transition:
-    background 140ms ease,
-    border-color 140ms ease,
-    transform 140ms ease;
-}
-
-.option:hover {
-  background: rgba(255, 255, 255, 0.08);
-  transform: translateY(-1px);
-}
-
-.optionActive {
-  background: rgba(255, 255, 255, 0.12);
-  border-color: var(--primary);
-  box-shadow: 0 0 12px var(--glow-color, rgba(0, 255, 208, 0.2));
-}
-
-.optionHeader {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
 }
 
 .optionLabel {
-  font-size: 13px;
-  font-weight: 600;
-  line-height: 1.2;
+  width: fit-content;
+  padding-bottom: 5px;
+  font-family: var(--font-hand);
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1;
 }
 
-.activeDot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--primary);
-  box-shadow: 0 0 6px var(--primary);
+.option:hover .optionLabel {
+  text-decoration: underline wavy rgba(255, 255, 255, 0.45);
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 3px;
+}
+
+.optionActive .optionLabel,
+.optionActive:hover .optionLabel {
+  text-decoration: none;
+  background: var(--scribble) left bottom / 100% 6px no-repeat;
 }
 
 .optionDescription {
-  font-size: 11px;
+  font-size: 12px;
   opacity: 0.7;
-  line-height: 1.2;
+  line-height: 1.25;
 }
 
 .swatchRow {
   display: flex;
-  gap: 5px;
-  margin-top: 4px;
+  gap: 8px;
+  margin-top: 6px;
 }
 
 .swatch {
-  width: 16px;
-  height: 16px;
-  border-radius: 5px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  width: 20px;
+  height: 20px;
+  border-radius: 52% 48% 55% 45% / 48% 55% 45% 52%;
+  box-shadow: 0 0 0 1.5px rgba(255, 255, 255, 0.22);
+}
+
+.swatch:nth-child(2) {
+  border-radius: 46% 54% 48% 52% / 54% 46% 52% 48%;
+}
+
+.swatch:nth-child(3) {
+  border-radius: 55% 45% 52% 48% / 45% 55% 48% 52%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .backdrop,
+  .panel {
+    animation: none;
+  }
 }

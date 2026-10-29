@@ -1,9 +1,10 @@
 "use client";
 
 import { Fragment, useEffect, useRef } from "react";
-import { Keyboard, X } from "@phosphor-icons/react";
+import { X } from "@phosphor-icons/react";
 
 import styles from "./KeyboardShortcutsModal.module.css";
+import { Bolt } from "../../ui/HandDrawn";
 
 interface KeyboardShortcutsModalProps {
   isOpen: boolean;
@@ -44,7 +45,10 @@ export default function KeyboardShortcutsModal({
       >
         <div className={styles.meta}>
           <div className={styles.titleRow}>
-            <Keyboard size={26} weight="regular" aria-hidden="true" />
+            <Bolt
+              className={styles.doodle}
+              style={{ "--fill": "var(--h-butter)" } as React.CSSProperties}
+            />
             <h3 id="shortcuts-title" className={styles.title}>
               Keyboard Shortcuts
             </h3>

@@ -189,28 +189,34 @@
 .scrollButton {
   position: fixed;
   bottom: 20px;
-  left: 100px;
-  width: 44px;
+  width: 64px;
   height: 44px;
-  border-radius: 50%;
-  border: 2px solid var(--primary);
-  background: var(--column-bg);
+  padding: 0;
+  border: none;
+  background: none;
   color: var(--primary);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition:
-    background-color 0.2s ease,
-    color 0.2s ease;
+  transition: color 0.2s ease;
   z-index: 100;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   animation: kPop 0.6s var(--ease) 1.1s backwards;
 }
 
 .scrollButton:hover {
-  background: var(--primary);
-  color: var(--column-bg);
+  color: var(--column-block-bg);
+}
+
+.scrollArrow {
+  width: 56px;
+  height: 26px;
+  filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.6))
+    drop-shadow(0 2px 6px rgba(0, 0, 0, 0.35));
+}
+
+.scrollArrowFlip {
+  transform: scaleX(-1);
 }
 
 .scrollButtonLeft {

@@ -10,6 +10,7 @@ import {
   useState,
   type CSSProperties,
 } from "react";
+import { Magnifier, Ghost } from "../../ui/HandDrawn";
 
 interface Block {
   title: string;
@@ -173,9 +174,7 @@ export default function SearchOverlay({
         <div className={styles.results} role="listbox">
           {!query.trim() && (
             <div className={styles.idle}>
-              <div className={styles.idleIcon}>
-                <MagnifyingGlass size={30} weight="light" />
-              </div>
+              <Magnifier className={styles.idleDoodle} />
 
               <p className={styles.idleText}>Type to scan across all columns</p>
 
@@ -187,6 +186,7 @@ export default function SearchOverlay({
 
           {query.trim() && matches.length === 0 && (
             <div className={styles.empty}>
+              <Ghost className={styles.emptyDoodle} />
               <span className={styles.emptyCode}>NO BLOCKS MATCH</span>
               <span className={styles.emptyQuery}>{query}</span>
             </div>

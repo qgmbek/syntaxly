@@ -25,6 +25,7 @@ import ThemeSwitcher from "../components/ThemeSwitcher/ThemeSwitcher";
 
 import styles from "./syntax.module.css";
 import { Data, ColumnData } from "./data";
+import { Arrow } from "../ui/HandDrawn";
 
 const LANGUAGE_INFO: LanguageInfoData = {
   name: "React",
@@ -403,11 +404,17 @@ export default function Syntax() {
             aria-pressed={uniqueOnly}
             className={`${styles.sidebarButton} ${uniqueOnly ? styles.sidebarButtonCompact : ""}`}
             onMouseEnter={(e) =>
-              showSidebarTip(e, uniqueOnly ? "Show All" : "Unique Only (Ctrl+U)")
+              showSidebarTip(
+                e,
+                uniqueOnly ? "Show All" : "Unique Only (Ctrl+U)",
+              )
             }
             onMouseLeave={() => setSidebarTip(null)}
             onFocus={(e) =>
-              showSidebarTip(e, uniqueOnly ? "Show All" : "Unique Only (Ctrl+U)")
+              showSidebarTip(
+                e,
+                uniqueOnly ? "Show All" : "Unique Only (Ctrl+U)",
+              )
             }
             onBlur={() => setSidebarTip(null)}
           >
@@ -417,7 +424,9 @@ export default function Syntax() {
           <button
             onClick={() => setCompact((c) => !c)}
             className={`${styles.sidebarButton} ${compact ? styles.sidebarButtonCompact : ""}`}
-            onMouseEnter={(e) => showSidebarTip(e, compact ? "Expand" : "Overview")}
+            onMouseEnter={(e) =>
+              showSidebarTip(e, compact ? "Expand" : "Overview")
+            }
             onMouseLeave={() => setSidebarTip(null)}
             onFocus={(e) => showSidebarTip(e, compact ? "Expand" : "Overview")}
             onBlur={() => setSidebarTip(null)}
@@ -449,7 +458,11 @@ export default function Syntax() {
       )}
 
       {sidebarTip && (
-        <div className={styles.sidebarTip} style={{ top: sidebarTip.y }} role="presentation">
+        <div
+          className={styles.sidebarTip}
+          style={{ top: sidebarTip.y }}
+          role="presentation"
+        >
           {sidebarTip.text}
         </div>
       )}
@@ -531,7 +544,7 @@ export default function Syntax() {
         title="Scroll left"
         aria-label="Scroll left"
       >
-        <ArrowLeft size={24} weight="bold" />
+        <Arrow draw={false} className={styles.scrollArrow} />
       </button>
 
       <button
@@ -540,7 +553,10 @@ export default function Syntax() {
         title="Scroll right"
         aria-label="Scroll right"
       >
-        <ArrowRight size={24} weight="bold" />
+        <Arrow
+          draw={false}
+          className={`${styles.scrollArrow} ${styles.scrollArrowFlip}`}
+        />
       </button>
     </div>
   );

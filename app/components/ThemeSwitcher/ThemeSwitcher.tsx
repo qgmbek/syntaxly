@@ -5,6 +5,7 @@ import { createPortal } from "react-dom";
 import { Palette } from "@phosphor-icons/react";
 import { useTheme } from "../../hooks/useTheme";
 import { THEMES, THEME_PREVIEW_COLORS, type ThemeId } from "../../lib/theme";
+import { Sparkle } from "../../ui/HandDrawn";
 import styles from "./ThemeSwitcher.module.css";
 
 interface ThemeSwitcherProps {
@@ -67,7 +68,13 @@ export default function ThemeSwitcher({
         aria-label="Theme options"
         onClick={(event) => event.stopPropagation()}
       >
+        <Sparkle
+          className={styles.doodle}
+          style={{ "--fill": "var(--h-butter)" } as React.CSSProperties}
+        />
+
         <div className={styles.panelTitle}>Theme</div>
+
         <div className={styles.options}>
           {THEMES.map((option) => {
             const isActive = theme === option.id;
@@ -81,13 +88,12 @@ export default function ThemeSwitcher({
                 className={`${styles.option} ${isActive ? styles.optionActive : ""}`}
                 onClick={() => selectTheme(option.id)}
               >
-                <div className={styles.optionHeader}>
-                  <span className={styles.optionLabel}>{option.label}</span>
-                  {isActive && <span className={styles.activeDot} />}
-                </div>
+                <span className={styles.optionLabel}>{option.label}</span>
+
                 <span className={styles.optionDescription}>
                   {option.description}
                 </span>
+
                 <span className={styles.swatchRow} aria-hidden="true">
                   <span
                     className={styles.swatch}

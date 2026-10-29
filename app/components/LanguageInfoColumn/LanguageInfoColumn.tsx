@@ -2,6 +2,20 @@
 
 import { useEffect, useState, type CSSProperties } from "react";
 import styles from "./LanguageInfoColumn.module.css";
+import {
+  Smiley,
+  Sparkle,
+  Burst,
+  Bolt,
+  Spiral,
+  Semicolon,
+  Braces,
+  Pointer,
+  Coffee,
+  Rocket,
+  Goldfish,
+  SleepyMoon,
+} from "../../../app/ui/HandDrawn";
 
 export interface LanguageInfoData {
   name: string;
@@ -28,6 +42,31 @@ interface LanguageInfoColumnProps {
   onClose: () => void;
 }
 
+const DOODLES = [
+  Smiley,
+  Sparkle,
+  Burst,
+  Bolt,
+  Spiral,
+  Semicolon,
+  Braces,
+  Pointer,
+  Coffee,
+  Rocket,
+  Goldfish,
+  SleepyMoon,
+];
+
+const FILLS = [
+  "var(--h-butter)",
+  "var(--h-pink)",
+  "var(--h-cyan)",
+  "var(--paper-2)",
+];
+
+const seedOf = (text: string) =>
+  Array.from(text).reduce((sum, ch, i) => sum + ch.charCodeAt(0) * (i + 1), 0);
+
 const group = (s: number) => ({ "--s": s }) as CSSProperties;
 const item = (k: number) => ({ "--k": k }) as CSSProperties;
 
@@ -53,6 +92,9 @@ export default function LanguageInfoColumn({
     }
   }, [data]);
 
+  const seed = rendered ? seedOf(rendered.name) : 0;
+  const Doodle = DOODLES[seed % DOODLES.length];
+
   return (
     <div
       className={`${styles.wrapper} ${visible ? styles.open : ""}`}
@@ -67,6 +109,20 @@ export default function LanguageInfoColumn({
             <div className={styles.headerName}>{rendered?.name ?? ""}</div>
             <div className={styles.tagline}>{rendered?.tagline ?? ""}</div>
           </div>
+
+          {rendered && (
+            <Doodle
+              key={session}
+              className={styles.doodle}
+              style={
+                {
+                  "--fill": FILLS[seed % FILLS.length],
+                  rotate: `${(seed % 17) - 8}deg`,
+                } as CSSProperties
+              }
+            />
+          )}
+
           <button
             className={styles.close}
             onClick={onClose}
@@ -93,9 +149,7 @@ export default function LanguageInfoColumn({
 
               <div className={styles.statsGrid} style={group(2)}>
                 <div className={styles.statCard} style={item(0)}>
-                  <div className={styles.statValue}>
-                    {rendered.githubStars}
-                  </div>
+                  <div className={styles.statValue}>{rendered.githubStars}</div>
                   <div className={styles.statLabel}>GitHub Stars</div>
                 </div>
                 <div className={styles.statCard} style={item(1)}>
@@ -111,9 +165,7 @@ export default function LanguageInfoColumn({
                   <div className={styles.statLabel}>Popularity</div>
                 </div>
                 <div className={styles.statCard} style={item(3)}>
-                  <div className={styles.statValue}>
-                    {rendered.yearCreated}
-                  </div>
+                  <div className={styles.statValue}>{rendered.yearCreated}</div>
                   <div className={styles.statLabel}>Created</div>
                 </div>
               </div>

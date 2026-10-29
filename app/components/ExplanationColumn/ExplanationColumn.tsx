@@ -130,13 +130,13 @@ export default function ExplanationColumn({
     >
       <div className={styles.column}>
         <div className={styles.meta}>
-          <div className={styles.title} key={session}>
+          <div className={styles.title} key={`title-${session}`}>
             {rendered?.blockTitle ?? ""}
           </div>
 
           {rendered && (
             <Doodle
-              key={session}
+              key={`doodle-${session}`}
               className={styles.doodle}
               style={
                 {

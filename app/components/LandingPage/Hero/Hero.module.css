@@ -526,7 +526,7 @@
   rotate: -6deg;
   white-space: nowrap;
   pointer-events: none;
-  opacity: calc(1 - var(--e) * 3);
+  opacity: 0;
 }
 
 .noteArrow {
@@ -536,6 +536,7 @@
 }
 
 .mounted .note {
+  opacity: calc(1 - var(--e) * 3);
   animation: noteIn 600ms var(--hero-ease) 2400ms backwards;
 }
 
@@ -879,7 +880,8 @@
     transition: none;
   }
 
-  .note {
+  .note,
+  .mounted .note {
     opacity: 1;
   }
 

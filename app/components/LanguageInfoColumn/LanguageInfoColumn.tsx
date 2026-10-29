@@ -102,7 +102,7 @@ export default function LanguageInfoColumn({
     >
       <div className={styles.column}>
         <div className={styles.header}>
-          <div className={styles.headerContent} key={session}>
+          <div className={styles.headerContent} key={`header-${session}`}>
             <div className={styles.categoryBadge}>
               {rendered?.category ?? ""}
             </div>
@@ -112,7 +112,7 @@ export default function LanguageInfoColumn({
 
           {rendered && (
             <Doodle
-              key={session}
+              key={`doodle-${session}`}
               className={styles.doodle}
               style={
                 {

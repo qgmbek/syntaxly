@@ -56,9 +56,7 @@ export default function RootLayout({
     >
       <body>
         <CookieConsent />
-        <head>
-          <ThemeScript />
-        </head>
+        <ThemeScript />
         {children}
       </body>
     </html>

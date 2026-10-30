@@ -23,6 +23,8 @@ import {
   ArrowDown,
   ArrowUpRight,
 } from "@phosphor-icons/react";
+
+import { Semicolon, Sparkle, Donut } from "../../ui/HandDrawn";
 import styles from "./Features.module.css";
 
 type Block = {
@@ -647,9 +649,9 @@ export default function Features() {
 
   return (
     <main className={styles.page} ref={root}>
-      <span className={`${styles.decor} ${styles.d1}`} aria-hidden="true" />
-      <span className={`${styles.decor} ${styles.d2}`} aria-hidden="true" />
-      <span className={`${styles.decor} ${styles.d3}`} aria-hidden="true" />
+      <Semicolon className={`${styles.decor} ${styles.decorSemi}`} />
+      <Sparkle className={`${styles.decor} ${styles.decorSpark}`} />
+      <Donut className={`${styles.decor} ${styles.decorDonut}`} />
 
       <section className={styles.hero}>
         <aside className={styles.rail}>

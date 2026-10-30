@@ -19,6 +19,7 @@ import {
 
 import styles from "./About.module.css";
 import useReveal from "../../hooks/useReveal";
+import { Arrow, Duck, Coffee, Spiral } from "../../ui/HandDrawn";
 
 type Field = "What it is" | "How it's used" | "Example" | "Tip";
 
@@ -208,9 +209,12 @@ export default function About() {
 
   return (
     <main ref={revealRef} className={styles.page}>
-      <span className={`${styles.decor} ${styles.d1}`} aria-hidden="true" />
-      <span className={`${styles.decor} ${styles.d2}`} aria-hidden="true" />
-      <span className={`${styles.decor} ${styles.d3}`} aria-hidden="true" />
+      <Duck
+        className={`${styles.decor} ${styles.decorDuck}`}
+        style={{ "--fill": "var(--h-butter)", "--fill2": "var(--h-red)" } as CSSProperties}
+      />
+      <Coffee className={`${styles.decor} ${styles.decorCoffee}`} />
+      <Spiral className={`${styles.decor} ${styles.decorSpiral}`} />
 
       <section className={styles.hero}>
         <aside className={styles.rail}>
@@ -443,6 +447,10 @@ export default function About() {
               className={`${styles.hint} ${touched ? styles.hintGone : ""}`}
               aria-hidden="true"
             >
+              <Arrow
+                className={styles.hintArrow}
+                style={{ "--draw-delay": "1.7s" } as CSSProperties}
+              />
               try the tabs
             </span>
           </div>
@@ -504,21 +512,6 @@ export default function About() {
       </section>
 
       <section className={styles.cta}>
-        <svg
-          className={`${styles.spark} ${styles.s1}`}
-          viewBox="0 0 24 24"
-          aria-hidden="true"
-        >
-          <path d="M12 0C13 8 16 11 24 12C16 13 13 16 12 24C11 16 8 13 0 12C8 11 11 8 12 0Z" />
-        </svg>
-        <svg
-          className={`${styles.spark} ${styles.s2}`}
-          viewBox="0 0 24 24"
-          aria-hidden="true"
-        >
-          <path d="M12 0C13 8 16 11 24 12C16 13 13 16 12 24C11 16 8 13 0 12C8 11 11 8 12 0Z" />
-        </svg>
-
         <h2 className={styles.ctaTitle} data-reveal>
           <span className={styles.mask}>
             <span className={styles.maskIn}>Stop scrolling docs.</span>

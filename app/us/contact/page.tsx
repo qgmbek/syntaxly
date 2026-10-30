@@ -20,6 +20,7 @@ import {
 } from "@phosphor-icons/react";
 
 import styles from "./Contact.module.css";
+import { Smiley, Octopus, Burst } from "../../ui/HandDrawn";
 
 type Item = {
   id: string;
@@ -188,9 +189,9 @@ export default function Contact() {
       >
         <div className={styles.orb} />
 
-        <span className={`${styles.decor} ${styles.d1}`} aria-hidden="true" />
-        <span className={`${styles.decor} ${styles.d2}`} aria-hidden="true" />
-        <span className={`${styles.decor} ${styles.d3}`} aria-hidden="true" />
+        <Smiley className={`${styles.decor} ${styles.decorSmile}`} />
+        <Octopus className={`${styles.decor} ${styles.decorOcto}`} />
+        <Burst className={`${styles.decor} ${styles.decorBurst}`} />
 
         <div className={styles.intro}>
           <h1 className={styles.title} aria-label="Say hello.">

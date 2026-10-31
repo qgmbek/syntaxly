@@ -11,6 +11,7 @@ import {
 import Link from "next/link";
 import { ArrowUpRight } from "@phosphor-icons/react";
 import styles from "./Privacy.module.css";
+import { Ghost, Cactus, Cloudy } from "../../ui/HandDrawn";
 
 const UPDATED = "October 2, 2026";
 
@@ -349,9 +350,9 @@ export default function Privacy() {
 
   return (
     <main className={styles.page} ref={rootRef}>
-      <span className={`${styles.decor} ${styles.d1}`} aria-hidden="true" />
-      <span className={`${styles.decor} ${styles.d2}`} aria-hidden="true" />
-      <span className={`${styles.decor} ${styles.d3}`} aria-hidden="true" />
+      <Ghost className={`${styles.decor} ${styles.decorGhost}`} />
+      <Cactus className={`${styles.decor} ${styles.decorCactus}`} />
+      <Cloudy className={`${styles.decor} ${styles.decorCloud}`} />
 
       <div className={styles.progress}>
         <div ref={bar} className={styles.progressBar} />

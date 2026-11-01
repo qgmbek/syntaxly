@@ -2,6 +2,7 @@
 
 import {
   useEffect,
+  useMemo,
   useRef,
   useState,
   type CSSProperties,
@@ -11,6 +12,16 @@ import {
 import { ArrowUpRight, ArrowDown } from "@phosphor-icons/react";
 
 import styles from "./Roadmap.module.css";
+import {
+  Arrow,
+  Turtle,
+  Penguin,
+  Snail,
+  Sparkle,
+  Braces,
+  Coffee,
+  Rocket,
+} from "../../ui/HandDrawn";
 
 const UPDATED = "October 6, 2026";
 
@@ -41,6 +52,52 @@ const STATUS: Record<Status, string> = {
   exploring: "Exploring",
 };
 
+const STATUS_CLASS: Record<Status, string> = {
+  live: "sLive",
+  making: "sMaking",
+  planned: "sPlanned",
+  exploring: "sExploring",
+};
+
+const STATUS_ORDER: Status[] = ["live", "making", "planned", "exploring"];
+
+type Filter = "all" | Status;
+
+const FILTERS: { key: Filter; label: string }[] = [
+  { key: "all", label: "All" },
+  { key: "live", label: "Live" },
+  { key: "making", label: "In the making" },
+  { key: "planned", label: "Planned" },
+  { key: "exploring", label: "Exploring" },
+];
+
+const LEGEND = [
+  {
+    status: "exploring" as Status,
+    Doodle: Sparkle,
+    fill: "var(--h-butter)",
+    text: "An idea we are thinking about. No promises yet.",
+  },
+  {
+    status: "planned" as Status,
+    Doodle: Braces,
+    fill: "var(--h-cyan)",
+    text: "We want to build it, and it has a place in the queue.",
+  },
+  {
+    status: "making" as Status,
+    Doodle: Coffee,
+    fill: "var(--h-pink)",
+    text: "Being built right now, one cup of coffee at a time.",
+  },
+  {
+    status: "live" as Status,
+    Doodle: Rocket,
+    fill: "var(--paper-2)",
+    text: "Shipped. Open Syntaxly and try it.",
+  },
+];
+
 type Item = {
   title: string;
   status: Status;
@@ -49,10 +106,11 @@ type Item = {
   link?: [string, string];
 };
 
-const COLS: { n: number; title: string; items: Item[] }[] = [
+const COLS: { n: number; title: string; sub: string; items: Item[] }[] = [
   {
     n: 1,
-    title: "Now",
+    title: "now",
+    sub: "what you can use today",
     items: [
       {
         title: "Search every block",
@@ -97,7 +155,8 @@ const COLS: { n: number; title: string; items: Item[] }[] = [
   },
   {
     n: 2,
-    title: "Next",
+    title: "next",
+    sub: "what we are building and planning",
     items: [
       {
         title: "Windows app",
@@ -131,7 +190,8 @@ const COLS: { n: number; title: string; items: Item[] }[] = [
   },
   {
     n: 3,
-    title: "Later",
+    title: "later",
+    sub: "ideas we are exploring",
     items: [
       {
         title: "Libraries & frameworks",
@@ -157,6 +217,12 @@ const COLS: { n: number; title: string; items: Item[] }[] = [
     ],
   },
 ];
+
+const ALL_ITEMS = COLS.flatMap((c) => c.items);
+
+const LIVE_TITLES = ALL_ITEMS.filter((i) => i.status === "live").map(
+  (i) => i.title,
+);
 
 const at = (seconds: number, distance?: number) =>
   ({
@@ -202,57 +268,123 @@ const letters = (text: string, line: number) => {
   ));
 };
 
+function Glyph({ status }: { status: Status }) {
+  const paths: Record<Status, string> = {
+    live: "M4 14 L10 20 L22 5",
+    making: "M5 22 L6 16 L18 4 L22 8 L10 20 Z M15 7 L19 11",
+    planned: "M6 23 V4 M6 5 C12 2 14 8 20 5 V15 C14 18 12 12 6 15",
+    exploring: "M8 9 C8 3 19 3 19 9 C19 14 13 13 13 18 M13 22 L13.2 22.2",
+  };
+
+  return (
+    <svg
+      className={styles.glyph}
+      viewBox="0 0 26 26"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.4"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <path d={paths[status]} />
+    </svg>
+  );
+}
+
 export default function Roadmap() {
   const [open, setOpen] = useState<string | null>(null);
+  const [filter, setFilter] = useState<Filter>("all");
+
   const root = useRef<HTMLElement>(null);
+  const journey = useRef<HTMLDivElement>(null);
+  const io = useRef<IntersectionObserver | null>(null);
+  const chipsRef = useRef<HTMLDivElement>(null);
+  const chipRefs = useRef<(HTMLButtonElement | null)[]>([]);
+
+  const counts = useMemo(() => {
+    const m: Record<Filter, number> = {
+      all: ALL_ITEMS.length,
+      live: 0,
+      making: 0,
+      planned: 0,
+      exploring: 0,
+    };
+
+    ALL_ITEMS.forEach((i) => {
+      m[i.status] += 1;
+    });
+
+    return m;
+  }, []);
+
+  const chapters = useMemo(
+    () =>
+      COLS.map((c) => ({
+        ...c,
+        items: c.items.filter((i) => filter === "all" || i.status === filter),
+      })).filter((c) => c.items.length > 0),
+    [filter],
+  );
 
   useEffect(() => {
-    const els = root.current?.querySelectorAll("[data-reveal]");
+    const el = root.current;
 
-    if (!els) return;
+    if (!el) return;
 
-    let timer: ReturnType<typeof setTimeout> | undefined;
-
-    const io = new IntersectionObserver(
+    const observer = new IntersectionObserver(
       (entries) =>
         entries.forEach((e) => {
-          if (!e.isIntersecting) return;
-
-          e.target.setAttribute("data-in", "");
-          io.unobserve(e.target);
-
-          if (e.target.hasAttribute("data-first")) {
-            timer = setTimeout(
-              () => setOpen((current) => current ?? FIRST_OPEN),
-              1300,
-            );
+          if (e.isIntersecting) {
+            e.target.setAttribute("data-in", "");
+            observer.unobserve(e.target);
           }
         }),
       { threshold: 0.15 },
     );
 
-    els.forEach((el) => io.observe(el));
+    io.current = observer;
+
+    el.querySelectorAll("[data-reveal]").forEach((n) => observer.observe(n));
+
+    const timer = setTimeout(
+      () => setOpen((current) => current ?? FIRST_OPEN),
+      2600,
+    );
 
     return () => {
-      io.disconnect();
-      if (timer) clearTimeout(timer);
+      clearTimeout(timer);
+      observer.disconnect();
+      io.current = null;
     };
   }, []);
 
   useEffect(() => {
     const el = root.current;
+
     if (!el) return;
 
     let frame = 0;
 
     const update = () => {
       frame = 0;
+
       const y = window.scrollY;
       const vh = window.innerHeight;
       const max = Math.max(1, el.offsetHeight - vh);
 
       el.style.setProperty("--hp", Math.min(1, y / vh).toFixed(4));
       el.style.setProperty("--pp", Math.min(1, y / max).toFixed(4));
+
+      const j = journey.current;
+
+      if (j) {
+        const r = j.getBoundingClientRect();
+        const p = Math.min(1, Math.max(0, (vh * 0.6 - r.top) / r.height));
+
+        j.style.setProperty("--tp", p.toFixed(4));
+      }
     };
 
     const onScroll = () => {
@@ -270,11 +402,51 @@ export default function Roadmap() {
     };
   }, []);
 
+  useEffect(() => {
+    const wrap = chipsRef.current;
+    const idx = FILTERS.findIndex((f) => f.key === filter);
+    const el = chipRefs.current[idx];
+
+    if (!wrap || !el) return;
+
+    const place = (snap: boolean) => {
+      if (snap) wrap.style.setProperty("--pt", "0s");
+
+      wrap.style.setProperty("--tx", `${el.offsetLeft}px`);
+      wrap.style.setProperty("--ty", `${el.offsetTop}px`);
+      wrap.style.setProperty("--tw", `${el.offsetWidth}px`);
+      wrap.style.setProperty("--th", `${el.offsetHeight}px`);
+      wrap.style.setProperty("--to", "1");
+
+      if (snap) {
+        requestAnimationFrame(() =>
+          requestAnimationFrame(() => wrap.style.removeProperty("--pt")),
+        );
+      }
+    };
+
+    place(wrap.style.getPropertyValue("--to") !== "1");
+
+    const onResize = () => place(true);
+
+    window.addEventListener("resize", onResize);
+    document.fonts?.ready.then(onResize);
+
+    return () => window.removeEventListener("resize", onResize);
+  }, [filter]);
+
+  const watch = (el: HTMLElement | null) => {
+    if (el && io.current && !el.hasAttribute("data-in")) {
+      io.current.observe(el);
+    }
+  };
+
+  let stopIndex = 0;
+
   return (
     <main className={styles.page} ref={root}>
-      <span className={`${styles.decor} ${styles.d1}`} aria-hidden="true" />
-      <span className={`${styles.decor} ${styles.d2}`} aria-hidden="true" />
-      <span className={`${styles.decor} ${styles.d3}`} aria-hidden="true" />
+      <Turtle className={`${styles.decor} ${styles.decorTurtle}`} />
+      <Penguin className={`${styles.decor} ${styles.decorPenguin}`} />
 
       <section className={styles.hero}>
         <aside className={styles.rail}>
@@ -310,13 +482,13 @@ export default function Roadmap() {
                 ))}
               </p>
 
-              <span className={styles.updated}>Updated {UPDATED}</span>
+              <span className={styles.updated}>updated {UPDATED}</span>
 
               <a
-                href="#board"
+                href="#trail"
                 className={`${styles.btn} ${styles.btnA} ${styles.heroBtn}`}
               >
-                See the board
+                Follow the trail
                 <ArrowDown size={18} weight="bold" />
               </a>
             </div>
@@ -324,96 +496,226 @@ export default function Roadmap() {
         </div>
       </section>
 
-      <section id="board">
-        <div className={styles.band}>
-          <div className={styles.cols}>
-            {COLS.map((c, ci) => (
-              <div
-                key={c.n}
-                className={styles.col}
+      <section className={styles.tally} aria-label="Status summary">
+        {STATUS_ORDER.map((s, i) => (
+          <div
+            key={s}
+            className={`${styles.tStat} ${styles[STATUS_CLASS[s]]}`}
+            data-reveal
+            style={at(i * 0.1)}
+          >
+            <span className={styles.tNum}>{counts[s]}</span>
+            <span className={styles.tLabel}>
+              <Glyph status={s} />
+              {STATUS[s].toLowerCase()}
+            </span>
+          </div>
+        ))}
+      </section>
+
+      <section className={styles.legend}>
+        <h2
+          className={`${styles.secTitle} ${styles.reveal} ${styles.wipe} ${styles.up}`}
+          data-reveal
+          style={at(0, 16)}
+        >
+          How to read it
+        </h2>
+
+        <p
+          className={`${styles.secText} ${styles.reveal} ${styles.fade} ${styles.right}`}
+          data-reveal
+          style={at(0.1)}
+        >
+          Every idea travels the same road, from a scribble in a notebook to
+          something you can open. The label on each stop tells you where it is.
+        </p>
+
+        <div className={styles.steps}>
+          {LEGEND.map((l, i) => (
+            <div
+              key={l.status}
+              className={`${styles.step} ${styles.reveal} ${styles.wipe} ${styles.up}`}
+              data-reveal
+              style={at(i * 0.12, 24)}
+            >
+              <l.Doodle
+                className={styles.stepDoodle}
+                style={{ "--fill": l.fill } as CSSProperties}
+              />
+
+              <span className={`${styles.stepName} ${styles[STATUS_CLASS[l.status]]}`}>
+                <Glyph status={l.status} />
+                {STATUS[l.status].toLowerCase()}
+              </span>
+
+              <p className={styles.stepText}>{l.text}</p>
+
+              {i < LEGEND.length - 1 && (
+                <Arrow
+                  className={styles.stepArrow}
+                  style={{ "--draw-delay": `${0.5 + i * 0.2}s` } as CSSProperties}
+                />
+              )}
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <div className={styles.ribbon} aria-hidden="true">
+        <div className={styles.track}>
+          {[0, 1].map((g) => (
+            <div className={styles.group} key={g}>
+              {LIVE_TITLES.map((t) => (
+                <span className={styles.ribbonItem} key={t}>
+                  {t}
+                  <span className={styles.ribbonStar}>*</span>
+                </span>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <section id="trail" className={styles.trail}>
+        <h2
+          className={`${styles.secTitle} ${styles.reveal} ${styles.wipe} ${styles.up}`}
+          data-reveal
+          style={at(0, 16)}
+        >
+          The trail
+        </h2>
+
+        <p
+          className={`${styles.secText} ${styles.reveal} ${styles.fade} ${styles.right}`}
+          data-reveal
+          style={at(0.1)}
+        >
+          Scroll to walk it. Tap a stop to see what is inside, or filter the
+          trail down to one kind of stop.
+        </p>
+
+        <div
+          className={styles.filters}
+          role="group"
+          aria-label="Filter by status"
+          ref={chipsRef}
+        >
+          <span className={styles.chipPill} aria-hidden="true" />
+
+          {FILTERS.map((f, i) => (
+            <button
+              key={f.key}
+              ref={(node) => {
+                chipRefs.current[i] = node;
+              }}
+              className={`${styles.chip} ${
+                filter === f.key ? styles.chipOn : ""
+              }`}
+              onClick={() => setFilter(f.key)}
+              aria-pressed={filter === f.key}
+            >
+              {f.label}
+              <span>{counts[f.key]}</span>
+            </button>
+          ))}
+        </div>
+
+        <div className={styles.journey} ref={journey}>
+          <div className={styles.spine} aria-hidden="true">
+            <span className={styles.spineFill} />
+          </div>
+
+          <div className={styles.traveler} aria-hidden="true">
+            <Snail style={{ "--fill": "var(--h-butter)" } as CSSProperties} />
+            <span className={styles.you}>you are here</span>
+          </div>
+
+          {chapters.map((c) => (
+            <div key={c.n} className={styles.chapterWrap}>
+              <header
+                className={styles.chapter}
+                ref={watch}
                 data-reveal
-                {...(c.n === 1 ? { "data-first": "" } : {})}
-                style={at(ci * 0.12)}
               >
-                <div className={styles.meta}>
-                  <span className={styles.metaNum}>{c.n}</span>
-                  <h2 className={styles.metaTitle}>{c.title}</h2>
-                  <em className={styles.metaCount}>Blocks: {c.items.length}</em>
-                </div>
+                <span className={styles.chNum}>{c.n}</span>
+                <h3 className={styles.chTitle}>
+                  <span className={styles.chMark}>{c.title}</span>
+                </h3>
+                <span className={styles.chSub}>{c.sub}</span>
+              </header>
 
-                <div className={styles.main}>
-                  {c.items.map((it, i) => {
-                    const isOpen = open === it.title;
+              {c.items.map((it) => {
+                const idx = stopIndex++;
+                const isOpen = open === it.title;
 
-                    return (
-                      <div
-                        key={it.title}
-                        className={`${styles.block} ${
-                          isOpen ? styles.blockOpen : ""
-                        }`}
-                        style={{ "--i": i } as CSSProperties}
+                return (
+                  <article
+                    key={it.title}
+                    ref={watch}
+                    data-reveal
+                    className={`${styles.stop} ${
+                      idx % 2 === 0 ? styles.stopL : styles.stopR
+                    }`}
+                  >
+                    <span className={styles.node} aria-hidden="true" />
+
+                    <div
+                      className={`${styles.block} ${
+                        isOpen ? styles.blockOpen : ""
+                      }`}
+                    >
+                      <button
+                        className={styles.head}
+                        onClick={() => setOpen(isOpen ? null : it.title)}
+                        aria-expanded={isOpen}
                       >
-                        <button
-                          className={styles.head}
-                          onClick={() => setOpen(isOpen ? null : it.title)}
-                          aria-expanded={isOpen}
+                        <span className={styles.tab}>{it.title}</span>
+
+                        <span
+                          className={`${styles.stat} ${
+                            styles[STATUS_CLASS[it.status]]
+                          }`}
                         >
-                          <span className={styles.tab}>{it.title}</span>
+                          <Glyph status={it.status} />
+                          {STATUS[it.status].toLowerCase()}
+                        </span>
 
-                          <span className={styles.stat}>
-                            <i
-                              className={`${styles.dot} ${styles[it.status]}`}
-                            />
-                            {STATUS[it.status]}
-                          </span>
+                        <span className={styles.text}>{it.text}</span>
+                      </button>
 
-                          <span className={styles.text}>{it.text}</span>
-                        </button>
+                      <div className={styles.panel}>
+                        <div className={styles.clip}>
+                          <div className={styles.detail}>
+                            <p>{it.detail}</p>
 
-                        <div className={styles.panel}>
-                          <div className={styles.clip}>
-                            <div className={styles.detail}>
-                              <p>{it.detail}</p>
-
-                              {it.link && (
-                                <a
-                                  href={it.link[0]}
-                                  className={styles.link}
-                                  tabIndex={isOpen ? 0 : -1}
-                                >
-                                  {it.link[1]}
-                                  <ArrowUpRight size={15} weight="bold" />
-                                </a>
-                              )}
-                            </div>
+                            {it.link && (
+                              <a
+                                href={it.link[0]}
+                                className={styles.link}
+                                tabIndex={isOpen ? 0 : -1}
+                              >
+                                {it.link[1]}
+                                <ArrowUpRight size={15} weight="bold" />
+                              </a>
+                            )}
                           </div>
                         </div>
                       </div>
-                    );
-                  })}
-                </div>
-              </div>
-            ))}
-          </div>
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+          ))}
+
+          {chapters.length === 0 && (
+            <p className={styles.none}>nothing here yet</p>
+          )}
         </div>
       </section>
 
       <section className={styles.cta}>
-        <svg
-          className={`${styles.spark} ${styles.s1}`}
-          viewBox="0 0 24 24"
-          aria-hidden="true"
-        >
-          <path d="M12 0C13 8 16 11 24 12C16 13 13 16 12 24C11 16 8 13 0 12C8 11 11 8 12 0Z" />
-        </svg>
-        <svg
-          className={`${styles.spark} ${styles.sp2}`}
-          viewBox="0 0 24 24"
-          aria-hidden="true"
-        >
-          <path d="M12 0C13 8 16 11 24 12C16 13 13 16 12 24C11 16 8 13 0 12C8 11 11 8 12 0Z" />
-        </svg>
-
         <h2 className={styles.ctaTitle} data-reveal>
           <span className={styles.mask}>
             <span className={styles.maskIn}>Missing something?</span>
@@ -433,7 +735,7 @@ export default function Roadmap() {
 
           <a
             href="/syntax"
-            className={`${styles.btn} ${styles.btnB} ${styles.reveal} ${styles.wipe} ${styles.right}`}
+            className={`${styles.btnB} ${styles.reveal} ${styles.wipe} ${styles.right}`}
             data-reveal
             style={at(0.52)}
           >

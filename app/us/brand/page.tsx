@@ -14,14 +14,7 @@ import {
   ArrowCounterClockwise,
 } from "@phosphor-icons/react";
 import styles from "./Brand.module.css";
-import {
-  Underline,
-  Loop,
-  Snail,
-  Owl,
-  Cactus,
-  Frog,
-} from "../../ui/HandDrawn";
+import { Underline, Loop, Snail, Owl, Cactus, Frog } from "../../ui/HandDrawn";
 
 type Theme = "default" | "monochrome" | "satisfying-fun";
 
@@ -128,15 +121,9 @@ const toHex = (rgb: string) => {
   ).toUpperCase();
 };
 
-const inkFor = (hex?: string) => {
-  if (!hex || !/^#[0-9a-f]{6}$/i.test(hex)) return "#000";
-
+const inkFor = (hex: string) => {
   const n = parseInt(hex.slice(1), 16);
-
-  const lum =
-    0.299 * (n >> 16) +
-    0.587 * ((n >> 8) & 255) +
-    0.114 * (n & 255);
+  const lum = 0.299 * (n >> 16) + 0.587 * ((n >> 8) & 255) + 0.114 * (n & 255);
 
   return lum > 150 ? "#000" : "#fff";
 };
@@ -179,14 +166,11 @@ function Lockup({ dark }: { dark?: boolean }) {
 
 export default function Brand() {
   const [theme, setTheme] = useState<Theme>("default");
-  const [hex, setHex] = useState<string[]>(
-    SWATCHES.map(() => "#000000"),
-  );
+  const [hex, setHex] = useState<string[]>(SWATCHES.map(() => "#000000"));
   const [copied, setCopied] = useState<number | null>(null);
   const [spin, setSpin] = useState(0);
   const [run, setRun] = useState(0);
-
-  const refs = useRef<(HTMLButtonElement | null)[]>([]);
+  const refs = useRef<(HTMLDivElement | null)[]>([]);
   const root = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -212,14 +196,12 @@ export default function Brand() {
 
   useEffect(() => {
     const el = root.current;
-
     if (!el) return;
 
     let frame = 0;
 
     const update = () => {
       frame = 0;
-
       el.style.setProperty(
         "--hp",
         Math.min(1, window.scrollY / window.innerHeight).toFixed(4),
@@ -231,56 +213,36 @@ export default function Brand() {
     };
 
     update();
-
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onScroll);
 
     return () => {
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
-
       if (frame) cancelAnimationFrame(frame);
     };
   }, []);
 
   useEffect(() => {
     setHex(
-      SWATCHES.map((_, i) => {
-        const el = refs.current[i];
-
-        if (!el) return "#000000";
-
-        const background = getComputedStyle(el).backgroundColor;
-
-        return toHex(background);
-      }),
+      refs.current.map((el) =>
+        el ? toHex(getComputedStyle(el).backgroundColor) : "#000000",
+      ),
     );
   }, [theme]);
 
   const trackPointer = (e: MouseEvent<HTMLElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
-
-    e.currentTarget.style.setProperty(
-      "--mx",
-      `${e.clientX - rect.left}px`,
-    );
-
-    e.currentTarget.style.setProperty(
-      "--my",
-      `${e.clientY - rect.top}px`,
-    );
+    e.currentTarget.style.setProperty("--mx", `${e.clientX - rect.left}px`);
+    e.currentTarget.style.setProperty("--my", `${e.clientY - rect.top}px`);
   };
 
   const copy = async (i: number) => {
     try {
       await navigator.clipboard.writeText(hex[i]);
-
       setCopied(i);
-
       setTimeout(() => setCopied(null), 1500);
-    } catch {
-      // Clipboard access may be unavailable.
-    }
+    } catch {}
   };
 
   return (
@@ -456,7 +418,7 @@ export default function Brand() {
               <button
                 key={s.token}
                 ref={(el) => {
-                  refs.current[i] = el;
+                  refs.current[i] = el as unknown as HTMLDivElement;
                 }}
                 onClick={() => copy(i)}
                 className={`${styles.swatch} ${styles.reveal} ${styles.wipe} ${styles.up}`}
@@ -466,11 +428,10 @@ export default function Brand() {
                   color: inkFor(hex[i]),
                   ...at(((i % 3) + Math.floor(i / 3)) * 0.08, 24),
                 }}
-                aria-label={`Copy ${s.name} ${hex[i] ?? ""}`}
+                aria-label={`Copy ${s.name} ${hex[i]}`}
               >
                 <span className={styles.swTop}>
                   <span className={styles.swName}>{s.name}</span>
-
                   {copied === i ? (
                     <Check size={18} weight="bold" />
                   ) : (
@@ -480,9 +441,8 @@ export default function Brand() {
 
                 <span>
                   <span className={styles.swHex}>
-                    {copied === i ? "Copied" : hex[i] ?? "#000000"}
+                    {copied === i ? "Copied" : hex[i]}
                   </span>
-
                   <span className={styles.swUse}>{s.use}</span>
                 </span>
               </button>
@@ -496,16 +456,11 @@ export default function Brand() {
           >
             <span
               style={
-                {
-                  flex: 60,
-                  background: "var(--paper)",
-                  "--c": 0,
-                } as CSSProperties
+                { flex: 60, background: "var(--paper)", "--c": 0 } as CSSProperties
               }
             >
               60% paper
             </span>
-
             <span
               style={
                 {
@@ -518,7 +473,6 @@ export default function Brand() {
             >
               20% ink
             </span>
-
             <span
               style={
                 {
@@ -530,7 +484,6 @@ export default function Brand() {
             >
               15%
             </span>
-
             <span
               style={
                 {
@@ -635,9 +588,7 @@ export default function Brand() {
               <span style={{ fontSize: 15 }}>
                 const [n, setN] = useState(0);
               </span>
-              <span style={{ fontSize: 15 }}>
-                await Promise.all(tasks);
-              </span>
+              <span style={{ fontSize: 15 }}>await Promise.all(tasks);</span>
             </div>
           </div>
         </div>
@@ -701,8 +652,8 @@ export default function Brand() {
             data-reveal
             style={at(0.1)}
           >
-            One curve for everything: fast out, long settle. Things arrive,
-            they don&apos;t slide.
+            One curve for everything: fast out, long settle. Things arrive, they
+            don&apos;t slide.
           </p>
 
           <div className={styles.motion}>
@@ -724,9 +675,7 @@ export default function Brand() {
               data-reveal
               style={at(0.12)}
             >
-              <span className={styles.cap}>
-                cubic-bezier(0.16, 1, 0.3, 1)
-              </span>
+              <span className={styles.cap}>cubic-bezier(0.16, 1, 0.3, 1)</span>
               <i
                 key={`b${run}`}
                 className={styles.dotOurs}
@@ -789,9 +738,7 @@ export default function Brand() {
                   style={{ "--draw-delay": "0.7s" } as CSSProperties}
                 />
               </span>
-              <span className={styles.cap}>
-                Loop · a number worth noticing
-              </span>
+              <span className={styles.cap}>Loop · a number worth noticing</span>
             </div>
 
             <div
@@ -814,9 +761,7 @@ export default function Brand() {
                 <Cactus style={{ "--fill": "var(--h-cyan)" } as CSSProperties} />
                 <Frog style={{ "--fill": "var(--h-butter)" } as CSSProperties} />
               </span>
-              <span className={styles.cap}>
-                Creatures · rare, never repeated
-              </span>
+              <span className={styles.cap}>Creatures · rare, never repeated</span>
             </div>
           </div>
         </div>
@@ -854,9 +799,7 @@ export default function Brand() {
       <section className={styles.cta}>
         <h2 className={styles.ctaTitle} data-reveal>
           <span className={styles.mask}>
-            <span className={styles.maskIn}>
-              Now go recall something.
-            </span>
+            <span className={styles.maskIn}>Now go recall something.</span>
           </span>
         </h2>
 

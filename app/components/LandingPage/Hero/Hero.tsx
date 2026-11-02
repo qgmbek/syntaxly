@@ -303,7 +303,11 @@ function SyntaxCard() {
 export default function Hero() {
   const containerRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLAnchorElement>(null);
-  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+  const [dimensions, setDimensions] = useState({
+    width: 0,
+    height: 0,
+    cell: CELL_SIZE,
+  });
   const [highlightOpacities, setHighlightOpacities] = useState<number[]>([]);
   const lastHoverCellRef = useRef<number | null>(null);
   const [mounted, setMounted] = useState(false);
@@ -319,7 +323,11 @@ export default function Hero() {
 
     const updateDimensions = () => {
       const { width, height } = container.getBoundingClientRect();
-      setDimensions({ width, height });
+      const cell =
+        Number.parseFloat(
+          getComputedStyle(container).getPropertyValue("--grid"),
+        ) || CELL_SIZE;
+      setDimensions({ width, height, cell });
     };
 
     updateDimensions();
@@ -362,17 +370,18 @@ export default function Hero() {
   const cells = useMemo(() => {
     if (!dimensions.width || !dimensions.height) return [];
 
-    const cols = Math.ceil(dimensions.width / CELL_SIZE) + 1;
-    const rows = Math.ceil(dimensions.height / CELL_SIZE) + 1;
+    const size = dimensions.cell;
+    const cols = Math.ceil(dimensions.width / size) + 1;
+    const rows = Math.ceil(dimensions.height / size) + 1;
     const result: Cell[] = [];
 
     for (let row = 0; row < rows; row++) {
       for (let col = 0; col < cols; col++) {
         result.push({
-          top: row * CELL_SIZE,
-          left: col * CELL_SIZE,
-          width: CELL_SIZE,
-          height: CELL_SIZE,
+          top: row * size,
+          left: col * size,
+          width: size,
+          height: size,
           row,
           col,
         });
@@ -380,7 +389,7 @@ export default function Hero() {
     }
 
     return result;
-  }, [dimensions.width, dimensions.height]);
+  }, [dimensions.width, dimensions.height, dimensions.cell]);
 
   const generateRandomHighlights = useCallback(
     (
@@ -441,8 +450,9 @@ export default function Hero() {
     const container = containerRef.current;
     if (!container || !cells.length) return;
 
-    const cols = Math.ceil(dimensions.width / CELL_SIZE) + 1;
-    const rows = Math.ceil(dimensions.height / CELL_SIZE) + 1;
+    const size = dimensions.cell;
+    const cols = Math.ceil(dimensions.width / size) + 1;
+    const rows = Math.ceil(dimensions.height / size) + 1;
 
     const clearHighlights = () => {
       lastHoverCellRef.current = null;
@@ -470,8 +480,8 @@ export default function Hero() {
         }
       }
 
-      const col = Math.floor((event.clientX - rect.left) / CELL_SIZE);
-      const row = Math.floor((event.clientY - rect.top) / CELL_SIZE);
+      const col = Math.floor((event.clientX - rect.left) / size);
+      const row = Math.floor((event.clientY - rect.top) / size);
 
       if (row < 0 || row >= rows || col < 0 || col >= cols) return;
 
@@ -494,21 +504,23 @@ export default function Hero() {
     cells.length,
     dimensions.width,
     dimensions.height,
+    dimensions.cell,
     generateRandomHighlights,
   ]);
 
   useEffect(() => {
-    const cols = Math.ceil(dimensions.width / CELL_SIZE) + 1;
-    const rows = Math.ceil(dimensions.height / CELL_SIZE) + 1;
+    const size = dimensions.cell;
+    const cols = Math.ceil(dimensions.width / size) + 1;
+    const rows = Math.ceil(dimensions.height / size) + 1;
 
     if (dimensions.width && dimensions.height) {
       setHighlightOpacities(new Array(rows * cols).fill(0));
       lastHoverCellRef.current = null;
     }
-  }, [dimensions.width, dimensions.height]);
+  }, [dimensions.width, dimensions.height, dimensions.cell]);
 
-  const gridCols = Math.ceil(dimensions.width / CELL_SIZE) + 1;
-  const gridRows = Math.ceil(dimensions.height / CELL_SIZE) + 1;
+  const gridCols = Math.ceil(dimensions.width / dimensions.cell) + 1;
+  const gridRows = Math.ceil(dimensions.height / dimensions.cell) + 1;
 
   return (
     <section
@@ -552,8 +564,6 @@ export default function Hero() {
           );
         })}
       </div>
-
-      <SyntaxCard />
 
       <div className={styles.content}>
         <h1
@@ -655,6 +665,8 @@ export default function Hero() {
           <Arrow className={styles.noteArrow} />
         </span>
       </div>
+
+      <SyntaxCard />
     </section>
   );
 }

@@ -5,9 +5,20 @@
 
   position: relative;
   isolation: isolate;
-  background: #fff;
-  color: #171717;
+  background: var(--paper);
+  color: var(--ink);
   overflow-x: clip;
+}
+
+.page::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: var(--grain);
+  opacity: 0.08;
+  mix-blend-mode: multiply;
 }
 
 .reveal {
@@ -198,41 +209,42 @@
 }
 
 .decor {
+  display: none;
   position: absolute;
   z-index: -1;
-  display: block;
   pointer-events: none;
 }
 
-.d1 {
+.decorMushroom {
   top: 46%;
-  left: -22px;
-  width: 56px;
-  height: 56px;
-  border-radius: 999px;
-  background: #ff7ab8;
+  left: -20px;
+  width: 120px;
+  height: 120px;
+  --fill: var(--h-red);
+  color: var(--ink);
+  rotate: -8deg;
   translate: 0 calc(var(--pp) * -260px);
 }
 
-.d2 {
+.decorBee {
   top: 30%;
-  right: -74px;
-  width: 170px;
-  height: 85px;
-  border-radius: 170px 170px 0 0;
-  background: #8ab6ff;
-  transform: rotate(-90deg);
+  right: -10px;
+  width: 140px;
+  height: 102px;
+  --fill: var(--h-butter);
+  color: var(--ink);
+  rotate: 8deg;
   translate: 0 calc(var(--pp) * -340px);
 }
 
-.d3 {
+.decorCrab {
   top: 72%;
-  right: -80px;
-  width: 130px;
-  height: 36px;
-  border-radius: 999px;
-  background: #b5f23d;
-  transform: rotate(-14deg);
+  right: -20px;
+  width: 170px;
+  height: 111px;
+  --fill: var(--h-pink);
+  color: var(--ink);
+  rotate: -8deg;
   translate: 0 calc(var(--pp) * -200px);
 }
 
@@ -259,8 +271,6 @@
   isolation: isolate;
   padding: 170px 5vw 70px;
   overflow: hidden;
-  background-color: #fff;
-  border-bottom: 1px solid #171717;
 }
 
 .hero::before {
@@ -270,8 +280,8 @@
   z-index: -1;
   pointer-events: none;
   background-image:
-    linear-gradient(to right, #ddd 1px, transparent 1px),
-    linear-gradient(to bottom, #ddd 1px, transparent 1px);
+    linear-gradient(to right, rgba(23, 23, 23, 0.08) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(23, 23, 23, 0.08) 1px, transparent 1px);
   background-size: 80px 80px;
   -webkit-mask-image: radial-gradient(
     circle closest-side,
@@ -313,7 +323,7 @@
   height: 700px;
   border-radius: 999px;
   filter: blur(90px);
-  background: rgba(0, 255, 208, 0.08);
+  background: rgba(0, 255, 208, 0.05);
   top: -260px;
   right: -160px;
   pointer-events: none;
@@ -346,10 +356,11 @@
 
 .title {
   margin: 0;
-  font-size: clamp(56px, 11vw, 170px);
+  font-family: var(--font-display);
+  font-size: clamp(60px, 11.6vw, 180px);
   line-height: 1;
-  font-weight: 600;
-  letter-spacing: -0.06em;
+  font-weight: 400;
+  letter-spacing: -0.03em;
   translate: 0 calc(var(--hp) * -40px);
 }
 
@@ -399,24 +410,42 @@
   padding: 0 0.12em;
   background: linear-gradient(var(--accent-soft), var(--accent-soft)) no-repeat
     left center / 0% 100%;
-  border-radius: 2px;
+  border-radius: 12px 4px 14px 5px / 5px 14px 4px 12px;
   animation: kMark 0.9s var(--ease) 0.95s forwards;
 }
 
 .sticker {
   display: inline-block;
   margin-left: 28px;
-  padding: 9px 18px;
-  border: 2px solid #171717;
-  border-radius: 999px;
-  background: var(--primary);
-  box-shadow: 3px 3px 0 #171717;
-  color: #171717;
-  font-size: 16px;
-  font-weight: 600;
-  letter-spacing: 0.01em;
+  padding: 6px 26px 9px;
+  font-family: var(--font-hand);
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: 0;
   line-height: 1;
   white-space: nowrap;
+  color: var(--ink);
+  background: color-mix(in srgb, var(--primary) 88%, transparent);
+  clip-path: polygon(
+    0 0,
+    100% 0,
+    97% 12%,
+    100% 25%,
+    97% 37%,
+    100% 50%,
+    97% 62%,
+    100% 75%,
+    97% 87%,
+    100% 100%,
+    0 100%,
+    3% 87%,
+    0 75%,
+    3% 62%,
+    0 50%,
+    3% 37%,
+    0 25%,
+    3% 12%
+  );
   vertical-align: middle;
   rotate: -6deg;
   animation:
@@ -446,13 +475,27 @@
 }
 
 .updated {
-  padding: 8px 14px;
-  font-size: 14px;
+  font-family: var(--font-hand);
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1;
   white-space: nowrap;
-  border: 1px solid #171717;
-  border-radius: 2px;
+  color: rgba(23, 23, 23, 0.65);
+  rotate: -2deg;
   animation: kDemoIn 0.8s var(--ease) 1s backwards;
 }
+
+
+
+
+
+
+
+
+
+
+
+
 
 .layout {
   max-width: 1150px;
@@ -506,9 +549,7 @@
   left: 0;
   width: 100%;
   height: 40px;
-  background: var(--accent-soft);
-  border-left: 2px solid var(--primary);
-  border-radius: 2px;
+  background: var(--scribble) 12px bottom / 70% 6px no-repeat;
   pointer-events: none;
   transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -523,9 +564,8 @@
   gap: 12px;
   padding: 0 12px;
   font-size: 15px;
-  color: #525252;
+  color: rgba(23, 23, 23, 0.6);
   white-space: nowrap;
-  border-radius: 2px;
   transition: color 0.2s ease;
 }
 
@@ -539,15 +579,13 @@
 }
 
 .tocNum {
-  padding: 2px 4px;
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
+  min-width: 22px;
+  font-family: var(--font-hand);
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1;
   font-variant-numeric: tabular-nums;
-  border-radius: 2px;
-  transition:
-    background 0.2s ease,
-    color 0.2s ease;
+  transition: color 0.2s ease;
 }
 
 .tocActive {
@@ -555,14 +593,13 @@
 }
 
 .tocActive .tocNum {
-  color: var(--primary);
-  background: var(--black);
+  color: var(--h-red);
 }
 
 .section {
   padding: 8px 0 56px;
   margin-bottom: 8px;
-  border-bottom: 1px solid rgba(15, 23, 42, 0.12);
+  border-bottom: 1px solid rgba(23, 23, 23, 0.12);
   scroll-margin-top: 90px;
 }
 
@@ -593,22 +630,21 @@
 }
 
 .num {
-  padding: 5px 10px;
-  font-size: 16px;
-  color: var(--black);
-  background: var(--primary);
-  border-top-left-radius: 12px;
-  border-bottom-right-radius: 12px;
-  font-family: var(--font-sansation), sans-serif;
+  font-family: var(--font-hand);
+  font-size: 38px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--h-red);
 }
 
 .h2 {
   margin: 0;
-  font-size: clamp(26px, 3vw, 36px);
-  font-weight: 500;
-  line-height: 1.1;
-  letter-spacing: -0.03em;
-  color: #0f172a;
+  font-family: var(--font-display);
+  font-size: clamp(30px, 3.6vw, 46px);
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--ink);
 }
 
 .short {
@@ -617,7 +653,7 @@
   padding: 40px 18px 16px;
   background: var(--column-block-bg);
   color: var(--black);
-  border-radius: 12px;
+  border-radius: 14px;
   overflow: hidden;
 }
 
@@ -642,8 +678,8 @@
   padding: 4px 10px;
   font-size: 13px;
   background: var(--primary);
-  border-top-left-radius: 12px;
-  border-bottom-right-radius: 12px;
+  border-top-left-radius: 14px;
+  border-bottom-right-radius: 14px;
 }
 
 .p,
@@ -676,7 +712,7 @@
 .ph {
   padding: 0 4px;
   color: inherit;
-  border-radius: 2px;
+  border-radius: 12px 4px 14px 5px / 5px 14px 4px 12px;
   background:
     linear-gradient(var(--primary), var(--primary)) left bottom / 100% 2px
       no-repeat,
@@ -691,7 +727,8 @@
 
 .end {
   display: flex;
-  gap: 16px;
+  align-items: center;
+  gap: 20px;
   padding-top: 24px;
 }
 
@@ -702,9 +739,9 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 14px 22px;
+  padding: 14px 24px;
   font-size: 17px;
-  border-radius: 2px;
+  border-radius: 999px;
   transition:
     transform 0.2s ease,
     color 0.26s ease;
@@ -723,7 +760,7 @@
 }
 
 .btn:hover {
-  transform: translateY(-4px);
+  transform: translateY(-2px);
 }
 
 .btn:hover::before {
@@ -733,7 +770,7 @@
 
 .btnA {
   color: #fff;
-  background: #000;
+  background: var(--ink);
 }
 
 .btnA::before {
@@ -741,25 +778,33 @@
 }
 
 .btnA:hover {
-  color: #000;
+  color: var(--ink);
 }
 
 .btnB {
-  color: #000;
-  border: 1px solid #000;
+  padding: 8px 6px 14px;
+  border-radius: 0;
+  font-family: var(--font-hand);
+  font-size: 34px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--ink);
+  background: var(--scribble) left bottom / 0 6px no-repeat;
+  transition: background-size 0.5s var(--ease);
 }
 
 .btnB::before {
-  background: #000;
+  display: none;
 }
 
 .btnB:hover {
-  color: #fff;
+  transform: none;
+  background-size: 100% 6px;
 }
 
-@media (max-width: 1399px) {
+@media (min-width: 1400px) {
   .decor {
-    display: none;
+    display: block;
   }
 }
 
@@ -788,6 +833,7 @@
   .lead {
     font-size: 18px;
   }
+
 }
 
 @media (max-width: 640px) {
@@ -802,6 +848,7 @@
 
   .end {
     flex-direction: column;
+    align-items: stretch;
   }
 
   .btn {
@@ -824,6 +871,9 @@
   .hl,
   .updated,
   .reveal[data-in],
+  .gBlock[data-in] .gTab,
+  .gBlock[data-in] .gCode,
+  .gBlock[data-in] .gText,
   .toc[data-in] .tocLink,
   .toc[data-in] .tocMarker,
   .head[data-in] .num,
@@ -849,8 +899,10 @@
   .tocNum,
   .tocMarker,
   .letter,
+  .gBlock,
   .btn,
-  .btn::before {
+  .btn::before,
+  .btnB {
     transition: none;
   }
 

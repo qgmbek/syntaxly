@@ -11,6 +11,7 @@ import {
 import Link from "next/link";
 import { ArrowUpRight } from "@phosphor-icons/react";
 import styles from "./Terms.module.css";
+import { Mushroom, Bee, Crab } from "../../ui/HandDrawn";
 
 const UPDATED = "October 2, 2026";
 
@@ -29,9 +30,9 @@ const TITLE_TONES = [
 ];
 
 const PH: Record<string, string> = {
-  OWNER: "[Your name or company]",
-  EMAIL: "hello@yourdomain.com",
-  JURISDICTION: "[Your country]",
+  OWNER: "Khogambyek Yersin",
+  EMAIL: "hogambek011@gmail.com",
+  JURISDICTION: "Mongolia",
 };
 
 type Section = {
@@ -321,9 +322,9 @@ export default function Terms() {
 
   return (
     <main className={styles.page} ref={rootRef}>
-      <span className={`${styles.decor} ${styles.d1}`} aria-hidden="true" />
-      <span className={`${styles.decor} ${styles.d2}`} aria-hidden="true" />
-      <span className={`${styles.decor} ${styles.d3}`} aria-hidden="true" />
+      <Mushroom className={`${styles.decor} ${styles.decorMushroom}`} />
+      <Bee className={`${styles.decor} ${styles.decorBee}`} />
+      <Crab className={`${styles.decor} ${styles.decorCrab}`} />
 
       <div className={styles.progress}>
         <div ref={bar} className={styles.progressBar} />

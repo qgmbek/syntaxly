@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { Cookie, CaretDown } from "@phosphor-icons/react";
 import styles from "./Cookieconsent.module.css";
 
@@ -160,9 +161,9 @@ export default function CookieConsent() {
                     }`}
                   />
                 </button>{" "}
-                <a href="/us/privacy" className={styles.link}>
+                <Link href="/us/privacy" className={styles.link}>
                   Privacy Policy
-                </a>
+                </Link>
               </p>
             </div>
           </div>

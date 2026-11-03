@@ -8,6 +8,7 @@ import {
   type CSSProperties,
   type MouseEvent,
 } from "react";
+import Link from "next/link";
 import { MagnifyingGlass, Plus, ArrowUpRight, X } from "@phosphor-icons/react";
 import styles from "./Faq.module.css";
 
@@ -70,7 +71,7 @@ const ITEMS: Item[] = [
     cat: "Using it",
     q: "Can I copy the code?",
     a: "Yes. Every block has a copy button, and you may use the snippets in your own projects.",
-    link: ["/terms", "Read the Terms of Use"],
+    link: ["/us/terms", "Read the Terms of Use"],
   },
   {
     cat: "Keyboard",
@@ -95,13 +96,13 @@ const ITEMS: Item[] = [
     cat: "Content",
     q: "Where does the content come from?",
     a: "Official documentation first, then real code from open-source projects, distilled into the shortest correct form.",
-    link: ["/how-it-works", "See how we write it"],
+    link: ["/us/how-it-works", "See how we write it"],
   },
   {
     cat: "Content",
     q: "A snippet looks wrong. What now?",
     a: "Tell us through the contact page with the block name and what you expected. Syntax changes between versions, so also check the official docs for the one you use.",
-    link: ["/contact", "Get in touch"],
+    link: ["/us/contact", "Get in touch"],
   },
   {
     cat: "Content",
@@ -112,13 +113,13 @@ const ITEMS: Item[] = [
     cat: "Apps & privacy",
     q: "Is there an app?",
     a: "Not yet. Windows, iOS and Android versions are in the making. The web version works today on any screen.",
-    link: ["/download", "See the download page"],
+    link: ["/us/download", "See the download page"],
   },
   {
     cat: "Apps & privacy",
     q: "What do you store about me?",
     a: "Nothing personal by default. Preferences like theme and font size can stay in your browser.",
-    link: ["/privacy", "Read the Privacy Policy"],
+    link: ["/us/privacy", "Read the Privacy Policy"],
   },
 ];
 
@@ -464,10 +465,10 @@ export default function Faq() {
             <span className={styles.emptyCode}>NO QUESTIONS MATCH</span>
             <span className={styles.emptyQ}>{query}</span>
 
-            <a href="/contact" className={styles.emptyLink}>
+            <Link href="/contact" className={styles.emptyLink}>
               Ask it yourself
               <ArrowUpRight size={16} weight="bold" />
-            </a>
+            </Link>
           </div>
         )}
 
@@ -545,10 +546,10 @@ export default function Faq() {
                     )}
 
                     {it.link && (
-                      <a href={it.link[0]} className={styles.link}>
+                      <Link href={it.link[0]} className={styles.link}>
                         {it.link[1]}
                         <ArrowUpRight size={16} weight="bold" />
-                      </a>
+                      </Link>
                     )}
                   </div>
                 </div>
@@ -581,7 +582,7 @@ export default function Faq() {
         </h2>
 
         <div className={styles.ctaBtns}>
-          <a
+          <Link
             href="/contact"
             className={`${styles.btn} ${styles.btnA} ${styles.reveal} ${styles.wipe} ${styles.right}`}
             data-reveal
@@ -589,16 +590,16 @@ export default function Faq() {
           >
             Ask us
             <ArrowUpRight size={18} weight="bold" />
-          </a>
+          </Link>
 
-          <a
+          <Link
             href="/syntax"
             className={`${styles.btn} ${styles.btnB} ${styles.reveal} ${styles.wipe} ${styles.right}`}
             data-reveal
             style={at(0.52)}
           >
             Open Syntaxly
-          </a>
+          </Link>
         </div>
       </section>
     </main>

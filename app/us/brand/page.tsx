@@ -7,6 +7,7 @@ import {
   type CSSProperties,
   type MouseEvent,
 } from "react";
+import Link from "next/link";
 import {
   Copy,
   Check,
@@ -803,7 +804,7 @@ export default function Brand() {
           </span>
         </h2>
 
-        <a
+        <Link
           href="/syntax"
           className={`${styles.btnA} ${styles.reveal} ${styles.wipe} ${styles.right}`}
           data-reveal
@@ -811,7 +812,7 @@ export default function Brand() {
         >
           Get Started
           <ArrowUpRight size={18} weight="bold" />
-        </a>
+        </Link>
       </section>
     </main>
   );

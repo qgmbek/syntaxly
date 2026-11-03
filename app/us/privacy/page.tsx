@@ -507,7 +507,7 @@ export default function Privacy() {
 
           <div className={styles.end}>
             <Link
-              href="/contact"
+              href="/us/contact"
               className={`${styles.btn} ${styles.btnA} ${styles.reveal} ${styles.wipe} ${styles.right}`}
               data-reveal
               style={at(0)}

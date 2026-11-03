@@ -8,6 +8,7 @@ import {
   type CSSProperties,
   type MouseEvent,
 } from "react";
+import Link from "next/link";
 
 import { ArrowUpRight, ArrowDown } from "@phosphor-icons/react";
 
@@ -690,14 +691,14 @@ export default function Roadmap() {
                             <p>{it.detail}</p>
 
                             {it.link && (
-                              <a
+                              <Link
                                 href={it.link[0]}
                                 className={styles.link}
                                 tabIndex={isOpen ? 0 : -1}
                               >
                                 {it.link[1]}
                                 <ArrowUpRight size={15} weight="bold" />
-                              </a>
+                              </Link>
                             )}
                           </div>
                         </div>
@@ -723,24 +724,24 @@ export default function Roadmap() {
         </h2>
 
         <div className={styles.ctaBtns}>
-          <a
-            href="/us/contact"
+          <Link
+            href="/contact"
             className={`${styles.btn} ${styles.btnA} ${styles.reveal} ${styles.wipe} ${styles.right}`}
             data-reveal
             style={at(0.4)}
           >
             Tell us
             <ArrowUpRight size={18} weight="bold" />
-          </a>
+          </Link>
 
-          <a
+          <Link
             href="/syntax"
             className={`${styles.btnB} ${styles.reveal} ${styles.wipe} ${styles.right}`}
             data-reveal
             style={at(0.52)}
           >
             Open Syntaxly
-          </a>
+          </Link>
         </div>
       </section>
     </main>

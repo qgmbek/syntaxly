@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, type CSSProperties, type MouseEvent } from "react";
+import Link from "next/link";
 
 import { ArrowUpRight, ArrowDown } from "@phosphor-icons/react";
 
@@ -322,19 +323,15 @@ export default function Resources() {
               {g.items.map((r, i) => {
                 const external = Boolean(r.host);
 
-                return (
+                return external ? (
                   <a
                     key={r.name}
                     href={r.href}
                     className={styles.row}
                     data-reveal
                     style={{ "--d": i } as CSSProperties}
-                    {...(external
-                      ? {
-                          target: "_blank",
-                          rel: "noopener noreferrer",
-                        }
-                      : {})}
+                    target="_blank"
+                    rel="noopener noreferrer"
                   >
                     <span className={styles.mark}>{r.name[0]}</span>
 
@@ -354,6 +351,32 @@ export default function Resources() {
                       aria-hidden="true"
                     />
                   </a>
+                ) : (
+                  <Link
+                    key={r.name}
+                    href={r.href}
+                    className={styles.row}
+                    data-reveal
+                    style={{ "--d": i } as CSSProperties}
+                  >
+                    <span className={styles.mark}>{r.name[0]}</span>
+
+                    <span className={styles.rowBody}>
+                      <b className={styles.rowName}>{r.name}</b>
+                      <span className={styles.rowDesc}>{r.desc}</span>
+                    </span>
+
+                    <span className={styles.tag}>{r.tag}</span>
+
+                    <span className={styles.host}>{r.host ?? "syntaxly"}</span>
+
+                    <ArrowUpRight
+                      size={22}
+                      weight="bold"
+                      className={styles.arrow}
+                      aria-hidden="true"
+                    />
+                  </Link>
                 );
               })}
             </div>
@@ -378,24 +401,24 @@ export default function Resources() {
         </h2>
 
         <div className={styles.ctaBtns}>
-          <a
-            href="/us/contact"
+          <Link
+            href="/contact"
             className={`${styles.btn} ${styles.btnA} ${styles.reveal} ${styles.wipe} ${styles.right}`}
             data-reveal
             style={at(0.4)}
           >
             Tell us
             <ArrowUpRight size={18} weight="bold" />
-          </a>
+          </Link>
 
-          <a
+          <Link
             href="/syntax"
             className={`${styles.btn} ${styles.btnB} ${styles.reveal} ${styles.wipe} ${styles.right}`}
             data-reveal
             style={at(0.52)}
           >
             Open Syntaxly
-          </a>
+          </Link>
         </div>
       </section>
     </main>

@@ -108,7 +108,7 @@
 .decor {
   display: block;
   position: absolute;
-  z-index: 0;
+  z-index: 11;
   pointer-events: none;
   opacity: 0;
 }

@@ -47,7 +47,7 @@
 }
 
 .decor {
-  display: none;
+  display: block;
   position: absolute;
   z-index: 0;
   pointer-events: none;
@@ -62,8 +62,9 @@
 .decorMoon {
   top: -30px;
   right: -50px;
-  width: 200px;
-  height: 200px;
+  width: min(200px, 32vw);
+  height: auto;
+  aspect-ratio: 1;
   --fill: var(--h-butter);
   color: var(--ink);
   rotate: 8deg;
@@ -72,8 +73,9 @@
 .decorRocket {
   bottom: -30px;
   right: 10px;
-  width: 120px;
-  height: 220px;
+  width: min(120px, 22vw);
+  height: auto;
+  aspect-ratio: 120 / 220;
   --fill: var(--paper-2);
   --fill2: var(--h-red);
   color: var(--ink);
@@ -116,7 +118,8 @@
 
 .linksGrid {
   display: flex;
-  gap: 150px;
+  flex-wrap: wrap;
+  gap: 48px 64px;
 }
 
 .column {
@@ -241,7 +244,7 @@
   position: relative;
   margin-top: 100px;
   font-family: var(--font-display);
-  font-size: 280px;
+  font-size: clamp(64px, 18vw, 280px);
   line-height: 0.8;
   letter-spacing: -0.04em;
   font-weight: 400;
@@ -440,12 +443,6 @@
   }
 }
 
-@media (min-width: 1280px) {
-  .decor {
-    display: block;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   .footer[data-in] .logo,
   .footer[data-in] .brand,
@@ -466,60 +463,248 @@
   }
 }
 
+@media (max-width: 1400px) {
+  .footer {
+    padding: 10vh 64px 0;
+  }
+
+  .top {
+    gap: 48px;
+  }
+
+  .linksGrid {
+    gap: 40px 48px;
+  }
+}
+
 @media (max-width: 1100px) {
   .footer {
-    padding: 60px 40px 0px;
+    padding: 60px 40px 0;
   }
 
   .top {
     flex-direction: column;
-    gap: 60px;
+    gap: 48px;
   }
 
   .linksGrid {
     display: grid;
     width: 100%;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 50px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 40px 32px;
   }
 
   .bottom {
-    margin-top: 80px;
-    min-height: 260px;
+    margin-top: 56px;
+    min-height: 180px;
+    align-items: flex-end;
+  }
+
+  .copyright {
+    margin-top: 0;
+  }
+
+  .bigText {
+    margin-top: 32px;
+  }
+
+  .toTop {
+    bottom: 120px;
+    right: 40px;
+  }
+
+  .decorMoon {
+    top: -16px;
+    right: -28px;
+    width: 140px;
+  }
+
+  .decorRocket {
+    width: 88px;
+    bottom: -18px;
+  }
+}
+
+@media (max-width: 768px) {
+  .footer {
+    height: auto;
+    min-height: auto;
+    position: relative;
+    padding: 48px 28px 28px;
+    overflow: hidden;
+  }
+
+  .top {
+    align-items: flex-start;
+  }
+
+  .brand {
+    font-size: 32px;
+  }
+
+  .heading {
+    font-size: 24px;
+  }
+
+  .column a {
+    font-size: 16px;
+  }
+
+  .bottom {
+    margin-top: 36px;
+    min-height: auto;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .copyright {
+    font-size: 14px;
+  }
+
+  .toTop {
+    position: relative;
+    bottom: auto;
+    right: auto;
+    font-size: 22px;
+    margin: 28px 0 8px;
+  }
+
+  .toTopArrow {
+    width: 32px;
+    height: 20px;
+  }
+
+  .bigText {
+    margin-top: 8px;
+    font-size: clamp(48px, 18vw, 120px);
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .decorMoon {
+    width: 108px;
+    top: 8px;
+    right: -24px;
+  }
+
+  .decorRocket {
+    width: 64px;
+    right: 12px;
+    bottom: 8px;
   }
 }
 
 @media (max-width: 640px) {
   .footer {
-    padding: 48px 24px 0px;
+    padding: 40px 20px 24px;
   }
 
-  .linksGrid {
-    grid-template-columns: 1fr;
-    gap: 36px;
+  .top {
+    gap: 28px;
+  }
+
+  .logoWrapper {
+    gap: 10px;
+  }
+
+  .logo {
+    width: 16px;
+    height: 16px;
   }
 
   .brand {
-    font-size: 1.8rem;
+    font-size: 28px;
+  }
+
+  .linksGrid {
+    gap: 28px 24px;
+  }
+
+  .heading {
+    font-size: 22px;
+    margin: 0 0 8px -6px;
+    padding: 2px 8px 4px;
+  }
+
+  .column {
+    gap: 8px;
   }
 
   .column a {
-    font-size: 0.95rem;
+    font-size: 15px;
+    padding-bottom: 4px;
   }
 
-  .bottom {
-    min-height: 180px;
+  .column a::before {
+    left: -12px;
+    width: 6px;
+    height: 6px;
+    margin-top: -6px;
   }
 
   .toTop {
-    top: 0;
+    font-size: 20px;
+  }
+
+  .toTopArrow {
+    width: 28px;
+    height: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer {
+    padding: 32px 16px 20px;
+  }
+
+  .top {
+    gap: 24px;
+  }
+
+  .brand {
     font-size: 24px;
   }
 
+  .logo {
+    width: 14px;
+    height: 14px;
+  }
+
+  .heading {
+    font-size: 20px;
+  }
+
+  .column a {
+    font-size: 14px;
+  }
+
+  .ext {
+    font-size: 0.75em;
+  }
+
+  .copyright {
+    font-size: 12px;
+  }
+
+  .toTop {
+    font-size: 18px;
+  }
+
+  .toTopArrow {
+    width: 24px;
+    height: 16px;
+  }
+
   .bigText {
-    left: 0;
-    right: auto;
-    bottom: -25px;
-    font-size: 6.5rem;
+    font-size: clamp(40px, 17vw, 88px);
+  }
+
+  .decorMoon {
+    width: 88px;
+  }
+
+  .decorRocket {
+    width: 52px;
   }
 }

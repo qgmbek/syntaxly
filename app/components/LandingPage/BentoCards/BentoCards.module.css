@@ -11,8 +11,6 @@
   flex-direction: column;
   align-items: center;
   z-index: 11;
-
-  margin-bottom: 80vh;
 }
 
 .sectionContainer::before {
@@ -174,10 +172,11 @@
 }
 
 .decorFish {
-  top: 19%;
-  left: -64px;
-  width: 240px;
-  height: 160px;
+  top: 12%;
+  left: -48px;
+  width: min(240px, 42vw);
+  height: auto;
+  aspect-ratio: 240 / 160;
   --fill: var(--h-red);
   --fill2: var(--h-butter);
   color: var(--ink);
@@ -186,10 +185,12 @@
 }
 
 .decorHand {
-  top: 48%;
-  right: -30px;
-  width: 150px;
-  height: 206px;
+  top: auto;
+  bottom: 18%;
+  right: -24px;
+  width: min(150px, 28vw);
+  height: auto;
+  aspect-ratio: 150 / 206;
   --fill: var(--h-pink);
   color: var(--ink);
   transform: rotate(8deg);
@@ -208,10 +209,13 @@
 .badge {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  max-width: 100%;
   gap: 12px;
-  font-size: 28px;
+  font-size: clamp(13px, 2.4vw, 28px);
   font-weight: 400;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.14em;
   background: var(--accent-soft);
   padding: 18px 26px;
   border-radius: var(--wobble);
@@ -222,7 +226,7 @@
 
 .mainHeading {
   font-family: var(--font-display);
-  font-size: 68px;
+  font-size: clamp(32px, 6vw, 68px);
   line-height: 1.05;
   font-weight: 400;
   letter-spacing: -0.02em;
@@ -393,7 +397,7 @@
 
 .cardTitle {
   font-family: var(--font-display);
-  font-size: 40px;
+  font-size: clamp(24px, 3.4vw, 40px);
   line-height: 1.1;
   font-weight: 400;
   letter-spacing: -0.02em;
@@ -401,6 +405,7 @@
   color: #0f172a;
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 10px;
 }
 
@@ -435,6 +440,7 @@
 
 .comparisonCol {
   flex: 1;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -500,6 +506,8 @@
 
 .syntaxBlobCode {
   font-size: 14px;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .timer {
@@ -710,10 +718,12 @@
   display: flex;
   gap: 36px;
   flex-wrap: wrap;
+  min-width: 0;
 }
 
 .playgroundLeftPanel {
   flex: 1 1 360px;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   gap: 14px;
@@ -824,10 +834,12 @@
   overflow: hidden;
   text-overflow: ellipsis;
   display: block;
+  min-width: 0;
 }
 
 .playgroundRightPanel {
   flex: 1.2 1 460px;
+  min-width: 0;
   background: var(--accent-soft);
   border-radius: 20px;
   overflow: hidden;
@@ -959,6 +971,7 @@
   border-radius: 10px;
   border: 1px solid rgba(0, 0, 0, 0.4);
   overflow-x: auto;
+  min-width: 0;
 }
 
 .codeExample {
@@ -1016,64 +1029,262 @@
 }
 
 @media (max-width: 1249px) {
-  .decor {
-    display: none;
+  .decorFish {
+    top: 6%;
+    left: -40px;
+  }
+
+  .decorHand {
+    bottom: 10%;
+    right: -20px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .bentoGrid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .largeCard,
+  .smallCard,
+  .fullWidthCard {
+    grid-column: span 4;
+  }
+
+  .cardCoffee {
+    width: 52px;
+    height: 52px;
   }
 }
 
 @media (max-width: 900px) {
+  .sectionContainer {
+    padding: 72px 20px;
+  }
+
+  .bentoGrid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
   .largeCard,
   .smallCard,
   .fullWidthCard {
-    grid-column: span 6;
+    grid-column: span 1;
+    min-height: auto;
+    padding: 28px;
+    rotate: 0deg;
+  }
+
+  .headerWrapper {
+    margin-bottom: 48px;
   }
 
   .mainHeading {
-    font-size: 38px;
+    margin-top: 28px;
+    margin-bottom: 20px;
   }
 
   .interactivePlaygroundHeader {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 18px;
+    gap: 12px;
   }
 
   .playgroundSplitBody {
     flex-direction: column;
+    gap: 20px;
+  }
+
+  .hint {
+    font-size: 18px;
   }
 
   .hintArrow {
+    width: 28px;
+    height: 14px;
     rotate: 90deg;
   }
 
   .cardCoffee {
-    display: none;
-  }
-}
-
-@media (max-width: 640px) {
-  .sectionContainer {
-    padding: 90px 18px;
-  }
-
-  .mainHeading {
-    font-size: 32px;
-  }
-
-  .largeCard,
-  .smallCard,
-  .fullWidthCard {
-    padding: 28px;
+    width: 44px;
+    height: 44px;
+    margin-top: 0;
   }
 
   .comparisonTrack {
     flex-direction: column;
   }
 
+  .note {
+    font-size: 18px;
+  }
+
+  .panelBlockHeader {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+}
+
+@media (max-width: 640px) {
+  .sectionContainer {
+    padding: 64px 18px 48px;
+  }
+
+  .badge {
+    padding: 12px 16px;
+    gap: 8px;
+    letter-spacing: 0.1em;
+  }
+
+  .badge svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .subHeading {
+    font-size: 17px;
+  }
+
+  .bentoGrid {
+    gap: 16px;
+  }
+
+  .largeCard,
+  .smallCard,
+  .fullWidthCard {
+    padding: 22px;
+  }
+
+  .cardDescription {
+    font-size: 16px;
+  }
+
+  .iconContainer svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .comparisonTrack {
+    padding: 14px;
+    gap: 14px;
+  }
+
   .syntaxTop {
     flex-direction: column;
     align-items: flex-start;
-    gap: 10px;
+    gap: 8px;
+  }
+
+  .syntaxSelectBlock {
+    padding: 14px;
+  }
+
+  .detailsGrid {
+    padding: 18px;
+    gap: 18px;
+  }
+
+  .panelBlockHeader {
+    padding: 12px 16px;
+  }
+
+  .codeOutputContainer {
+    padding: 12px 14px;
+  }
+
+  .inlineCodePreview,
+  .codeExample {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+
+  .decorFish {
+    top: 4%;
+    left: -56px;
+    width: 108px;
+  }
+
+  .decorHand {
+    bottom: 4%;
+    right: -36px;
+    width: 78px;
+  }
+}
+
+@media (max-width: 480px) {
+  .sectionContainer {
+    padding: 56px 16px 40px;
+  }
+
+  .subHeading {
+    font-size: 15px;
+    line-height: 1.45;
+  }
+
+  .badge {
+    padding: 10px 12px;
+    letter-spacing: 0.08em;
+  }
+
+  .badge svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .largeCard,
+  .smallCard,
+  .fullWidthCard {
+    padding: 18px;
+    border-radius: 22px;
+  }
+
+  .cardDescription {
+    font-size: 15px;
+  }
+
+  .comparisonLabel {
+    font-size: 10px;
+  }
+
+  .syntaxBlobCode {
+    font-size: 12px;
+  }
+
+  .miniBlockItem {
+    font-size: 12px;
+    padding: 10px 14px;
+  }
+
+  .syntaxName {
+    font-size: 13px;
+  }
+
+  .syntaxLang {
+    font-size: 10px;
+  }
+
+  .inlineCodePreview {
+    font-size: 13px;
+  }
+
+  .detailLabel {
+    font-size: 12px;
+  }
+
+  .detailValue {
+    font-size: 13px;
+  }
+
+  .codeExample {
+    font-size: 13px;
+  }
+
+  .cardCoffee {
+    width: 36px;
+    height: 36px;
+  }
+
+  .hint {
+    font-size: 16px;
   }
 }
 

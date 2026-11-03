@@ -11,6 +11,12 @@
   margin-bottom: 80vh;
 }
 
+@media (max-width: 768px) {
+  .section {
+    margin-bottom: 0;
+  }
+}
+
 .section::before {
   content: "";
   position: absolute;
@@ -48,17 +54,18 @@
 }
 
 .decor {
-  display: none;
+  display: block;
   position: absolute;
   z-index: 0;
   pointer-events: none;
 }
 
 .decorGlass {
-  top: 30%;
-  left: -100px;
-  width: 230px;
-  height: 253px;
+  top: 22%;
+  left: -72px;
+  width: min(230px, 38vw);
+  height: auto;
+  aspect-ratio: 230 / 253;
   --fill: var(--paper-2);
   --fill2: var(--h-butter);
   color: var(--ink);
@@ -67,10 +74,12 @@
 }
 
 .decorScissors {
-  top: 60%;
-  right: -100px;
-  width: 300px;
-  height: 150px;
+  top: auto;
+  bottom: 18%;
+  right: -80px;
+  width: min(300px, 46vw);
+  height: auto;
+  aspect-ratio: 300 / 150;
   --fill: var(--h-red);
   --fill2: var(--paper-2);
   color: var(--ink);
@@ -120,7 +129,7 @@
   max-width: 640px;
   margin: 0;
   font-family: var(--font-display);
-  font-size: clamp(30px, 3.8vw, 48px);
+  font-size: clamp(28px, 5.4vw, 48px);
   font-weight: 400;
   line-height: 1.08;
   letter-spacing: -0.02em;
@@ -467,7 +476,7 @@
 .statement {
   margin: 0;
   font-family: var(--font-display);
-  font-size: clamp(36px, 6vw, 84px);
+  font-size: clamp(28px, 8vw, 84px);
   font-weight: 400;
   line-height: 1.04;
   letter-spacing: -0.02em;
@@ -475,7 +484,7 @@
 }
 
 .featured .statement {
-  font-size: clamp(44px, 8.4vw, 120px);
+  font-size: clamp(32px, 10vw, 120px);
   letter-spacing: -0.03em;
 }
 
@@ -706,62 +715,134 @@
   }
 }
 
-@media (min-width: 1400px) {
-  .decor {
-    display: block;
-  }
-}
-
 @media (max-width: 900px) {
   .section {
-    padding: 90px 20px 60px;
+    padding: 80px 20px 56px;
   }
 
   .head {
-    margin-bottom: 56px;
+    margin-bottom: 48px;
+    gap: 20px;
+  }
+
+  .badge {
+    font-size: 14px;
+    padding: 12px 16px;
+    letter-spacing: 0.14em;
   }
 
   .note {
-    width: 170px;
+    position: relative;
+    top: auto;
+    right: auto;
+    width: min(180px, 58vw);
+    align-self: flex-end;
+    margin-top: 4px;
   }
 
   .noteTop {
-    font-size: 28px;
+    font-size: 26px;
   }
 
   .noteBody {
-    font-size: 22px;
+    font-size: 20px;
+  }
+
+  .notePaper {
+    padding: 22px 16px 28px;
   }
 
   .ribbons {
-    height: 120px;
-    margin-bottom: 40px;
+    height: 110px;
+    margin-bottom: 36px;
+  }
+
+  .item {
+    font-size: clamp(22px, 6vw, 32px);
   }
 
   .row {
     grid-template-columns: 1fr;
-    gap: 14px;
-    padding: 32px 0 36px;
+    gap: 12px;
+    padding: 28px 0 32px;
   }
 
   .sticker {
     position: static;
     display: inline-block;
-    margin-top: 18px;
-  }
-
-  .intro {
-    font-size: 28px;
+    margin-top: 16px;
+    font-size: 22px;
+    padding: 5px 18px 7px;
   }
 
   .small {
     font-size: 15px;
+    max-width: none;
+  }
+
+  .decorGlass {
+    top: 8%;
+    left: -56px;
+    width: 120px;
+  }
+
+  .decorScissors {
+    bottom: 8%;
+    right: -64px;
+    width: 150px;
   }
 }
 
-@media (max-width: 760px) {
+@media (max-width: 480px) {
+  .section {
+    padding: 64px 16px 48px;
+  }
+
+  .badge {
+    font-size: 12px;
+    padding: 10px 12px;
+    gap: 8px;
+  }
+
   .note {
-    display: none;
+    width: min(156px, 70vw);
+  }
+
+  .noteTop {
+    font-size: 22px;
+  }
+
+  .noteBody {
+    font-size: 18px;
+  }
+
+  .ribbons {
+    height: 88px;
+    margin-bottom: 28px;
+  }
+
+  .row {
+    padding: 24px 0 28px;
+  }
+
+  .index {
+    font-size: 13px;
+    padding: 4px 8px;
+  }
+
+  .end {
+    font-size: 14px;
+    flex-wrap: wrap;
+  }
+
+  .decorGlass {
+    width: 96px;
+    left: -48px;
+  }
+
+  .decorScissors {
+    width: 120px;
+    right: -52px;
   }
 }
 

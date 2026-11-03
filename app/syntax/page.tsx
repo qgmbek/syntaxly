@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect, useCallback, useRef } from "react";
+import React, { useState, useMemo, useEffect, useCallback, useRef } from "react";
 import {
   Columns,
   DiamondsFour,
@@ -336,7 +336,7 @@ export default function Syntax() {
   }
 
   const showSidebarTip = (
-    e: MouseEvent<HTMLButtonElement> | FocusEvent<HTMLButtonElement>,
+    e: React.MouseEvent<HTMLButtonElement> | React.FocusEvent<HTMLButtonElement>,
     text: string,
   ) => {
     const r = e.currentTarget.getBoundingClientRect();

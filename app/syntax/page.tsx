@@ -1,13 +1,19 @@
 "use client";
 
-import React, { useState, useMemo, useEffect, useCallback, useRef } from "react";
+import React, {
+  useState,
+  useMemo,
+  useEffect,
+  useCallback,
+  useRef,
+  useSyncExternalStore,
+} from "react";
 import {
   Columns,
   DiamondsFour,
   MagnifyingGlass,
   Keyboard,
-  ArrowLeft,
-  ArrowRight,
+  CaretDown,
 } from "@phosphor-icons/react";
 
 import LanguageInfoColumn, {
@@ -97,6 +103,23 @@ interface SidebarTip {
   y: number;
 }
 
+function useMediaQuery(query: string) {
+  const subscribe = useCallback(
+    (onChange: () => void) => {
+      const mql = window.matchMedia(query);
+      mql.addEventListener("change", onChange);
+      return () => mql.removeEventListener("change", onChange);
+    },
+    [query],
+  );
+
+  return useSyncExternalStore(
+    subscribe,
+    () => window.matchMedia(query).matches,
+    () => false,
+  );
+}
+
 export default function Syntax() {
   const [selected, setSelected] = useState<Selected | null>(null);
   const [compact, setCompact] = useState(false);
@@ -108,9 +131,13 @@ export default function Syntax() {
   const [focusMode, setFocusMode] = useState(false);
   const [languageInfoOpen, setLanguageInfoOpen] = useState(false);
   const [sidebarTip, setSidebarTip] = useState<SidebarTip | null>(null);
+  const [dockOpen, setDockOpen] = useState(false);
+
+  const isMobile = useMediaQuery("(max-width: 1024px)");
 
   const columnGroupRefs = useRef<(HTMLDivElement | null)[]>([]);
   const mainbarRef = useRef<HTMLDivElement>(null);
+  const prevCompactRef = useRef(compact);
 
   const COLUMNS: ColumnData[] = useMemo(() => {
     if (!uniqueOnly) return Data;
@@ -122,16 +149,96 @@ export default function Syntax() {
   }, [uniqueOnly]);
 
   useEffect(() => {
-    if (selected === null) return;
-    const el = columnGroupRefs.current[selected.columnIndex];
-    if (el) {
-      el.scrollIntoView({
-        behavior: "smooth",
-        block: "nearest",
-        inline: "nearest",
-      });
+    if (isMobile || selected === null) return;
+    const group = columnGroupRefs.current[selected.columnIndex];
+    if (!group) return;
+    group.scrollIntoView({
+      behavior: "smooth",
+      block: "nearest",
+      inline: "nearest",
+    });
+  }, [selected?.columnIndex, selected?.blockIndex, isMobile]);
+
+  useEffect(() => {
+  const wasCompact = prevCompactRef.current;
+  prevCompactRef.current = compact;
+
+  if (!isMobile || compact || selected === null) return;
+
+  const main = mainbarRef.current;
+  const group = columnGroupRefs.current[selected.columnIndex];
+  const explanation = group?.lastElementChild as HTMLElement | null;
+  if (!main || !explanation) return;
+
+  const reduceMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)",
+  ).matches;
+  const minTime = 420 + (wasCompact ? 450 + selected.columnIndex * 20 : 0);
+  const maxTime = minTime + 1200;
+
+  let raf = 0;
+  let start = -1;
+  let last = 0;
+
+  const getTarget = () => {
+    const m = main.getBoundingClientRect();
+    const r = explanation.getBoundingClientRect();
+    const left = r.left - m.left + main.scrollLeft;
+    const right = left + r.width;
+    const view = main.clientWidth;
+
+    let next = main.scrollLeft;
+    if (right > next + view) next = right - view;
+    if (left < next) next = left;
+    return next;
+  };
+
+  const tick = (now: number) => {
+    if (start < 0) {
+      start = now;
+      last = now;
     }
-  }, [selected?.columnIndex, selected?.blockIndex]);
+
+    const elapsed = now - start;
+    const dt = Math.max(0, Math.min(now - last, 50));
+    last = now;
+
+    const target = getTarget();
+    const diff = target - main.scrollLeft;
+    const settled = Math.abs(diff) < 1.5;
+
+    if (settled) {
+      main.scrollLeft = target;
+    } else if (reduceMotion) {
+      main.scrollLeft = target;
+    } else {
+      main.scrollLeft += diff * (1 - Math.pow(0.02, dt / 350));
+    }
+
+    if (elapsed < maxTime && (elapsed < minTime || !settled)) {
+      raf = requestAnimationFrame(tick);
+    }
+  };
+
+  const cancel = () => cancelAnimationFrame(raf);
+
+  main.addEventListener("touchstart", cancel, { passive: true });
+  main.addEventListener("wheel", cancel, { passive: true });
+  main.addEventListener("pointerdown", cancel, { passive: true });
+
+  raf = requestAnimationFrame(tick);
+
+  return () => {
+    cancelAnimationFrame(raf);
+    main.removeEventListener("touchstart", cancel);
+    main.removeEventListener("wheel", cancel);
+    main.removeEventListener("pointerdown", cancel);
+  };
+}, [selected?.columnIndex, selected?.blockIndex, compact, isMobile]);
+
+  useEffect(() => {
+    if (!isMobile) setDockOpen(false);
+  }, [isMobile]);
 
   const openSearch = useCallback(() => {
     setSearchQuery("");
@@ -286,6 +393,7 @@ export default function Syntax() {
 
   function handleSearchSelect(colIndex: number, blockIndex: number) {
     closeSearch();
+    if (isMobile) setDockOpen(false);
     if (compact) setCompact(false);
     setSelected({
       columnIndex: colIndex,
@@ -319,6 +427,7 @@ export default function Syntax() {
   }
 
   function handleMinimapSelect(colIndex: number, blockIndex: number) {
+    if (isMobile) setDockOpen(false);
     if (compact) setCompact(false);
     const block = COLUMNS[colIndex].blocks[blockIndex];
     if (
@@ -347,117 +456,154 @@ export default function Syntax() {
   };
 
   return (
-    <div className={styles.container}>
-      {!focusMode && (
-        <div className={styles.sidebar}>
-          <div
-            className={`${styles.name} ${styles.nameClickable} ${languageInfoOpen ? styles.nameActive : ""}`}
-            onClick={() => setLanguageInfoOpen((v) => !v)}
-            role="button"
-            tabIndex={0}
-            onKeyDown={(e) =>
-              e.key === "Enter" && setLanguageInfoOpen((v) => !v)
-            }
-            title="View language details"
-          >
-            REACT
-          </div>
-
-          <div className={styles.fontControls}>
-            <button
-              className={styles.fontBtn}
-              onClick={() => setFontSize((s) => Math.min(s + 1, 24))}
-              onMouseEnter={(e) => showSidebarTip(e, "Increase (+)")}
-              onMouseLeave={() => setSidebarTip(null)}
-              onFocus={(e) => showSidebarTip(e, "Increase (+)")}
-              onBlur={() => setSidebarTip(null)}
-            >
-              +
-            </button>
-            <span className={styles.fontValue}>{fontSize}</span>
-            <button
-              className={styles.fontBtn}
-              onClick={() => setFontSize((s) => Math.max(s - 1, 10))}
-              onMouseEnter={(e) => showSidebarTip(e, "Decrease (-)")}
-              onMouseLeave={() => setSidebarTip(null)}
-              onFocus={(e) => showSidebarTip(e, "Decrease (-)")}
-              onBlur={() => setSidebarTip(null)}
-            >
-              −
-            </button>
-          </div>
-
-          <button
-            onClick={openSearch}
-            className={`${styles.sidebarButton} ${searchOpen ? styles.sidebarButtonCompact : ""}`}
-            aria-label="Search blocks"
-            onMouseEnter={(e) => showSidebarTip(e, "Search (Ctrl+K)")}
-            onMouseLeave={() => setSidebarTip(null)}
-            onFocus={(e) => showSidebarTip(e, "Search (Ctrl+K)")}
-            onBlur={() => setSidebarTip(null)}
-          >
-            <MagnifyingGlass size={22} weight="light" aria-hidden="true" />
-          </button>
-
-          <button
-            onClick={toggleUniqueOnly}
-            aria-pressed={uniqueOnly}
-            className={`${styles.sidebarButton} ${uniqueOnly ? styles.sidebarButtonCompact : ""}`}
-            onMouseEnter={(e) =>
-              showSidebarTip(
-                e,
-                uniqueOnly ? "Show All" : "Unique Only (Ctrl+U)",
-              )
-            }
-            onMouseLeave={() => setSidebarTip(null)}
-            onFocus={(e) =>
-              showSidebarTip(
-                e,
-                uniqueOnly ? "Show All" : "Unique Only (Ctrl+U)",
-              )
-            }
-            onBlur={() => setSidebarTip(null)}
-          >
-            <DiamondsFour size={22} weight={uniqueOnly ? "fill" : "light"} />
-          </button>
-
-          <button
-            onClick={() => setCompact((c) => !c)}
-            className={`${styles.sidebarButton} ${compact ? styles.sidebarButtonCompact : ""}`}
-            onMouseEnter={(e) =>
-              showSidebarTip(e, compact ? "Expand" : "Overview")
-            }
-            onMouseLeave={() => setSidebarTip(null)}
-            onFocus={(e) => showSidebarTip(e, compact ? "Expand" : "Overview")}
-            onBlur={() => setSidebarTip(null)}
-          >
-            <Columns size={22} weight={compact ? "fill" : "light"} />
-          </button>
-
-          <button
-            onClick={() => setShortcutsOpen(true)}
-            className={styles.sidebarButton}
-            aria-label="View Keyboard Shortcuts"
-            onMouseEnter={(e) => showSidebarTip(e, "Shortcuts")}
-            onMouseLeave={() => setSidebarTip(null)}
-            onFocus={(e) => showSidebarTip(e, "Shortcuts")}
-            onBlur={() => setSidebarTip(null)}
-          >
-            <Keyboard size={18} weight="light" />
-          </button>
-
-          <ThemeSwitcher
-            buttonClassName={styles.sidebarButton}
-            activeButtonClassName={styles.sidebarButtonCompact}
-            onMouseEnter={(e) => showSidebarTip(e, "Theme")}
-            onMouseLeave={() => setSidebarTip(null)}
-            onFocus={(e) => showSidebarTip(e, "Theme")}
-            onBlur={() => setSidebarTip(null)}
-          />
-        </div>
+    <div className={`${styles.container} ${focusMode ? styles.focus : ""}`}>
+      {isMobile && dockOpen && !focusMode && (
+        <div
+          className={styles.dockBackdrop}
+          onClick={() => setDockOpen(false)}
+          aria-hidden="true"
+        />
       )}
 
-      {sidebarTip && (
+      <div className={`${styles.dock} ${dockOpen ? styles.dockOpen : ""}`}>
+        {!focusMode && (
+          <div className={styles.sidebar}>
+            <div
+              className={`${styles.name} ${styles.nameClickable} ${languageInfoOpen ? styles.nameActive : ""}`}
+              onClick={() => setLanguageInfoOpen((v) => !v)}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) =>
+                e.key === "Enter" && setLanguageInfoOpen((v) => !v)
+              }
+              title="View language details"
+            >
+              REACT
+            </div>
+
+            <div className={styles.fontControls}>
+              <button
+                className={styles.fontBtn}
+                onClick={() => setFontSize((s) => Math.min(s + 1, 24))}
+                onMouseEnter={(e) => showSidebarTip(e, "Increase (+)")}
+                onMouseLeave={() => setSidebarTip(null)}
+                onFocus={(e) => showSidebarTip(e, "Increase (+)")}
+                onBlur={() => setSidebarTip(null)}
+                aria-label="Increase font size"
+              >
+                +
+              </button>
+              <span className={styles.fontValue}>{fontSize}</span>
+              <button
+                className={styles.fontBtn}
+                onClick={() => setFontSize((s) => Math.max(s - 1, 10))}
+                onMouseEnter={(e) => showSidebarTip(e, "Decrease (-)")}
+                onMouseLeave={() => setSidebarTip(null)}
+                onFocus={(e) => showSidebarTip(e, "Decrease (-)")}
+                onBlur={() => setSidebarTip(null)}
+                aria-label="Decrease font size"
+              >
+                −
+              </button>
+            </div>
+
+            <button
+              onClick={openSearch}
+              className={`${styles.sidebarButton} ${searchOpen ? styles.sidebarButtonCompact : ""}`}
+              aria-label="Search blocks"
+              onMouseEnter={(e) => showSidebarTip(e, "Search (Ctrl+K)")}
+              onMouseLeave={() => setSidebarTip(null)}
+              onFocus={(e) => showSidebarTip(e, "Search (Ctrl+K)")}
+              onBlur={() => setSidebarTip(null)}
+            >
+              <MagnifyingGlass size={22} weight="light" aria-hidden="true" />
+            </button>
+
+            <button
+              onClick={toggleUniqueOnly}
+              aria-pressed={uniqueOnly}
+              aria-label="Toggle unique blocks only"
+              className={`${styles.sidebarButton} ${uniqueOnly ? styles.sidebarButtonCompact : ""}`}
+              onMouseEnter={(e) =>
+                showSidebarTip(
+                  e,
+                  uniqueOnly ? "Show All" : "Unique Only (Ctrl+U)",
+                )
+              }
+              onMouseLeave={() => setSidebarTip(null)}
+              onFocus={(e) =>
+                showSidebarTip(
+                  e,
+                  uniqueOnly ? "Show All" : "Unique Only (Ctrl+U)",
+                )
+              }
+              onBlur={() => setSidebarTip(null)}
+            >
+              <DiamondsFour size={22} weight={uniqueOnly ? "fill" : "light"} />
+            </button>
+
+            <button
+              onClick={() => setCompact((c) => !c)}
+              aria-label={compact ? "Expand columns" : "Overview"}
+              className={`${styles.sidebarButton} ${compact ? styles.sidebarButtonCompact : ""}`}
+              onMouseEnter={(e) =>
+                showSidebarTip(e, compact ? "Expand" : "Overview")
+              }
+              onMouseLeave={() => setSidebarTip(null)}
+              onFocus={(e) =>
+                showSidebarTip(e, compact ? "Expand" : "Overview")
+              }
+              onBlur={() => setSidebarTip(null)}
+            >
+              <Columns size={22} weight={compact ? "fill" : "light"} />
+            </button>
+
+            <button
+              onClick={() => setShortcutsOpen(true)}
+              className={`${styles.sidebarButton} ${styles.hideOnPhone}`}
+              aria-label="View Keyboard Shortcuts"
+              onMouseEnter={(e) => showSidebarTip(e, "Shortcuts")}
+              onMouseLeave={() => setSidebarTip(null)}
+              onFocus={(e) => showSidebarTip(e, "Shortcuts")}
+              onBlur={() => setSidebarTip(null)}
+            >
+              <Keyboard size={18} weight="light" />
+            </button>
+
+            <ThemeSwitcher
+              buttonClassName={styles.sidebarButton}
+              activeButtonClassName={styles.sidebarButtonCompact}
+              onMouseEnter={(e) => showSidebarTip(e, "Theme")}
+              onMouseLeave={() => setSidebarTip(null)}
+              onFocus={(e) => showSidebarTip(e, "Theme")}
+              onBlur={() => setSidebarTip(null)}
+            />
+
+            <button
+              type="button"
+              className={styles.dockToggle}
+              onClick={() => setDockOpen((v) => !v)}
+              aria-expanded={dockOpen}
+              aria-label={dockOpen ? "Collapse toolbar" : "Expand toolbar"}
+            >
+              <CaretDown size={22} weight="bold" aria-hidden="true" />
+            </button>
+          </div>
+        )}
+
+        {isMobile && dockOpen && !focusMode && (
+          <div className={styles.dockMinimap}>
+            <Minimap
+              columns={COLUMNS}
+              selectedColumnIndex={selected?.columnIndex ?? null}
+              selectedBlockIndex={selected?.blockIndex ?? null}
+              onSelect={handleMinimapSelect}
+            />
+          </div>
+        )}
+      </div>
+
+      {sidebarTip && !isMobile && (
         <div
           className={styles.sidebarTip}
           style={{ top: sidebarTip.y }}
@@ -467,10 +613,12 @@ export default function Syntax() {
         </div>
       )}
 
-      <LanguageInfoColumn
-        data={languageInfoOpen ? LANGUAGE_INFO : null}
-        onClose={() => setLanguageInfoOpen(false)}
-      />
+      <div className={styles.languageInfoWrap} data-open={languageInfoOpen}>
+        <LanguageInfoColumn
+          data={languageInfoOpen ? LANGUAGE_INFO : null}
+          onClose={() => setLanguageInfoOpen(false)}
+        />
+      </div>
 
       <div className={styles.mainbar} ref={mainbarRef}>
         {COLUMNS.map((col, colIndex) => (
@@ -514,13 +662,15 @@ export default function Syntax() {
         )}
       </div>
 
-      {!focusMode && (
-        <Minimap
-          columns={COLUMNS}
-          selectedColumnIndex={selected?.columnIndex ?? null}
-          selectedBlockIndex={selected?.blockIndex ?? null}
-          onSelect={handleMinimapSelect}
-        />
+      {!focusMode && !isMobile && (
+        <div className={styles.minimapDesktop}>
+          <Minimap
+            columns={COLUMNS}
+            selectedColumnIndex={selected?.columnIndex ?? null}
+            selectedBlockIndex={selected?.blockIndex ?? null}
+            onSelect={handleMinimapSelect}
+          />
+        </div>
       )}
 
       {searchOpen && (

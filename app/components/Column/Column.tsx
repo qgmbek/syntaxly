@@ -173,6 +173,9 @@ export default function Column({
 }: ColumnProps) {
   const delay = compact ? `${columnIndex * 30}ms` : `${columnIndex * 20}ms`;
 
+  // --fs-scale is set per breakpoint on the page container (1 on desktop)
+  const scaledFont = `calc(${fontSize}px * var(--fs-scale, 1))`;
+
   const HeadIcon = HEAD[data.number % HEAD.length];
   const slots = planCritters(data.number, data.blocks.length);
 
@@ -216,14 +219,14 @@ export default function Column({
                 tabIndex={0}
                 onKeyDown={(e) => e.key === "Enter" && onBlockClick?.(block, i)}
               >
-                <div className={styles.blockTitle} style={{ fontSize }}>
+                <div className={styles.blockTitle} style={{ fontSize: scaledFont }}>
                   {block.title}
                 </div>
                 <CopyButton text={block.code} />
                 <CodeBlock
                   code={block.code}
                   language={block.language ?? "tsx"}
-                  fontSize={fontSize}
+                  fontSize={scaledFont}
                 />
               </div>
 

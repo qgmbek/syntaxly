@@ -6,6 +6,17 @@
   background-color: var(--column-bg);
 }
 
+.dock,
+.minimapDesktop,
+.languageInfoWrap {
+  display: contents;
+}
+
+.dockToggle,
+.dockBackdrop {
+  display: none;
+}
+
 .sidebar {
   max-width: 80px;
   height: 100vh;
@@ -305,10 +316,254 @@
   }
 }
 
-@keyframes kEmpty { 
+@keyframes kEmpty {
   from {
     opacity: 0;
     transform: translate3d(0, -8px, 0);
+  }
+}
+
+@keyframes kDockIn {
+  from {
+    opacity: 0;
+    transform: translate3d(0, -8px, 0);
+  }
+}
+
+@keyframes kFade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes kSheetIn {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 16px, 0);
+  }
+}
+
+@media (max-width: 1024px) {
+  .container {
+    --dock-h: 52px;
+    --col-w: 66vw;
+    --fs-scale: 0.92;
+
+    flex-direction: column;
+    box-sizing: border-box;
+    height: 100vh;
+    height: 100dvh;
+    padding-top: var(--dock-h);
+    overflow: hidden;
+  }
+
+  .focus {
+    padding-top: 0;
+  }
+
+  .focus .dock {
+    display: none;
+  }
+
+  .dock {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 150;
+    background-color: var(--primary);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.11);
+  }
+
+  .dockOpen {
+    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.35);
+  }
+
+  .dockBackdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 140;
+    background: rgba(0, 0, 0, 0.4);
+    animation: kFade 0.25s ease backwards;
+  }
+
+  .sidebar {
+    width: 100%;
+    max-width: none;
+    height: auto;
+    min-height: var(--dock-h);
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px 8px;
+    padding: 4px 8px 4px 16px;
+    border-right: none;
+  }
+
+  .name {
+    order: 0;
+    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    writing-mode: horizontal-tb;
+    text-orientation: mixed;
+    font-size: 22px;
+    letter-spacing: 0.12em;
+  }
+
+  .dockToggle {
+    order: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--black);
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .dockToggle svg {
+    transition: transform 300ms var(--ease);
+  }
+
+  .dockOpen .dockToggle {
+    color: var(--secondary);
+  }
+
+  .dockOpen .dockToggle svg {
+    transform: rotate(180deg);
+  }
+
+  .sidebar > :not(.name):not(.dockToggle) {
+    order: 2;
+    display: none;
+  }
+
+  .dockOpen .sidebar > :not(.name):not(.dockToggle) {
+    display: flex;
+  }
+
+  .dockOpen .sidebar::after {
+    content: "";
+    order: 1;
+    flex: 0 0 100%;
+    height: 0;
+  }
+
+  .dockOpen .sidebar {
+    padding-bottom: 12px;
+  }
+
+  .fontControls {
+    flex-direction: row;
+    margin-top: 0;
+    gap: 4px;
+  }
+
+  .fontBtn {
+    width: 36px;
+    height: 36px;
+    font-size: 20px;
+  }
+
+  .sidebarButton {
+    width: 44px;
+    height: 44px;
+  }
+
+  .sidebarTip {
+    display: none;
+  }
+
+  .minimapDesktop {
+    display: none;
+  }
+
+  .dockMinimap {
+    background-color: var(--column-bg);
+    border-top: 1px solid rgba(0, 0, 0, 0.11);
+    animation: kDockIn 0.35s var(--ease) backwards;
+  }
+
+  .mainbar {
+    flex: 1 1 0;
+    min-height: 0;
+    height: auto;
+    padding-right: 12px;
+    overscroll-behavior-x: contain;
+    overflow-anchor: none;
+    touch-action: pan-x pan-y;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .languageInfoWrap {
+    display: none;
+  }
+
+  .languageInfoWrap[data-open="true"] {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 300;
+    background-color: var(--column-bg);
+    animation: kSheetIn 0.35s var(--ease) backwards;
+  }
+
+  .languageInfoWrap > * {
+    width: 100% !important;
+    max-width: none !important;
+    height: 100% !important;
+  }
+
+  .scrollButton {
+    bottom: 12px;
+    width: 48px;
+    height: 36px;
+  }
+
+  .scrollArrow {
+    width: 42px;
+    height: 20px;
+  }
+
+  .scrollButtonLeft {
+    left: 16px;
+  }
+
+  .scrollButtonRight {
+    right: 16px;
+  }
+
+  .emptyFilter p {
+    font-size: 24px;
+  }
+}
+
+@media (max-width: 640px) {
+  .container {
+    --fs-scale: 0.75;
+  }
+
+  .hideOnPhone {
+    display: none !important;
+  }
+
+  .scrollButton {
+    display: none;
+  }
+
+  .name {
+    font-size: 20px;
   }
 }
 
@@ -318,11 +573,15 @@
   .sidebar > .name,
   .emptyFilter,
   .scrollButton,
-  .sidebarTip {
+  .sidebarTip,
+  .dockMinimap,
+  .dockBackdrop,
+  .languageInfoWrap {
     animation: none;
   }
 
-  .sidebarButton {
+  .sidebarButton,
+  .dockToggle svg {
     transition: none;
   }
 }

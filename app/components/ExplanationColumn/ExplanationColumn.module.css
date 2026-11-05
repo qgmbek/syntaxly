@@ -285,7 +285,123 @@
   }
 }
 
+@media (max-width: 1024px) {
+  .wrapper {
+    display: flex;
+    transition: width 360ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .wrapper.open .column {
+    animation: kExplainIn 300ms ease 60ms backwards;
+  }
+
+  @keyframes kExplainIn {
+    from {
+      opacity: 0;
+    }
+  }
+
+  .wrapper.open {
+    width: var(--col-w, 66vw);
+  }
+
+  .column {
+    height: auto;
+    flex: 1 1 auto;
+    min-width: var(--col-w, 66vw);
+  }
+
+  .meta {
+    height: auto;
+    min-height: 60px;
+    padding: 8px 10px 8px 14px;
+  }
+
+  .title {
+    margin-top: 0;
+    font-size: 20px;
+    padding-right: 76px;
+  }
+
+  .doodle {
+    top: 10px;
+    right: 44px;
+    width: 28px;
+    height: 28px;
+  }
+
+  .close {
+    top: 6px;
+    right: 6px;
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+  }
+
+  .main {
+    min-height: 0;
+    padding: 14px 12px calc(20px + env(safe-area-inset-bottom, 0px));
+    overscroll-behavior-y: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .section {
+    margin-bottom: 18px;
+  }
+
+  .sectionLabel {
+    font-size: 20px;
+  }
+
+  .sectionText {
+    font-size: 13px;
+    letter-spacing: 0.3px;
+  }
+
+  .codeBlock {
+    padding: 10px 12px;
+    font-size: 13px;
+    border-radius: 12px;
+  }
+
+  .tipSection {
+    padding: 16px 12px 12px;
+  }
+
+  .metaLabel {
+    font-size: 18px;
+    min-width: 90px;
+  }
+
+  .metaValue {
+    font-size: 13px;
+  }
+
+  .difficultyBadge {
+    font-size: 17px;
+  }
+
+  .memoryQualifier {
+    font-size: 17px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .wrapper {
+    transition: none;
+  }
+
+  .title,
+  .section,
+  .codeBlock,
+  .metaGroup,
+  .doodle,
+  .difficultyBadge,
+  .memoryBarFill {
+    animation: none;
+  }
+
+  .wrapper.open .column,
   .title,
   .section,
   .codeBlock,

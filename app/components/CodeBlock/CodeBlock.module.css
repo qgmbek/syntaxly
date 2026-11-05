@@ -20,8 +20,37 @@
   font-family: "JetBrains Mono", "Fira Code", monospace;
 }
 
-
 .code::-webkit-scrollbar {
   width: 5px;
   height: 4px;
+}
+
+@media (max-width: 1024px) {
+  .code {
+    height: auto;
+    overflow: visible;
+    padding: 36px 10px 10px 8px;
+    cursor: auto !important;
+  }
+
+  .code :global(pre) {
+    height: auto;
+    min-width: 0;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    word-break: normal;
+    tab-size: 2;
+  }
+
+  .code :global(code) {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+}
+
+@media (max-width: 640px) {
+  .code {
+    padding: 32px 8px 8px 8px;
+  }
 }

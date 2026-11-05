@@ -285,6 +285,87 @@
   }
 }
 
+@media (max-width: 1024px) {
+  .column {
+    height: auto;
+    width: var(--col-w, 66vw);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .column.compact {
+    width: 60px;
+  }
+
+  .meta {
+    flex: 0 0 auto;
+    height: auto;
+    min-height: 60px;
+    padding: 8px 44px 8px 14px;
+  }
+
+  .number {
+    font-size: 24px;
+  }
+
+  .title {
+    margin-top: 0;
+    font-size: 20px;
+    line-height: 1.15;
+  }
+
+  .blockCount {
+    bottom: 5px;
+    right: 8px;
+    font-size: 15px;
+  }
+
+  .headDoodle {
+    top: 6px;
+    right: 8px;
+    width: 30px;
+    height: 30px;
+  }
+
+  .main {
+    flex: 1 1 0;
+    min-height: 0;
+    height: auto;
+    padding: 8px 8px 64px;
+    overscroll-behavior-y: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .block {
+    margin-bottom: 12px;
+    border-radius: 12px;
+  }
+
+  .blockTitle {
+    padding: 4px 9px;
+    border-top-left-radius: 12px;
+  }
+
+  .blockActive::after {
+    border-radius: 12px;
+  }
+
+  .critterRow {
+    height: 18px;
+    padding: 0 14px;
+  }
+
+  .critter {
+    height: 24px;
+  }
+}
+
+@media (max-width: 640px) {
+  .main {
+    padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .meta,
   .number,

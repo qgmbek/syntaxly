@@ -5,19 +5,49 @@
   z-index: 1000;
 }
 
+.logo::after {
+  content: "home";
+  position: absolute;
+  top: 8px;
+  right: 58px;
+  font-family: var(--font-hand);
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--h-red);
+  rotate: -4deg;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.logo:hover::after,
+.logo:focus-visible::after {
+  opacity: 1;
+}
+
+.logo:focus-visible {
+  outline: 2px solid var(--secondary);
+  outline-offset: 4px;
+}
+
 .logoMark {
-  width: 44px;
-  height: 44px;
+  width: 46px;
+  height: 46px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 28px;
-  color: var(--black);
+  font-size: 26px;
+  line-height: 1;
+  color: var(--ink);
   background: var(--primary);
-  border-radius: 2px;
-  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 2.5px solid var(--ink);
+  border-radius: var(--wobble);
+  rotate: -6deg;
 }
 
-.logo:hover .logoMark {
-  transform: rotate(90deg);
+@media (prefers-reduced-motion: reduce) {
+  .logo::after {
+    transition: none;
+  }
 }

@@ -7,7 +7,8 @@ import styles from "./CodeBlock.module.css";
 interface CodeBlockProps {
   code: string;
   language?: string;
-  fontSize?: number;
+  /** number (px) or any CSS length, e.g. "calc(16px * var(--fs-scale, 1))" */
+  fontSize?: number | string;
 }
 
 export default function CodeBlock({

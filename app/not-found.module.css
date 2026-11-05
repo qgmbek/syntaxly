@@ -1,31 +1,44 @@
 .container {
+  position: relative;
+  isolation: isolate;
+  z-index: 1;
   width: 100%;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  position: relative;
-  background-image:
-    linear-gradient(to right, #ddd 1px, transparent 1px),
-    linear-gradient(to bottom, #ddd 1px, transparent 1px);
-  background-size: 80px 80px;
   overflow: hidden;
-  z-index: 1;
-  background-color: #fff;
+  background-color: var(--paper);
+  background-image:
+    linear-gradient(to right, rgba(23, 23, 23, 0.08) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(23, 23, 23, 0.08) 1px, transparent 1px);
+  background-size: 80px 80px;
+  color: var(--ink);
+}
+
+.container::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: var(--grain);
+  opacity: 0.08;
+  mix-blend-mode: multiply;
 }
 
 .bgOrb {
   position: absolute;
-  border-radius: 999px;
-  filter: blur(90px);
-  pointer-events: none;
+  bottom: -120px;
+  left: -120px;
   z-index: 0;
   width: 800px;
   height: 800px;
-  background: rgba(0, 255, 208, 0.08);
-  bottom: -120px;
-  left: -120px;
+  border-radius: 999px;
+  filter: blur(90px);
+  background: rgba(0, 255, 208, 0.05);
+  pointer-events: none;
   animation: gradientMove 14s ease-in-out infinite;
 }
 
@@ -36,44 +49,104 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 32px;
+  gap: 28px;
   width: 100%;
   padding: 0 24px;
 }
 
 .errorCode {
-  font-size: 180px;
-  font-weight: 700;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.04em;
+  font-family: var(--font-display);
+  font-size: clamp(110px, 24vw, 300px);
+  font-weight: 400;
   line-height: 1;
-  color: var(--primary);
-  font-family: var(--font-oxanium);
-  opacity: 0.9;
-  letter-spacing: -0.05em;
+  letter-spacing: -0.04em;
+}
+
+.ghost {
+  width: 0.62em;
+  height: 0.78em;
+  color: var(--ink);
+  rotate: -6deg;
+  animation: float 3.4s ease-in-out infinite;
+}
+
+.tape {
+  position: absolute;
+  right: -0.35em;
+  bottom: 0.02em;
+  padding: 6px 24px 9px;
+  font-family: var(--font-hand);
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 1;
+  white-space: nowrap;
+  color: var(--ink);
+  background: color-mix(in srgb, var(--primary) 88%, transparent);
+  clip-path: polygon(
+    0 0,
+    100% 0,
+    97% 12%,
+    100% 25%,
+    97% 37%,
+    100% 50%,
+    97% 62%,
+    100% 75%,
+    97% 87%,
+    100% 100%,
+    0 100%,
+    3% 87%,
+    0 75%,
+    3% 62%,
+    0 50%,
+    3% 37%,
+    0 25%,
+    3% 12%
+  );
+  rotate: -6deg;
 }
 
 .title {
-  font-size: 48px;
-  font-weight: 600;
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(36px, 5vw, 64px);
+  font-weight: 400;
   text-align: center;
-  line-height: 1.2;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
 }
 
 .highlighted {
-  padding: 4px 8px;
+  padding: 0 0.14em;
   background-color: var(--accent-soft);
-  border-radius: 2px;
+  border-radius: 12px 4px 14px 5px / 5px 14px 4px 12px;
 }
 
 .subtitle {
   max-width: 600px;
+  margin: 0;
   font-size: 18px;
   text-align: center;
   line-height: 1.5;
-  color: #0a0a0a;
-  opacity: 0.7;
+  color: rgba(23, 23, 23, 0.72);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 22px;
 }
 
 .button {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -81,25 +154,63 @@
   text-decoration: none;
   font-size: 16px;
   font-weight: 500;
-  background-color: #000;
   color: #fff;
-  border-radius: 2px;
-  transition: transform 0.2s ease, background-color 0.2s ease;
+  background-color: var(--ink);
+  border-radius: 999px;
+  transition:
+    transform 0.2s ease,
+    color 0.26s ease;
+}
+
+.button::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  z-index: -1;
+  background: var(--primary);
+  border-radius: 50% 50% 0 0 / 45% 45% 0 0;
+  transform: translateY(101%);
+  transition:
+    transform 0.48s cubic-bezier(0.16, 1, 0.3, 1),
+    border-radius 0.48s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .button:hover {
-  transform: translateY(-4px);
-  background-color: var(--primary);
-  color: #000;
+  transform: translateY(-2px);
+  color: var(--ink);
+}
+
+.button:hover::before {
+  border-radius: 0;
+  transform: translateY(0);
+}
+
+.link {
+  padding: 4px 4px 10px;
+  text-decoration: none;
+  font-family: var(--font-hand);
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--ink);
+  background: var(--scribble) left bottom / 0 6px no-repeat;
+  transition: background-size 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.link:hover {
+  background-size: 100% 6px;
+}
+
+.button:focus-visible,
+.link:focus-visible {
+  outline: 2px solid var(--secondary);
+  outline-offset: 3px;
 }
 
 @media (max-width: 768px) {
-  .errorCode {
-    font-size: 120px;
-  }
-
-  .title {
-    font-size: 32px;
+  .tape {
+    font-size: 24px;
+    right: -0.1em;
   }
 
   .subtitle {
@@ -109,14 +220,6 @@
 }
 
 @media (max-width: 480px) {
-  .errorCode {
-    font-size: 80px;
-  }
-
-  .title {
-    font-size: 24px;
-  }
-
   .button {
     padding: 12px 24px;
     font-size: 14px;
@@ -131,5 +234,29 @@
 
   50% {
     transform: translate(40px, -40px) scale(1.1);
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+
+  50% {
+    translate: 0 -10px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bgOrb,
+  .ghost {
+    animation: none;
+  }
+
+  .button,
+  .button::before,
+  .link {
+    transition: none;
   }
 }

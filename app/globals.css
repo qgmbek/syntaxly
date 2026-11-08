@@ -32,32 +32,54 @@
   --card-border: rgba(255, 255, 255, 0.12);
   --glow-color: rgba(255, 255, 255, 0.3);
 }
-
+:root[data-theme="satisfying-fun"],
 [data-theme="satisfying-fun"] {
-  --primary: #ff6584;
-  --secondary: #7c5cfc;
-  --black: #1e1a34;
-  --white: #fffdfb;
-  --column-bg: #1b172e;
-  --column-block-bg: #fdf9f7;
-  --explanation-bg: #151126;
-  --explanation-code: #5eead4;
+  --primary: #ffcf3f;
+  --secondary: #ec2b7b;
+  --black: #24102e;
+  --white: #fffaf0;
+  --column-bg: #2d1b5e;
+  --column-block-bg: #fff4de;
+  --explanation-bg: #230f4f;
+  --explanation-code: #8ff5d8;
   --memory-gradient: linear-gradient(
     90deg,
-    #5eead4 0%,
-    #fcd34d 50%,
-    #ff6584 100%
+    #2ee6a6 0%,
+    #ffe14d 35%,
+    #ff8a3d 65%,
+    #ff3d81 100%
   );
-  --accent-soft: rgba(255, 101, 132, 0.18);
-  --tag-bg: #ffd5de;
-  --tag-text: #5a162b;
-  --card-border: rgba(124, 92, 252, 0.18);
-  --glow-color: rgba(255, 101, 132, 0.35);
-  --fun-mint: #5eead4;
+  --accent-soft: rgba(255, 207, 63, 0.34);
+  --tag-bg: #ffd3e4;
+  --tag-text: #5c0f34;
+  --card-border: rgba(255, 126, 182, 0.28);
+  --glow-color: rgba(255, 61, 129, 0.4);
+
+  --fun-mint: #62e8c5;
   --fun-peach: #ff9e7d;
-  --fun-yellow: #fde68a;
-  --fun-lavender: #ddd6fe;
-  --fun-gradient: linear-gradient(135deg, #ff6584 0%, #7c5cfc 100%);
+  --fun-yellow: #ffe14d;
+  --fun-lavender: #c9b6ff;
+  --fun-pink: #ff7eb6;
+  --fun-sky: #6cc7ff;
+  --fun-lime: #b8f04a;
+  --fun-tangerine: #ff8a3d;
+  --fun-gradient: linear-gradient(
+    135deg,
+    #ff7eb6 0%,
+    #ffcf3f 35%,
+    #62e8c5 68%,
+    #6cc7ff 100%
+  );
+
+  --paper: #fff0d9;
+  --paper-2: #fffaf0;
+  --ink: #24102e;
+  --h-red: #ff4d3d;
+  --h-cobalt: #3b5bff;
+  --h-cyan: #5ad8ff;
+  --h-butter: #ffd23f;
+  --h-pink: #ff7eb6;
+  --scribble: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 6' preserveAspectRatio='none'%3E%3Cpath d='M1 4 C6 0 10 6 16 3 S28 5 33 2 S38 3 39 3' fill='none' stroke='%23ff3d2e' stroke-width='1.8' stroke-linecap='round'/%3E%3C/svg%3E");
 }
 
 :root {

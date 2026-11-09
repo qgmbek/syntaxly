@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect, MouseEvent, CSSProperties } from "react";
 import Link from "next/link";
+import { Sun, CircleHalf, Sparkle } from "@phosphor-icons/react";
 import styles from "./Footer.module.css";
 import { Rocket, SleepyMoon } from "../../../../app/ui/HandDrawn";
 import HandwrittenText, { HandwrittenArrow } from "../../../ui/HandwrittenText";
@@ -17,6 +18,8 @@ type FooterColumn = {
   tone: string;
   links: FooterLink[];
 };
+
+type Theme = "default" | "monochrome" | "satisfying-fun";
 
 const columns: FooterColumn[] = [
   {
@@ -74,9 +77,53 @@ const TONES = [
   "#ff7ab8",
 ];
 
+const themes: {
+  key: Theme;
+  label: string;
+  colors: string[];
+  Icon: typeof Sun;
+}[] = [
+  {
+    key: "default",
+    label: "Default theme",
+    colors: ["#00ffd0", "#171717", "#eeeeee"],
+    Icon: Sun,
+  },
+  {
+    key: "monochrome",
+    label: "Monochrome theme",
+    colors: ["#171717", "#ffffff", "#a5a5a5"],
+    Icon: CircleHalf,
+  },
+  {
+    key: "satisfying-fun",
+    label: "Fun theme",
+    colors: ["#ff3d81", "#ffd84d", "#8ab6ff"],
+    Icon: Sparkle,
+  },
+];
+
 export default function Footer() {
   const footerRef = useRef<HTMLElement>(null);
   const [shown, setShown] = useState(false);
+  const [activeTheme, setActiveTheme] = useState<Theme>("default");
+
+  useEffect(() => {
+  const savedTheme = localStorage.getItem("syntaxly-theme") as Theme | null;
+
+  const validTheme = themes.some((theme) => theme.key === savedTheme);
+
+  const theme = validTheme ? savedTheme! : "default";
+
+  document.documentElement.dataset.theme = theme;
+  setActiveTheme(theme);
+}, []);
+
+  const changeTheme = (theme: Theme) => {
+  document.documentElement.dataset.theme = theme;
+  localStorage.setItem("syntaxly-theme", theme);
+  setActiveTheme(theme);
+};
 
   useEffect(() => {
     const node = footerRef.current;
@@ -137,6 +184,34 @@ export default function Footer() {
             <div className={styles.logo}></div>
             <span className={styles.brand}>Syntaxly</span>
           </div>
+
+          <div className={styles.themeSwitch} role="group" aria-label="Choose theme">
+            {themes.map(({ key, label, colors, Icon }) => (
+              <button
+                key={key}
+                type="button"
+                className={`${styles.themeButton} ${
+                  activeTheme === key ? styles.themeButtonActive : ""
+                }`}
+                
+                onClick={() => changeTheme(key)}
+                aria-label={label}
+                aria-pressed={activeTheme === key}
+                title={label}
+              >
+                <Icon className={styles.themeIcon} weight="regular" />
+                <span className={styles.themePalette} aria-hidden="true">
+                  {colors.map((color) => (
+                    <span
+                      key={color}
+                      className={styles.themeColor}
+                      style={{ "--swatch": color } as CSSProperties}
+                    />
+                  ))}
+                </span>
+              </button>
+            ))}
+          </div>
         </div>
 
         <div className={styles.linksGrid}>
@@ -161,7 +236,7 @@ export default function Footer() {
                   <a
                     key={link.label}
                     style={style}
-                    href={link.href}
+                    href={link.href || undefined}
                     {...(link.external
                       ? { target: "_blank", rel: "noopener noreferrer" }
                       : {})}

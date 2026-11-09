@@ -1,12 +1,20 @@
+import Script from "next/script";
+
 export default function ThemeScript() {
-  // React hoists and executes async external scripts on server and client renders.
-  // Block the first paint until the saved theme has been restored.
   return (
-    <script
-      id="syntaxly-theme-init"
-      src="/theme-init.js"
-      async
-      blocking="render"
-    />
+    <Script id="syntaxly-theme" strategy="beforeInteractive">
+      {`
+        (() => {
+          try {
+            const saved = localStorage.getItem("syntaxly-theme");
+            const allowed = ["default", "monochrome", "satisfying-fun"];
+            const theme = allowed.includes(saved) ? saved : "default";
+            document.documentElement.dataset.theme = theme;
+          } catch {
+            document.documentElement.dataset.theme = "default";
+          }
+        })();
+      `}
+    </Script>
   );
 }

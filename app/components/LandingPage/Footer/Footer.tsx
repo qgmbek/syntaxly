@@ -109,21 +109,19 @@ export default function Footer() {
   const [activeTheme, setActiveTheme] = useState<Theme>("default");
 
   useEffect(() => {
-  const savedTheme = localStorage.getItem("syntaxly-theme") as Theme | null;
+    const savedTheme = localStorage.getItem("syntaxly-theme") as Theme | null;
+    const isValidTheme = themes.some((theme) => theme.key === savedTheme);
+    const theme: Theme = isValidTheme ? savedTheme! : "default";
 
-  const validTheme = themes.some((theme) => theme.key === savedTheme);
-
-  const theme = validTheme ? savedTheme! : "default";
-
-  document.documentElement.dataset.theme = theme;
-  setActiveTheme(theme);
-}, []);
+    document.documentElement.dataset.theme = theme;
+    setActiveTheme(theme);
+  }, []);
 
   const changeTheme = (theme: Theme) => {
-  document.documentElement.dataset.theme = theme;
-  localStorage.setItem("syntaxly-theme", theme);
-  setActiveTheme(theme);
-};
+    document.documentElement.dataset.theme = theme;
+    localStorage.setItem("syntaxly-theme", theme);
+    setActiveTheme(theme);
+  };
 
   useEffect(() => {
     const node = footerRef.current;
@@ -181,11 +179,17 @@ export default function Footer() {
       <div className={styles.top}>
         <div className={styles.brandSection}>
           <div className={styles.logoWrapper}>
-            <div className={styles.logo}></div>
+            <span className={styles.logo} aria-hidden="true">
+              ✦
+            </span>
             <span className={styles.brand}>Syntaxly</span>
           </div>
 
-          <div className={styles.themeSwitch} role="group" aria-label="Choose theme">
+          <div
+            className={styles.themeSwitch}
+            role="group"
+            aria-label="Choose theme"
+          >
             {themes.map(({ key, label, colors, Icon }) => (
               <button
                 key={key}
@@ -193,13 +197,13 @@ export default function Footer() {
                 className={`${styles.themeButton} ${
                   activeTheme === key ? styles.themeButtonActive : ""
                 }`}
-                
                 onClick={() => changeTheme(key)}
                 aria-label={label}
                 aria-pressed={activeTheme === key}
                 title={label}
               >
                 <Icon className={styles.themeIcon} weight="regular" />
+
                 <span className={styles.themePalette} aria-hidden="true">
                   {colors.map((color) => (
                     <span

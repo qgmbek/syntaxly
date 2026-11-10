@@ -102,11 +102,16 @@
 }
 
 .logo {
-  width: 18px;
-  height: 18px;
-  border: 3px solid var(--ink);
-  border-radius: 52% 48% 55% 45% / 48% 55% 45% 52%;
-  position: relative;
+  display: grid;
+  width: 30px;
+  height: 30px;
+  place-items: center;
+  border: 2px solid var(--ink);
+  border-radius: var(--wobble);
+  background: var(--primary);
+  color: var(--ink);
+  font-size: 0.85rem;
+  rotate: -6deg;
 }
 
 .brand {
@@ -609,8 +614,8 @@
   }
 
   .logo {
-    width: 16px;
-    height: 16px;
+    width: 30px;
+    height: 30px;
   }
 
   .brand {
@@ -666,11 +671,6 @@
     font-size: 24px;
   }
 
-  .logo {
-    width: 14px;
-    height: 14px;
-  }
-
   .heading {
     font-size: 20px;
   }
@@ -708,7 +708,6 @@
     width: 52px;
   }
 }
-
 
 .themeSwitch {
   display: flex;

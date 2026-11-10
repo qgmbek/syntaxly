@@ -32,54 +32,60 @@
   --card-border: rgba(255, 255, 255, 0.12);
   --glow-color: rgba(255, 255, 255, 0.3);
 }
+
 :root[data-theme="satisfying-fun"],
 [data-theme="satisfying-fun"] {
-  --primary: #ffcf3f;
-  --secondary: #ec2b7b;
-  --black: #24102e;
-  --white: #fffaf0;
-  --column-bg: #2d1b5e;
-  --column-block-bg: #fff4de;
-  --explanation-bg: #230f4f;
-  --explanation-code: #8ff5d8;
+  --primary: #ffe600;
+  --secondary: #c20074;
+  --black: #170536;
+  --white: #fffdf5;
+  --column-bg: #2a0b8a;
+  --column-block-bg: #fff7e0;
+  --explanation-bg: #52079b;
+  --explanation-code: #c8ff3d;
   --memory-gradient: linear-gradient(
     90deg,
-    #2ee6a6 0%,
-    #ffe14d 35%,
-    #ff8a3d 65%,
-    #ff3d81 100%
+    #00f5a0 0%,
+    #c8ff3d 25%,
+    #ffe600 50%,
+    #ff7a00 75%,
+    #ff1f8e 100%
   );
-  --accent-soft: rgba(255, 207, 63, 0.34);
-  --tag-bg: #ffd3e4;
-  --tag-text: #5c0f34;
-  --card-border: rgba(255, 126, 182, 0.28);
-  --glow-color: rgba(255, 61, 129, 0.4);
+  --accent-soft: rgba(255, 230, 0, 0.45);
+  --tag-bg: #c8ff3d;
+  --tag-text: #1a0640;
+  --card-border: rgba(255, 255, 255, 0.22);
+  --glow-color: rgba(255, 31, 142, 0.55);
 
-  --fun-mint: #62e8c5;
-  --fun-peach: #ff9e7d;
-  --fun-yellow: #ffe14d;
-  --fun-lavender: #c9b6ff;
-  --fun-pink: #ff7eb6;
-  --fun-sky: #6cc7ff;
-  --fun-lime: #b8f04a;
-  --fun-tangerine: #ff8a3d;
+  --fun-mint: #00f5a0;
+  --fun-peach: #ff8f6b;
+  --fun-yellow: #ffe600;
+  --fun-lavender: #b58cff;
+  --fun-pink: #ff4fb3;
+  --fun-sky: #00b8ff;
+  --fun-lime: #c8ff3d;
+  --fun-orange: #ff7a00;
+  --fun-violet: #8a3dff;
+  --fun-coral: #ff5e6c;
   --fun-gradient: linear-gradient(
     135deg,
-    #ff7eb6 0%,
-    #ffcf3f 35%,
-    #62e8c5 68%,
-    #6cc7ff 100%
+    #ff1f8e 0%,
+    #ff7a00 20%,
+    #ffe600 40%,
+    #00f5a0 60%,
+    #00b8ff 80%,
+    #8a3dff 100%
   );
 
-  --paper: #fff0d9;
-  --paper-2: #fffaf0;
-  --ink: #24102e;
-  --h-red: #ff4d3d;
-  --h-cobalt: #3b5bff;
-  --h-cyan: #5ad8ff;
-  --h-butter: #ffd23f;
-  --h-pink: #ff7eb6;
-  --scribble: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 6' preserveAspectRatio='none'%3E%3Cpath d='M1 4 C6 0 10 6 16 3 S28 5 33 2 S38 3 39 3' fill='none' stroke='%23ff3d2e' stroke-width='1.8' stroke-linecap='round'/%3E%3C/svg%3E");
+  --paper: #ffeefb;
+  --paper-2: #fffafd;
+  --ink: #170536;
+  --h-red: #cf1200;
+  --h-cobalt: #2f4bff;
+  --h-cyan: #00e5ff;
+  --h-butter: #ffe600;
+  --h-pink: #ff4fb3;
+  --scribble: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 6' preserveAspectRatio='none'%3E%3Cpath d='M1 4 C6 0 10 6 16 3 S28 5 33 2 S38 3 39 3' fill='none' stroke='%23ff2d95' stroke-width='1.9' stroke-linecap='round'/%3E%3C/svg%3E");
 }
 
 :root {
@@ -91,10 +97,11 @@
   --h-cyan: #8be3f6;
   --h-butter: #ffd24a;
   --h-pink: #f77fc8;
-  --font-display: var(--font-instrument-serif, "Instrument Serif"),
-    "Iowan Old Style", Georgia, serif;
-  --font-hand: var(--font-caveat, "Caveat"), "Segoe Print", "Bradley Hand",
-    cursive;
+  --font-display:
+    var(--font-instrument-serif, "Instrument Serif"), "Iowan Old Style",
+    Georgia, serif;
+  --font-hand:
+    var(--font-caveat, "Caveat"), "Segoe Print", "Bradley Hand", cursive;
   --wobble: 255px 18px 225px 18px / 18px 225px 18px 255px;
   --scribble: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 6' preserveAspectRatio='none'%3E%3Cpath d='M1 4 C6 0 10 6 16 3 S28 5 33 2 S38 3 39 3' fill='none' stroke='%23e8222c' stroke-width='1.8' stroke-linecap='round'/%3E%3C/svg%3E");
   --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .25 0 0 0 0 .2 0 0 0 0 .15 0 0 0 .6 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");

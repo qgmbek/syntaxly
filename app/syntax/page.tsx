@@ -8,13 +8,6 @@ import React, {
   useRef,
   useSyncExternalStore,
 } from "react";
-import {
-  Columns,
-  DiamondsFour,
-  MagnifyingGlass,
-  Keyboard,
-  CaretDown,
-} from "@phosphor-icons/react";
 
 import LanguageInfoColumn, {
   LanguageInfoData,
@@ -516,7 +509,7 @@ export default function Syntax() {
               onFocus={(e) => showSidebarTip(e, "Search (Ctrl+K)")}
               onBlur={() => setSidebarTip(null)}
             >
-              <MagnifyingGlass size={22} weight="light" aria-hidden="true" />
+              <i className="ri-search-line" style={{ fontSize: 22, fontWeight: 300 }} aria-hidden="true" />
             </button>
 
             <button
@@ -539,7 +532,7 @@ export default function Syntax() {
               }
               onBlur={() => setSidebarTip(null)}
             >
-              <DiamondsFour size={22} weight={uniqueOnly ? "fill" : "light"} />
+              <i className={uniqueOnly ? "ri-layout-grid-fill" : "ri-layout-grid-line"} style={{ fontSize: 22, fontWeight: uniqueOnly ? "normal" : 300 }} />
             </button>
 
             <button
@@ -555,7 +548,7 @@ export default function Syntax() {
               }
               onBlur={() => setSidebarTip(null)}
             >
-              <Columns size={22} weight={compact ? "fill" : "light"} />
+              <i className={compact ? "ri-layout-column-fill" : "ri-layout-column-line"} style={{ fontSize: 22, fontWeight: compact ? "normal" : 300 }} />
             </button>
 
             <button
@@ -567,7 +560,7 @@ export default function Syntax() {
               onFocus={(e) => showSidebarTip(e, "Shortcuts")}
               onBlur={() => setSidebarTip(null)}
             >
-              <Keyboard size={18} weight="light" />
+              <i className="ri-keyboard-line" style={{ fontSize: 18, fontWeight: 300 }} />
             </button>
 
             <ThemeSwitcher
@@ -586,7 +579,7 @@ export default function Syntax() {
               aria-expanded={dockOpen}
               aria-label={dockOpen ? "Collapse toolbar" : "Expand toolbar"}
             >
-              <CaretDown size={22} weight="bold" aria-hidden="true" />
+              <i className="ri-arrow-down-s-line" style={{ fontSize: 22, fontWeight: "bold" }} aria-hidden="true" />
             </button>
           </div>
         )}

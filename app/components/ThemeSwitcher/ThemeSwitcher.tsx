@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
-import { Palette } from "@phosphor-icons/react";
 import { useTheme } from "../../hooks/useTheme";
 import { THEMES, THEME_PREVIEW_COLORS, type ThemeId } from "../../lib/theme";
 import { Sparkle } from "../../ui/HandDrawn";
@@ -138,7 +137,7 @@ export default function ThemeSwitcher({
         onFocus={onFocus}
         onBlur={onBlur}
       >
-        <Palette size={18} weight={open ? "fill" : "regular"} aria-hidden="true" />
+        <i className={`${open ? "ri-palette-fill" : "ri-palette-line"}`} style={{ fontSize: 18 }} aria-hidden="true" />
       </button>
 
       {mounted && panel ? createPortal(panel, document.body) : null}
